@@ -52,8 +52,7 @@ RosewoodApp::RosewoodApp() : _scene(make_unique<Scene>()), _rotation(0) {
 
     auto checkered = std::make_shared<Texture>(get_resource("Space.png"));
 
-    auto shader = std::make_shared<Shader>(get_resource("Shaders/Shader." SHADER_EXT ".vsh"),
-                                           get_resource("Shaders/Shader." SHADER_EXT ".fsh"));
+    auto shader = std::make_shared<Shader>(get_resource("Shaders/Shader." SHADER_EXT ".rwshader-mp"));
 
     auto camera_object = std::make_shared<SceneObject>("Main Camera");
     auto camera = camera_object->add_component<Camera>();
@@ -62,8 +61,8 @@ RosewoodApp::RosewoodApp() : _scene(make_unique<Scene>()), _rotation(0) {
 
     camera_object->set_local_position(0.0f, 0.0f, 4.0f);
 
-    auto mesh = std::make_shared<Mesh>(get_resource("Cube 1x1x1.mesh-mp"));
-    mesh->set_current_texcoord_data_key("Wrap");
+    auto mesh = Mesh::create(get_resource("Cube 1x1x1.mesh-mp"));
+    mesh->set_default_texcoord_data_key("Wrap");
 
     auto material = std::make_shared<Material>();
     material->set_shader(shader);
