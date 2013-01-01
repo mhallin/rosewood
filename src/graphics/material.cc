@@ -2,6 +2,8 @@
 
 #include <ostream>
 
+#include "rosewood/core/stats.h"
+
 #include "rosewood/math/matrix4.h"
 
 #include "rosewood/graphics/gl_state.h"
@@ -49,28 +51,9 @@ void Material::submit_draw_calls() {
     gl_state::bind_vertex_array_object(_vao);
     gl_state::bind_array_buffer(_vbo);
 
-    if (_texture) {
-        gl_state::activate_texture_unit(0);
-        _texture->bind();
-        _shader->set_texture_sampler_uniform(0);
-    }
-    else {
-        gl_state::bind_texture(0);
-    }
-
-    auto new_size = _vertex_index * sizeof(float);
-
-    if (new_size > _last_size) {
-        GL_FUNC(glBufferData)(GL_ARRAY_BUFFER, new_size, &_vertices[0], GL_DYNAMIC_DRAW);
-        _last_size = new_size;
-    }
-    else {
-        GL_FUNC(glBufferSubData)(GL_ARRAY_BUFFER, 0, new_size, &_vertices[0]);
-    }
-
-    auto stride = shader()->attribute_stride() / sizeof(float);
-
-    GL_FUNC(glDrawArrays)(GL_TRIANGLES, 0, (int)_vertex_index/stride);
+    bind_texture();
+    upload_vbo_data();
+    draw_triangles();
 }
 
 void Material::print_debug_info(std::ostream &os, int indent) const {
@@ -93,4 +76,36 @@ void Material::init_vao() {
     gl_state::bind_array_buffer(_vbo);
 
     shader()->initialize_attribute_arrays();
+}
+
+void Material::bind_texture() const {
+    if (_texture) {
+        gl_state::activate_texture_unit(0);
+        _texture->bind();
+        _shader->set_texture_sampler_uniform(0);
+    }
+    else {
+        gl_state::bind_texture(0);
+    }
+}
+
+void Material::upload_vbo_data() {
+    auto new_size = _vertex_index * sizeof(float);
+
+    if (new_size > _last_size) {
+        GL_FUNC(glBufferData)(GL_ARRAY_BUFFER, new_size, &_vertices[0], GL_DYNAMIC_DRAW);
+        _last_size = new_size;
+    }
+    else {
+        GL_FUNC(glBufferSubData)(GL_ARRAY_BUFFER, 0, new_size, &_vertices[0]);
+    }
+}
+
+void Material::draw_triangles() const {
+    auto stride = shader()->attribute_stride() / sizeof(float);
+    int vertex_count = (int)_vertex_index/stride;
+
+    GL_FUNC(glDrawArrays)(GL_TRIANGLES, 0, vertex_count);
+    core::stats::draw_calls.increment();
+    core::stats::triangle_count.increment(vertex_count/3);
 }

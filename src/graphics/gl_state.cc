@@ -6,6 +6,8 @@
 #include <functional>
 #include <unordered_map>
 
+#include "rosewood/core/stats.h"
+
 #include "rosewood/math/math_types.h"
 #include "rosewood/math/matrix4.h"
 #include "rosewood/math/matrix3.h"
@@ -107,6 +109,7 @@ namespace rosewood { namespace graphics { namespace gl_state {
     void use_program(GLuint program) {
         if_changed(gCurrentProgram, program, [=]() {
             GL_FUNC(glUseProgram)(program);
+            core::stats::shader_change_count.increment();
 
             gSavedShaderStates[gCurrentProgram] = gCurrentUniforms;
             gCurrentUniforms = gSavedShaderStates[program];

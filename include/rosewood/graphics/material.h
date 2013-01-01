@@ -47,6 +47,10 @@ namespace rosewood { namespace graphics {
 
         void init_vbo();
         void init_vao();
+
+        void bind_texture() const;
+        void upload_vbo_data();
+        void draw_triangles() const;
     };
     
     inline std::shared_ptr<Texture> Material::texture() const { return _texture; }
