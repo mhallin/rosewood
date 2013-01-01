@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <CoreVideo/CoreVideo.h>
 
 @class RWGLView;
 
@@ -22,5 +23,7 @@
 
 @interface RWGLView : NSOpenGLView
 @property (weak, nonatomic) IBOutlet id<RWGLViewDelegate> delegate;
+
+- (CVReturn)drawForTime:(const CVTimeStamp *)time;
 
 @end

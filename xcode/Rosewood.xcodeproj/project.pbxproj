@@ -88,6 +88,7 @@
 		8A3571B9168F8FD800EA130B /* worker.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A3571A6168F8F9400EA130B /* worker.py */; };
 		8A3571BB168F8FEB00EA130B /* __init__.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A3571AE168F8FA600EA130B /* __init__.py */; };
 		8A3571BC168F8FEB00EA130B /* connection.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A3571AF168F8FA600EA130B /* connection.py */; };
+		8A3571D01691C91000EA130B /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A3571CF1691C91000EA130B /* CoreVideo.framework */; };
 		8AE76288168723CE006FC8BC /* image_loader_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8AE7628616872268006FC8BC /* image_loader_osx.mm */; };
 		8AE7628A168726AF006FC8BC /* image_loader_ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8AE76289168726AF006FC8BC /* image_loader_ios.mm */; };
 		8AE7628D16873E34006FC8BC /* sample_app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8AE7628B16873E34006FC8BC /* sample_app.cc */; };
@@ -233,6 +234,7 @@
 		8A3571A6168F8F9400EA130B /* worker.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = worker.py; sourceTree = "<group>"; };
 		8A3571AE168F8FA600EA130B /* __init__.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = __init__.py; sourceTree = "<group>"; };
 		8A3571AF168F8FA600EA130B /* connection.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = connection.py; sourceTree = "<group>"; };
+		8A3571CF1691C91000EA130B /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
 		8AE7628516872251006FC8BC /* image_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_loader.h; sourceTree = "<group>"; };
 		8AE7628616872268006FC8BC /* image_loader_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = image_loader_osx.mm; sourceTree = "<group>"; };
 		8AE76289168726AF006FC8BC /* image_loader_ios.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = image_loader_ios.mm; sourceTree = "<group>"; };
@@ -309,6 +311,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A3571D01691C91000EA130B /* CoreVideo.framework in Frameworks */,
 				8A1F62A716866F7F00E53FBB /* OpenGL.framework in Frameworks */,
 				8A1F623016866C2300E53FBB /* Cocoa.framework in Frameworks */,
 				8A1F62B3168676C700E53FBB /* libev.a in Frameworks */,
@@ -430,6 +433,7 @@
 		8A1F620B16866B0600E53FBB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8A3571CF1691C91000EA130B /* CoreVideo.framework */,
 				8A357199168F875900EA130B /* Python.framework */,
 				8A1F62B81686787500E53FBB /* GLKit.framework */,
 				8A1F62B61686782400E53FBB /* OpenGLES.framework */,

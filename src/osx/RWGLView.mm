@@ -19,9 +19,25 @@ using rosewood::core::add_resource_loader;
 
 using rosewood::utils::NSBundleResourceLoader;
 
+static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
+                                      __unused const CVTimeStamp *inNow,
+                                      const CVTimeStamp *inOutputTime,
+                                      __unused CVOptionFlags flagsIn,
+                                      __unused CVOptionFlags *flagsOut,
+                                      void *displayLinkContext) {
+    @autoreleasepool {
+        RWGLView *view = (__bridge RWGLView*)displayLinkContext;
+        return [view drawForTime:inOutputTime];
+    }
+}
+
 @implementation RWGLView {
     BOOL _needsReshape;
     BOOL _haveViewport;
+
+    CVDisplayLinkRef _displayLink;
+
+    NSTimeInterval _lastFrame;
 }
 
 + (NSOpenGLPixelFormat *)defaultPixelFormat {
@@ -50,10 +66,13 @@ using rosewood::utils::NSBundleResourceLoader;
 
     [self _setupOpenGL];
     [self _startTimer];
+    [self _startDisplayLink];
 }
 
 - (void)dealloc {
     [_delegate rosewoodWillTerminate:self];
+
+    CVDisplayLinkRelease(_displayLink);
 }
 
 - (void)_setupOpenGL {
@@ -64,11 +83,23 @@ using rosewood::utils::NSBundleResourceLoader;
 }
 
 - (void)_startTimer {
-    [NSTimer scheduledTimerWithTimeInterval:1.0/60.0
+    [NSTimer scheduledTimerWithTimeInterval:1.0/240.0
                                      target:self
                                    selector:@selector(updateScene:)
                                    userInfo:nil
                                     repeats:YES];
+}
+
+- (void)_startDisplayLink {
+    CVDisplayLinkCreateWithActiveCGDisplays(&_displayLink);
+
+    CVDisplayLinkSetOutputCallback(_displayLink, &display_link_callback, (__bridge void*)self);
+
+    CGLContextObj cglCtx = (CGLContextObj)self.openGLContext.CGLContextObj;
+    CGLPixelFormatObj cglPixelFormat = (CGLPixelFormatObj)self.pixelFormat.CGLPixelFormatObj;
+    CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(_displayLink, cglCtx, cglPixelFormat);
+
+    CVDisplayLinkStart(_displayLink);
 }
 
 - (void)prepareOpenGL {
@@ -83,13 +114,16 @@ using rosewood::utils::NSBundleResourceLoader;
 }
 
 - (void)updateScene:(id)__unused sender {
-    rosewood::utils::mark_frame_beginning();
-    rosewood::utils::tick_all_animations();
-    [_delegate rosewoodUpdateDidTick:self];
-    [self setNeedsDisplay:YES];
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    if (now - _lastFrame >= 1.0/60.0) {
+        rosewood::utils::mark_frame_beginning();
+        rosewood::utils::tick_all_animations();
+        [_delegate rosewoodUpdateDidTick:self];
+        _lastFrame = now;
+    }
 }
 
-- (void)drawRect:(NSRect)__unused dirtyRect {
+- (CVReturn)drawForTime:(const CVTimeStamp *)__unused time {
     [self.openGLContext makeCurrentContext];
 
     if (_needsReshape || !_haveViewport) {
@@ -99,7 +133,10 @@ using rosewood::utils::NSBundleResourceLoader;
     }
 
     [_delegate rosewoodDrawDidTick:self];
+
     [self.openGLContext flushBuffer];
+
+    return kCVReturnSuccess;
 }
 
 @end
