@@ -39,11 +39,12 @@ namespace rosewood { namespace graphics {
         std::shared_ptr<Shader> _shader;
         std::shared_ptr<Texture> _texture;
 
-        std::vector<float> _vertices;
+        std::vector<float> _buffer;
         GLuint _vbo;
         GLuint _vao;
         size_t _last_size;
-        size_t _vertex_index;
+        size_t _buffer_index;
+        size_t _vertex_count;
 
         void init_vbo();
         void init_vao();
@@ -59,7 +60,7 @@ namespace rosewood { namespace graphics {
     inline std::shared_ptr<Shader> Material::shader() const { return _shader; }
     inline void Material::set_shader(std::shared_ptr<Shader> shader) { _shader = shader; }
 
-    inline bool Material::has_enqueued_meshes() const { return !!_vertex_index; }
+    inline bool Material::has_enqueued_meshes() const { return !!_buffer_index; }
 
 } }
 

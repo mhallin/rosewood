@@ -1,6 +1,8 @@
 #ifndef __ROSEWOOD_CORE_STATS_H__
 #define __ROSEWOOD_CORE_STATS_H__
 
+#include <stddef.h>
+
 namespace rosewood { namespace core {
 
     namespace stats {
@@ -17,9 +19,9 @@ namespace rosewood { namespace core {
             T _count;
         };
 
-        extern Counter<int> draw_calls;
-        extern Counter<int> triangle_count;
-        extern Counter<int> shader_change_count;
+        extern Counter<size_t> draw_calls;
+        extern Counter<size_t> triangle_count;
+        extern Counter<size_t> shader_change_count;
     }
 
 } }

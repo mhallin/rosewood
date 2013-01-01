@@ -18,7 +18,7 @@ using rosewood::math::Matrix4;
 
 using rosewood::graphics::Material;
 
-Material::Material() : _vbo(UINT_MAX), _vao(UINT_MAX), _last_size(0), _vertex_index(0) { }
+Material::Material() : _vbo(UINT_MAX), _vao(UINT_MAX), _last_size(0), _buffer_index(0), _vertex_count(0) { }
 
 Material::~Material() {
     if (_vbo != UINT_MAX) {
@@ -30,21 +30,24 @@ Material::~Material() {
 }
 
 void Material::clear_vertex_buffer() {
-    _vertex_index = 0;
+    _buffer_index = 0;
+    _vertex_count = 0;
 }
 
 void Material::enqueue_mesh(const Mesh *mesh, Matrix4 transform, Matrix4 inverse_transform) {
-    auto nverts = mesh->vertex_data().size() * shader()->attribute_stride() / sizeof(float);
-    if (_vertex_index + nverts > _vertices.size()) {
-        _vertices.resize(_vertex_index + nverts);
+    auto nverts = mesh->vertex_data().size();
+    auto meshbufsize = nverts * shader()->attribute_stride() / sizeof(float);
+    if (_buffer_index + meshbufsize > _buffer.size()) {
+        _buffer.resize(_buffer_index + meshbufsize);
     }
-    mesh->instantiate(transform, inverse_transform, _vertices.begin() + _vertex_index,
+    mesh->instantiate(transform, inverse_transform, _buffer.begin() + _buffer_index,
                       shader()->extra_attributes());
-    _vertex_index += nverts;
+    _buffer_index += meshbufsize;
+    _vertex_count += nverts;
 }
 
 void Material::submit_draw_calls() {
-    if (!_vertex_index) return;
+    if (!_buffer_index) return;
     if (_vbo == UINT_MAX) init_vbo();
     if (_vao == UINT_MAX) init_vao();
     
@@ -58,11 +61,7 @@ void Material::submit_draw_calls() {
 
 void Material::print_debug_info(std::ostream &os, int indent) const {
     os << std::string(indent, ' ') << "- Material " << this << "\n";
-    os << std::string(indent, ' ') << "  VAO: " << _vao << ", VBO: " << _vbo << ", Vertices: " << _vertices.size() << "\n";
-    
-    os << std::string(indent, ' ') << "  [";
-    std::copy(begin(_vertices), end(_vertices), std::ostream_iterator<float>(os, ", "));
-    os << "]\n";
+    os << std::string(indent, ' ') << "  VAO: " << _vao << ", VBO: " << _vbo << ", Buffer size: " << _buffer.size() << "\n";
 }
 
 void Material::init_vbo() {
@@ -90,22 +89,19 @@ void Material::bind_texture() const {
 }
 
 void Material::upload_vbo_data() {
-    auto new_size = _vertex_index * sizeof(float);
+    auto new_size = _buffer_index * sizeof(float);
 
     if (new_size > _last_size) {
-        GL_FUNC(glBufferData)(GL_ARRAY_BUFFER, new_size, &_vertices[0], GL_DYNAMIC_DRAW);
+        GL_FUNC(glBufferData)(GL_ARRAY_BUFFER, new_size, &_buffer[0], GL_DYNAMIC_DRAW);
         _last_size = new_size;
     }
     else {
-        GL_FUNC(glBufferSubData)(GL_ARRAY_BUFFER, 0, new_size, &_vertices[0]);
+        GL_FUNC(glBufferSubData)(GL_ARRAY_BUFFER, 0, new_size, &_buffer[0]);
     }
 }
 
 void Material::draw_triangles() const {
-    auto stride = shader()->attribute_stride() / sizeof(float);
-    int vertex_count = (int)_vertex_index/stride;
-
-    GL_FUNC(glDrawArrays)(GL_TRIANGLES, 0, vertex_count);
+    GL_FUNC(glDrawArrays)(GL_TRIANGLES, 0, (int)_vertex_count);
     core::stats::draw_calls.increment();
-    core::stats::triangle_count.increment(vertex_count/3);
+    core::stats::triangle_count.increment(_vertex_count/3);
 }
