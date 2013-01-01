@@ -49,11 +49,11 @@ void rosewood::core::add_resource_loader(std::unique_ptr<IResourceLoader> loader
 
 static bool load_newest_asset_contents(const std::string &path, std::string *out_contents) {
     IResourceLoader *newest_loader = nullptr;
-    struct timespec newest_spec;
+    struct timespec newest_spec{0};
     
     for (const auto &loader : gResourceLoaders) {
         auto info = loader->find_file(path);
-        if (info.exists && (!newest_loader || newest_spec.tv_sec < info.mtime.tv_sec)) {
+        if (info.exists && newest_spec.tv_sec < info.mtime.tv_sec) {
             newest_loader = loader.get();
             newest_spec = info.mtime;
         }
