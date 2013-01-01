@@ -88,7 +88,11 @@
 		8A3571B9168F8FD800EA130B /* worker.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A3571A6168F8F9400EA130B /* worker.py */; };
 		8A3571BB168F8FEB00EA130B /* __init__.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A3571AE168F8FA600EA130B /* __init__.py */; };
 		8A3571BC168F8FEB00EA130B /* connection.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A3571AF168F8FA600EA130B /* connection.py */; };
+		8A3571CD1691C8F500EA130B /* plane.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3571CB1691C8E200EA130B /* plane.cc */; };
+		8A3571CE1691C8F500EA130B /* plane.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3571CB1691C8E200EA130B /* plane.cc */; };
 		8A3571D01691C91000EA130B /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A3571CF1691C91000EA130B /* CoreVideo.framework */; };
+		8AE143F11693476E00A92298 /* stats.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8AE143F01693476E00A92298 /* stats.cc */; };
+		8AE143F41693478D00A92298 /* stats.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8AE143F01693476E00A92298 /* stats.cc */; };
 		8AE76288168723CE006FC8BC /* image_loader_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8AE7628616872268006FC8BC /* image_loader_osx.mm */; };
 		8AE7628A168726AF006FC8BC /* image_loader_ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8AE76289168726AF006FC8BC /* image_loader_ios.mm */; };
 		8AE7628D16873E34006FC8BC /* sample_app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8AE7628B16873E34006FC8BC /* sample_app.cc */; };
@@ -213,8 +217,8 @@
 		8A1F62A516866EBD00E53FBB /* url_downloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = url_downloader.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8A1F62A616866F7E00E53FBB /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
 		8A1F62A81686723000E53FBB /* memory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memory.h; sourceTree = "<group>"; };
-		8A1F62A91686759300E53FBB /* RWGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RWGLView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		8A1F62AB168675B700E53FBB /* RWGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = RWGLView.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		8A1F62A91686759300E53FBB /* RWGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RWGLView.h; sourceTree = "<group>"; };
+		8A1F62AB168675B700E53FBB /* RWGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = RWGLView.mm; sourceTree = "<group>"; };
 		8A1F62B0168676C700E53FBB /* libev.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libev.a; sourceTree = "<group>"; };
 		8A1F62B1168676C700E53FBB /* libmsgpack.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmsgpack.a; sourceTree = "<group>"; };
 		8A1F62B61686782400E53FBB /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.0.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
@@ -234,7 +238,11 @@
 		8A3571A6168F8F9400EA130B /* worker.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = worker.py; sourceTree = "<group>"; };
 		8A3571AE168F8FA600EA130B /* __init__.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = __init__.py; sourceTree = "<group>"; };
 		8A3571AF168F8FA600EA130B /* connection.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = connection.py; sourceTree = "<group>"; };
+		8A3571CA1691C85400EA130B /* plane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = plane.h; sourceTree = "<group>"; };
+		8A3571CB1691C8E200EA130B /* plane.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = plane.cc; sourceTree = "<group>"; };
 		8A3571CF1691C91000EA130B /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
+		8AE143F01693476E00A92298 /* stats.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stats.cc; sourceTree = "<group>"; };
+		8AE143F31693477C00A92298 /* stats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stats.h; sourceTree = "<group>"; };
 		8AE7628516872251006FC8BC /* image_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_loader.h; sourceTree = "<group>"; };
 		8AE7628616872268006FC8BC /* image_loader_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = image_loader_osx.mm; sourceTree = "<group>"; };
 		8AE76289168726AF006FC8BC /* image_loader_ios.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = image_loader_ios.mm; sourceTree = "<group>"; };
@@ -364,6 +372,7 @@
 			isa = PBXGroup;
 			children = (
 				8A1F61E816866A4500E53FBB /* resource_manager.cc */,
+				8AE143F01693476E00A92298 /* stats.cc */,
 			);
 			path = core;
 			sourceTree = "<group>";
@@ -392,6 +401,7 @@
 		8A1F61F616866A4500E53FBB /* math */ = {
 			isa = PBXGroup;
 			children = (
+				8A3571CB1691C8E200EA130B /* plane.cc */,
 				8A1F61F716866A4500E53FBB /* matrix3.cc */,
 				8A1F61F816866A4500E53FBB /* matrix4.cc */,
 				8A1F61F916866A4500E53FBB /* quaternion.cc */,
@@ -552,8 +562,9 @@
 			isa = PBXGroup;
 			children = (
 				8A1F628116866EBD00E53FBB /* clang_msgpack.h */,
-				8A1F628216866EBD00E53FBB /* resource_manager.h */,
 				8A1F62A81686723000E53FBB /* memory.h */,
+				8A1F628216866EBD00E53FBB /* resource_manager.h */,
+				8AE143F31693477C00A92298 /* stats.h */,
 			);
 			path = core;
 			sourceTree = "<group>";
@@ -590,6 +601,7 @@
 		8A1F629216866EBD00E53FBB /* math */ = {
 			isa = PBXGroup;
 			children = (
+				8A3571CA1691C85400EA130B /* plane.h */,
 				8A1F629316866EBD00E53FBB /* math_types.h */,
 				8A1F629416866EBD00E53FBB /* matrix3.h */,
 				8A1F629516866EBD00E53FBB /* matrix4.h */,
@@ -970,6 +982,8 @@
 				8A1F62BC1686789400E53FBB /* RWViewController.mm in Sources */,
 				8AE7628A168726AF006FC8BC /* image_loader_ios.mm in Sources */,
 				8AE7628D16873E34006FC8BC /* sample_app.cc in Sources */,
+				8A3571CE1691C8F500EA130B /* plane.cc in Sources */,
+				8AE143F11693476E00A92298 /* stats.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1005,6 +1019,8 @@
 				8A1F62AD168675C500E53FBB /* RWGLView.mm in Sources */,
 				8AE76288168723CE006FC8BC /* image_loader_osx.mm in Sources */,
 				8AE7628E16873E34006FC8BC /* sample_app.cc in Sources */,
+				8A3571CD1691C8F500EA130B /* plane.cc in Sources */,
+				8AE143F41693478D00A92298 /* stats.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
