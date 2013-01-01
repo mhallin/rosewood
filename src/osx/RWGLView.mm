@@ -43,7 +43,7 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 + (NSOpenGLPixelFormat *)defaultPixelFormat {
     NSOpenGLPixelFormatAttribute attribs[] = {
         NSOpenGLPFAAccelerated,
-        NSOpenGLPFADepthSize, 32,
+        NSOpenGLPFADepthSize, 24,
         NSOpenGLPFAColorSize, 24,
         NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
         NSOpenGLPFADoubleBuffer,
