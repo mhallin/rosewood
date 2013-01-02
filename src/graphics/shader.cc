@@ -30,7 +30,7 @@ const char *Shader::kUniformNames[(int)Shader::Uniforms::kNumUniforms] = {
 };
 
 Shader::Shader(std::shared_ptr<Asset> shader_spec_asset)
-: _program(0)
+: _program(UINT_MAX)
 , _shader_spec(core::create_view(shader_spec_asset, [&] { reload_shader(); }))
 , _queue_index(kDefaultQueueIndex)
 {
@@ -119,7 +119,12 @@ void Shader::destroy_shader() {
 }
 
 void Shader::reload_shader() {
-    if (_program != UINT_MAX) destroy_shader();
+    gl_state::uniform_map known_state;
+
+    if (_program != UINT_MAX) {
+        known_state = gl_state::known_uniform_state(_program);
+        destroy_shader();
+    }
 
     auto &contents = _shader_spec->str();
     msgpack::unpacked spec_pack;
@@ -204,6 +209,10 @@ void Shader::reload_shader() {
         if (_uniforms[name] == -1) {
             std::cerr << "Could not find uniform " << kUniformNames[index] << std::endl;
         }
+    }
+
+    if (!known_state.empty()) {
+        gl_state::set_uniforms(_program, known_state);
     }
 }
 

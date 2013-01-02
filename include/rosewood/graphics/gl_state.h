@@ -1,7 +1,9 @@
 #ifndef __ROSEWOOD_GRAPHICS_GL_STATE_H__
 #define __ROSEWOOD_GRAPHICS_GL_STATE_H__
 
-#include <cstddef>
+#include <unordered_map>
+
+#include <stddef.h>
 
 #include "rosewood/math/math_types.h"
 
@@ -69,6 +71,8 @@ namespace rosewood { namespace graphics {
 
     namespace gl_state {
 
+        typedef std::unordered_map<GLint, UniformData> uniform_map;
+
         void set_state(GLenum state, bool enabled);
         void enable(GLenum state);
         void disable(GLenum state);
@@ -89,6 +93,12 @@ namespace rosewood { namespace graphics {
         void set_uniform(GLint uniform, math::Matrix3 m);
         void set_uniform(GLuint program, GLint uniform, int i);
         void set_uniform(GLint uniform, int i);
+
+        uniform_map known_uniform_state();
+        uniform_map known_uniform_state(GLuint program);
+
+        void set_uniforms(const uniform_map &map);
+        void set_uniforms(GLuint program, const uniform_map &map);
 
         void delete_program(GLuint program);
 

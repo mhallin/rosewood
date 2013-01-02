@@ -68,6 +68,8 @@ namespace rosewood { namespace graphics {
         Shader(const Shader&) = delete;
         Shader &operator=(const Shader&) = delete;
         
+        void reload_shader();
+
     private:
         GLuint _program;
         std::unordered_map<std::string, GLint> _uniforms;
@@ -80,7 +82,6 @@ namespace rosewood { namespace graphics {
         int _queue_index;
         
         void destroy_shader();
-        void reload_shader();
 
         static const int kDefaultQueueIndex;
         

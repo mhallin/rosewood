@@ -42,9 +42,6 @@ namespace rosewood { namespace graphics { namespace gl_state {
         }
     }
 
-    // Managed state variables
-    typedef std::unordered_map<GLint, UniformData> uniform_map;
-
     static std::unordered_map<GLenum, bool> gKnownState; // glEnable/glDisable
     static GLuint gCurrentBuffer = UINT_MAX; // glBindBuffer
     static GLuint gCurrentVAO = UINT_MAX; // glBindVertexArray
@@ -115,23 +112,49 @@ namespace rosewood { namespace graphics { namespace gl_state {
             gCurrentUniforms = gSavedShaderStates[program];
             gCurrentProgram = program;
 
-            for (auto pair : gNewShaderStates[program]) {
-                switch (pair.second.type) {
-                    case UniformDataType::Int1:
-                        set_uniform(pair.first, pair.second.data.i1);
-                        break;
-                    case UniformDataType::Matrix3:
-                        set_uniform(pair.first, pair.second.data.mat3);
-                        break;
-                    case UniformDataType::Matrix4:
-                        set_uniform(pair.first, pair.second.data.mat4);
-                        break;
-                    case UniformDataType::Empty:
-                        break;
-                }
-            }
+            set_uniforms(program, gNewShaderStates[program]);
+
             gNewShaderStates[program].clear();
         });
+    }
+
+    uniform_map known_uniform_state() {
+        return gCurrentUniforms;
+    }
+
+    uniform_map known_uniform_state(GLuint program) {
+        if (program == gCurrentProgram) {
+            return known_uniform_state();
+        }
+
+        uniform_map state = gSavedShaderStates[program];
+        for (auto pair : gNewShaderStates[program]) {
+            state[pair.first] = pair.second;
+        }
+
+        return state;
+    }
+
+    void set_uniforms(const uniform_map &map) {
+        set_uniforms(gCurrentProgram, map);
+    }
+
+    void set_uniforms(GLuint program, const uniform_map &map) {
+        for (auto pair : map) {
+            switch (pair.second.type) {
+                case UniformDataType::Int1:
+                    set_uniform(program, pair.first, pair.second.data.i1);
+                    break;
+                case UniformDataType::Matrix3:
+                    set_uniform(program, pair.first, pair.second.data.mat3);
+                    break;
+                case UniformDataType::Matrix4:
+                    set_uniform(program, pair.first, pair.second.data.mat4);
+                    break;
+                case UniformDataType::Empty:
+                    break;
+            }
+        }
     }
 
     void set_uniform(GLuint program, GLint uniform, math::Matrix4 m) {
@@ -190,6 +213,7 @@ namespace rosewood { namespace graphics { namespace gl_state {
         gNewShaderStates[program].clear();
 
         if (gCurrentProgram == program) {
+            gCurrentUniforms.clear();
             use_program(0);
         }
 
