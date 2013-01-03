@@ -12,6 +12,7 @@ namespace rosewood { namespace math {
     float         length2   (const Vector3   v);
     float         dot       (const Vector3 lhs, const Vector3 rhs);
     Vector3       cross     (const Vector3 lhs, const Vector3 rhs);
+    Vector3       emult     (const Vector3 lhs, const Vector3 rhs);
     
     Vector3       normalized(const Vector3   v);
     
@@ -56,6 +57,9 @@ namespace rosewood { namespace math {
     inline Vector3 cross           (const Vector3 lhs, const Vector3 rhs) { return Vector3(lhs.y*rhs.z - lhs.z*rhs.y,
                                                                                            lhs.z*rhs.x - lhs.x*rhs.z,
                                                                                            lhs.x*rhs.y - lhs.y*rhs.x); }
+    inline Vector3 emult           (const Vector3 lhs, const Vector3 rhs) { return Vector3(lhs.x*rhs.x,
+                                                                                           lhs.y*rhs.y,
+                                                                                           lhs.z*rhs.z); }
     inline Vector3 normalized      (const Vector3   v)                    { return v/length(v); }
 
     inline float   get             (const Vector3   v, size_t i)          { return ptr(v)[i]; }
