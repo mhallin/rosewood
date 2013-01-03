@@ -22,9 +22,17 @@ Quaternion rosewood::math::quaternion_from_axis_angle(const Vector3 axis, float 
 }
 
 Quaternion rosewood::math::quaternion_from_euler_angles(float x, float y, float z) {
-    return (quaternion_from_axis_angle(Vector3(0, 0, 1), z) *
-            quaternion_from_axis_angle(Vector3(0, 1, 0), y) *
-            quaternion_from_axis_angle(Vector3(1, 0, 0), x));
+    auto c1 = cosf(y/2), s1 = sinf(y/2);
+    auto c2 = cosf(z/2), s2 = sinf(z/2);
+    auto c3 = cosf(x/2), s3 = sinf(x/2);
+
+    return Quaternion(c1*c2*c3 - s1*s2*s3,
+                      s1*s2*c3 + c1*c2*s3,
+                      s1*c2*c3 + c1*s2*s3,
+                      c1*s2*c3 - s1*c2*s3);
+//    return (quaternion_from_axis_angle(Vector3(0, 0, 1), z) *
+//            quaternion_from_axis_angle(Vector3(0, 1, 0), y) *
+//            quaternion_from_axis_angle(Vector3(1, 0, 0), x));
 }
 
 Matrix4 rosewood::math::mat4(const Quaternion q) {
