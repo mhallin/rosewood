@@ -33,6 +33,8 @@ namespace rosewood { namespace graphics {
         struct UniformSpec {
             
         };
+
+        static std::shared_ptr<Shader> create(const std::string &resource_path);
         
         Shader(std::shared_ptr<core::Asset> shader_spec_asset);
         ~Shader();

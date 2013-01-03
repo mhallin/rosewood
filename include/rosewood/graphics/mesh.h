@@ -35,7 +35,7 @@ namespace rosewood { namespace graphics {
         typedef std::unordered_map<data_map_key, texcoord_list> texcoord_list_map;
 
         static std::shared_ptr<Mesh> create(const std::shared_ptr<core::Asset> &mesh_asset);
-
+        static std::shared_ptr<Mesh> create(const std::string &resource_path);
 
         Mesh(const std::shared_ptr<core::Asset> &mesh_asset);
         Mesh();

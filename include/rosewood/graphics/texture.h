@@ -20,6 +20,8 @@ namespace rosewood { namespace graphics {
     
     class Texture {
     public:
+        static std::shared_ptr<Texture> create(const std::string &resource_path);
+        
         Texture(const std::shared_ptr<core::Asset> &image_asset);
         Texture(const ImageData &image_data);
         ~Texture();

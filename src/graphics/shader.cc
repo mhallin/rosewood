@@ -29,6 +29,10 @@ const char *Shader::kUniformNames[(int)Shader::Uniforms::kNumUniforms] = {
     "rw_projection_matrix", "rw_modelview_matrix", "rw_normal_matrix", "rw_texture",
 };
 
+std::shared_ptr<Shader> Shader::create(const std::string &resource_path) {
+    return std::make_shared<Shader>(core::get_resource(resource_path + ".rwshader-mp"));
+}
+
 Shader::Shader(std::shared_ptr<Asset> shader_spec_asset)
 : _program(UINT_MAX)
 , _shader_spec(core::create_view(shader_spec_asset, [&] { reload_shader(); }))

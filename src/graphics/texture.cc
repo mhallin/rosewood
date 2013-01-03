@@ -10,6 +10,10 @@ using rosewood::core::Asset;
 
 using rosewood::graphics::Texture;
 
+std::shared_ptr<Texture> Texture::create(const std::string &resource_path) {
+    return std::make_shared<Texture>(core::get_resource(resource_path));
+}
+
 Texture::Texture(const std::shared_ptr<Asset> &image_asset)
 : _image_asset(core::create_view(image_asset, [&] { reload_image_asset(); })) {
     glGenTextures(1, &_texture);

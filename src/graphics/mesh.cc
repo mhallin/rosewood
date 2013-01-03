@@ -32,6 +32,10 @@ std::shared_ptr<Mesh> Mesh::create(const std::shared_ptr<Asset> &mesh_asset) {
     return std::make_shared<Mesh>(mesh_asset);
 }
 
+std::shared_ptr<Mesh> Mesh::create(const std::string &resource_path) {
+    return create(core::get_resource(resource_path + ".mesh-mp"));
+}
+
 Mesh::Mesh(const std::shared_ptr<Asset> &mesh_asset)
 : _mesh_asset(core::create_view(mesh_asset, [&] { reload_mesh_asset(); })) {
     reload_mesh_asset();
