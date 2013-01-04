@@ -48,16 +48,17 @@ void Mesh::instantiate(Matrix4 transform, Matrix4 inverse_transform,
                        const std::vector<Shader::AttributeSpec> &attribute_specs) const {
     auto n_matrix = transposed(mat3(inverse_transform));
 
-    std::vector<float> result;
+    auto &v_data = vertex_data();
+    auto &n_data = normal_data();
+    auto &tc_data = texcoord_data();
 
-    auto v_data = vertex_data();
-    auto n_data = normal_data();
-    auto tc_data = texcoord_data();
+    typedef std::tuple<const Shader::AttributeSpec*, const std::vector<AttributeData>*> attribute_tuple;
 
-    std::vector<std::tuple<const Shader::AttributeSpec*, const std::vector<AttributeData>*>> extra_attributes;
+    attribute_tuple *extra_attributes = static_cast<attribute_tuple*>(alloca(sizeof(attribute_tuple) * attribute_specs.size()));
 
-    for (auto spec : attribute_specs) {
-        extra_attributes.emplace_back(&spec, &_extra_data.at(spec.name));
+    for (int i = 0; i < attribute_specs.size(); ++i) {
+        std::get<0>(extra_attributes[i]) = &attribute_specs[i];
+        std::get<1>(extra_attributes[i]) = &_extra_data.at(attribute_specs[i].name);
     }
     
     for (size_t i = 0; i < _vertex_data.size(); ++i) {
@@ -74,9 +75,9 @@ void Mesh::instantiate(Matrix4 transform, Matrix4 inverse_transform,
         *destination++ = t.x;
         *destination++ = t.y;
 
-        for (auto t : extra_attributes) {
-            auto &spec = *std::get<0>(t);
-            auto &data = *std::get<1>(t);
+        for (int i = 0; i < attribute_specs.size(); ++i) {
+            auto &spec = *std::get<0>(extra_attributes[i]);
+            auto &data = *std::get<1>(extra_attributes[i]);
 
             switch (spec.type) {
                 case kTypeFloat:
