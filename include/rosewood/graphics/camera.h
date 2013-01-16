@@ -1,7 +1,9 @@
 #ifndef __ROSEWOOD_GRAPHICS_CAMERA_H__
 #define __ROSEWOOD_GRAPHICS_CAMERA_H__
 
-#include "component.h"
+#include "rosewood/core/entity.h"
+#include "rosewood/core/component.h"
+
 #include "view_frustum.h"
 
 namespace rosewood { namespace math {
@@ -10,14 +12,13 @@ namespace rosewood { namespace math {
 
 namespace rosewood { namespace graphics {
     
-    class Camera : public Component {
+    class Camera;
+    
+    Camera *camera(core::Entity entity);
+    
+    class Camera : public core::Component<Camera> {
     public:
-        ROSEWOOD_COMPONENT;
-        
-        explicit Camera(SceneObject *owner);
-        virtual ~Camera();
-        
-        virtual void print_debug_info(std::ostream &os, int indent) const override;
+        Camera(core::Entity owner);
         
         void set_fov(float angles);
         void set_aspect(float aspect);
@@ -43,7 +44,11 @@ namespace rosewood { namespace graphics {
         void invalidate_frustum();
     };
     
-    inline Camera::Camera(SceneObject *owner) : Component(owner), _view_frustum(this) { }
+    inline Camera *camera(core::Entity entity) {
+        return entity.component<Camera>();
+    }
+    
+    inline Camera::Camera(core::Entity owner) : core::Component<Camera>(owner), _view_frustum(this) { }
     
     inline void Camera::set_fov(float angles) { _fov = angles; invalidate_frustum(); }
     inline void Camera::set_aspect(float aspect) { _aspect = aspect; invalidate_frustum(); }

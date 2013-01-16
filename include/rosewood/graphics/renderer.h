@@ -3,21 +3,21 @@
 
 #include <memory>
 
-#include "component.h"
+#include "rosewood/core/entity.h"
+#include "rosewood/core/component.h"
 
 namespace rosewood { namespace graphics {
 
     class Mesh;
     class Material;
+    class Renderer;
+    
+    Renderer *renderer(core::Entity entity);
 
-    class Renderer : public Component {
+    class Renderer : public core::Component<Renderer> {
     public:
-        ROSEWOOD_COMPONENT;
+        explicit Renderer(core::Entity owner);
 
-        explicit Renderer(SceneObject *owner);
-
-        virtual void print_debug_info(std::ostream &os, int indent) const override;
-        
         std::shared_ptr<Mesh> mesh();
         void set_mesh(std::shared_ptr<Mesh> mesh);
 
@@ -28,8 +28,12 @@ namespace rosewood { namespace graphics {
         std::shared_ptr<Mesh> _mesh;
         std::shared_ptr<Material> _material;
     };
+    
+    inline Renderer *renderer(core::Entity entity) {
+        return entity.component<Renderer>();
+    }
 
-    inline Renderer::Renderer(SceneObject *owner) : Component(owner) { }
+    inline Renderer::Renderer(core::Entity owner) : core::Component<Renderer>(owner) { }
 
     inline std::shared_ptr<Mesh> Renderer::mesh() { return _mesh; }
     inline void Renderer::set_mesh(std::shared_ptr<Mesh> mesh) { _mesh = mesh; }

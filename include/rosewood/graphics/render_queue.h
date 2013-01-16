@@ -4,8 +4,10 @@
 #include <memory>
 #include <vector>
 
+#include "rosewood/core/entity.h"
+#include "rosewood/core/transform.h"
+
 #include "rosewood/graphics/camera.h"
-#include "rosewood/graphics/scene_object.h"
 #include "rosewood/graphics/material.h"
 
 #include "rosewood/math/math_types.h"
@@ -63,11 +65,13 @@ namespace rosewood { namespace graphics {
                                         Material *material,
                                         Camera *camera)
     : _camera(camera), _mesh(mesh)
-    , _transform(camera->owner()->inverse_world_transform() * transform)
-    , _inverse_transform(inverse_transform * camera->owner()->world_transform())
     , _max_axis_scale(max_axis_scale)
     , _material(material)
-    , _shader(material->shader().get()) { }
+    , _shader(material->shader().get()) {
+        auto camera_transform = core::transform(camera->entity());
+        _transform = math::make_hand_shift() * camera_transform->inverse_world_transform() * transform;
+        _inverse_transform = inverse_transform * camera_transform->world_transform() * math::make_hand_shift();
+    }
 
     inline void RenderQueue::add_command(RenderCommand command) {
         _commands.push_back(command);

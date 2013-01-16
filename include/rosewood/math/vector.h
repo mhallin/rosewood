@@ -25,6 +25,9 @@ namespace rosewood { namespace math {
     Vector3       operator- (const Vector3   v);
     Vector3       operator/ (const Vector3   v, float s);
     
+    bool          operator==(const Vector3 lhs, const Vector3 rhs);
+    bool          operator!=(const Vector3 lhs, const Vector3 rhs);
+    
     // Vector4 functions
     float         length    (const Vector4   v);
     float         length2   (const Vector4   v);
@@ -86,6 +89,11 @@ namespace rosewood { namespace math {
     inline Vector3 operator/       (float s, const Vector3   v)           { return Vector3(s/v.x,
                                                                                            s/v.y,
                                                                                            s/v.z); }
+    
+    inline bool    operator==      (const Vector3 lhs, const Vector3 rhs) { return (lhs.x == rhs.x &&
+                                                                                    lhs.y == rhs.y &&
+                                                                                    lhs.z == rhs.z); }
+    inline bool    operator!=      (const Vector3 lhs, const Vector3 rhs) { return !(lhs == rhs); }
 
     // Vector4 function implementations
     inline         Vector4::Vector4()                                       : x(0), y(0), z(0), w(0) { }

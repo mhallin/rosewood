@@ -3,7 +3,9 @@
 
 #include "rosewood/core/resource_manager.h"
 
-#ifndef __OBJC__
+#ifdef __OBJC__
+#include <Foundation/Foundation.h>
+#else
 typedef NSBundle void
 #endif
 

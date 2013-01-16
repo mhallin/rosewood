@@ -26,6 +26,9 @@ namespace rosewood { namespace math {
     Quaternion  operator*  (float lhs, const Quaternion rhs);
     Quaternion  operator/  (const Quaternion lhs, float rhs);
     
+    bool        operator== (const Quaternion lhs, const Quaternion rhs);
+    bool        operator!= (const Quaternion lhs, const Quaternion rhs);
+    
     Quaternion  normalized (const Quaternion q);
 
     
@@ -52,6 +55,12 @@ namespace rosewood { namespace math {
     inline Quaternion operator*(const Quaternion q, float s) { return Quaternion(q._w*s, q._x*s, q._y*s, q._z*s); }
     inline Quaternion operator*(float s, const Quaternion q) { return q * s; }
     inline Quaternion operator/(const Quaternion q, float s) { return q * (1.0f/s); }
+    
+    inline bool       operator==(const Quaternion lhs, const Quaternion rhs) { return (lhs._x == rhs._x &&
+                                                                                       lhs._y == rhs._y &&
+                                                                                       lhs._z == rhs._z &&
+                                                                                       lhs._w == rhs._w); }
+    inline bool       operator!=(const Quaternion lhs, const Quaternion rhs) { return !(lhs == rhs); }
     
     inline Quaternion normalized(const Quaternion q) { return q / norm(q); }
 

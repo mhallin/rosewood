@@ -13,7 +13,6 @@
 #include "rosewood/graphics/material.h"
 #include "rosewood/graphics/gl_state.h"
 #include "rosewood/graphics/mesh.h"
-#include "rosewood/graphics/scene_object.h"
 #include "rosewood/graphics/view_frustum.h"
 
 using rosewood::graphics::RenderCommand;

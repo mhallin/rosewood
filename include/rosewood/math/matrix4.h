@@ -7,6 +7,7 @@ namespace rosewood { namespace math {
     
     // Matrix4 functions
     Matrix4  make_identity     ();
+    Matrix4  make_hand_shift   ();
     Matrix4  make_perspective  (float fovy, float aspect, float z_near, float z_far);
     Matrix4  make_inverse_perspective(float fovy, float aspect, float z_near, float z_far);
     Matrix4  make_translation  (Vector3 v);
@@ -16,6 +17,8 @@ namespace rosewood { namespace math {
 
     float    get               (const Matrix4 &m, size_t row, size_t col);
     void     set               (      Matrix4 &m, size_t row, size_t col, float value);
+    
+    Matrix4  transposed        (const Matrix4 &m);
     
     Matrix3  mat3              (const Matrix4 &m);
 

@@ -41,6 +41,13 @@ void rosewood::math::set(Matrix4 &m, size_t row, size_t col, float v) {
     m._m[col*4 + row] = v;
 }
 
+Matrix4 rosewood::math::transposed(const Matrix4 &m) {
+    return Matrix4(m._m[ 0], m._m[ 1], m._m[ 2], m._m[ 3],
+                   m._m[ 4], m._m[ 5], m._m[ 6], m._m[ 7],
+                   m._m[ 8], m._m[ 9], m._m[10], m._m[11],
+                   m._m[12], m._m[13], m._m[14], m._m[15]);
+}
+
 Matrix3 rosewood::math::mat3(const Matrix4 &m) {
     return Matrix3(get(m, 0, 0), get(m, 0, 1), get(m, 0, 2),
                    get(m, 1, 0), get(m, 1, 1), get(m, 1, 2),
@@ -66,6 +73,13 @@ Matrix4 rosewood::math::make_identity() {
                    0, 0, 0, 1);
 }
 
+Matrix4 rosewood::math::make_hand_shift() {
+    return Matrix4(1, 0, 0, 0,
+                   0, 1, 0, 0,
+                   0, 0, -1, 0,
+                   0, 0, 0, 1);
+}
+
 Matrix4 rosewood::math::make_perspective(float fovy,
                                          float aspect,
                                          float z_near,
@@ -87,7 +101,7 @@ Matrix4 rosewood::math::make_inverse_perspective(float fovy,
     return Matrix4(aspect/f,   0,                               0,                               0,
                    0,        1/f,                               0,                               0,
                    0,          0,                               0,                              -1,
-                   0,          0, (z_near-z_far)/(2*z_far*z_near), (z_far+z_near)/(2*z_far*z_near));
+                   0,          0, -(z_near-z_far)/(2*z_far*z_near), -(z_far+z_near)/(2*z_far*z_near));
 }
 
 Matrix4 rosewood::math::make_translation(Vector3 v) {
@@ -180,7 +194,18 @@ Matrix4 rosewood::math::operator*(const Matrix4 &lhs, const Matrix4 &rhs) {
 }
 
 Vector3 rosewood::math::operator*(const Matrix4 &lhs, const Vector3 &rhs) {
-    return Vector3(lhs * Vector4(rhs));
+    Vector3 result;
+    float w;
+
+    float * __restrict r = ptr(result);
+    const float * __restrict a = ptr(lhs), * __restrict b = ptr(rhs);
+
+    w     =  a[ 3]*b[ 0] + a[ 7]*b[ 1] + a[11]*b[ 2] + a[15];
+    r[ 0] = (a[ 0]*b[ 0] + a[ 4]*b[ 1] + a[ 8]*b[ 2] + a[12]) / w;
+    r[ 1] = (a[ 1]*b[ 0] + a[ 5]*b[ 1] + a[ 9]*b[ 2] + a[13]) / w;
+    r[ 2] = (a[ 2]*b[ 0] + a[ 6]*b[ 1] + a[10]*b[ 2] + a[14]) / w;
+    
+    return result;
 }
 
 Vector4 rosewood::math::operator*(const Matrix4 &lhs, const Vector4 &rhs) {
