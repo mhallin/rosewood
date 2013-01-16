@@ -11,9 +11,9 @@ namespace rosewood { namespace core {
     
     class BaseComponent {
     public:
-        explicit BaseComponent(Entity entity);
+        explicit BaseComponent(Entity entity) : _entity(entity) { }
         
-        Entity entity() const;
+        Entity entity() const { return _entity; }
 
     protected:
         static ComponentTypeCode _type_code_counter;
@@ -25,24 +25,13 @@ namespace rosewood { namespace core {
     template<class Derived>
     class Component : public BaseComponent {
     public:
-        explicit Component(Entity entity);
+        explicit Component(Entity entity) : BaseComponent(entity) { }
         
-        static ComponentTypeCode register_type();
+        static ComponentTypeCode register_type() {
+            static auto type_code = _type_code_counter++;
+            return type_code;
+        }
     };
-    
-    
-    inline BaseComponent::BaseComponent(Entity entity) : _entity(entity) { }
-    
-    inline Entity BaseComponent::entity() const { return _entity; }
-    
-    template<class Derived>
-    ComponentTypeCode Component<Derived>::register_type() {
-        static auto type_code = _type_code_counter++;
-        return type_code;
-    }
-    
-    template<class Derived>
-    Component<Derived>::Component(Entity entity) : BaseComponent(entity) { }
     
 } }
 

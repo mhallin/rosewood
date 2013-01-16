@@ -2,16 +2,9 @@
 #define __ROSEWOOD_ENGINE_SCENE_H__
 
 #include <memory>
+#include <mutex>
 
 #include "rosewood/core/entity.h"
-
-namespace rosewood { namespace core {
-    class Transform;
-} }
-
-namespace rosewood { namespace math {
-    class Matrix4;
-} }
 
 namespace rosewood { namespace graphics {
     class Camera;
@@ -24,10 +17,12 @@ namespace rosewood { namespace utils {
     public:
         void draw();
         
-        core::Entity root_node() const;
+        core::Entity root_node() const { return _root_node; }
         
-        void set_root_node(core::Entity node);
-        void set_main_camera_node(core::Entity node);
+        void set_root_node(core::Entity node) { _root_node = node; }
+        void set_main_camera_node(core::Entity node) { _main_camera_node = node; }
+        
+        std::mutex &scene_mutex() { return _scene_mutex; }
     
     private:
         core::Entity _root_node;
@@ -35,25 +30,10 @@ namespace rosewood { namespace utils {
         
         std::unique_ptr<graphics::RenderQueue> _queue;
         
+        std::mutex _scene_mutex;
+        
         void draw_camera(graphics::RenderQueue *queue, graphics::Camera *camera);
-        static void draw_tree(graphics::RenderQueue *queue,
-                              graphics::Camera *camera, core::Transform *tree,
-                              const math::Matrix4 &acc_transform,
-                              const math::Matrix4 &acc_inverse_transform,
-                              float max_axis_scale);
     };
-    
-    inline core::Entity Scene::root_node() const {
-        return _root_node;
-    }
-
-    inline void Scene::set_root_node(core::Entity node) {
-        _root_node = node;
-    }
-
-    inline void Scene::set_main_camera_node(core::Entity node) {
-        _main_camera_node = node;
-    }
 
 } }
 

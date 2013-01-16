@@ -28,6 +28,9 @@ using rosewood::graphics::renderer;
 
 using rosewood::utils::Scene;
 
+static void draw_tree(RenderQueue *queue, Camera *camera, Transform *tree,
+                      float max_axis_scale);
+
 void Scene::draw() {
     auto camera_comp = camera(_main_camera_node);
     
@@ -36,29 +39,24 @@ void Scene::draw() {
     }
 
     _queue->clear();
+    _scene_mutex.lock();
     draw_camera(_queue.get(), camera_comp);
+    _scene_mutex.unlock();
     _queue->sort();
     _queue->run();
 }
 
 void Scene::draw_camera(RenderQueue *queue, Camera *camera) {
-    draw_tree(queue, camera, transform(_root_node),
-              math::make_identity(), math::make_identity(),
-              1);
+    draw_tree(queue, camera, transform(_root_node), 1);
 }
 
-void Scene::draw_tree(RenderQueue *queue, Camera *camera, Transform *tree,
-                      const Matrix4 &acc_transform,
-                      const Matrix4 &acc_inverse_transform,
+static void draw_tree(RenderQueue *queue, Camera *camera, Transform *tree,
                       float max_axis_scale) {
-    auto root_transform = acc_transform * tree->local_transform();
-    auto root_inv_transform = tree->inverse_local_transform() * acc_inverse_transform;
     auto scale = tree->local_scale();
     auto root_max_axis_scale = max_axis_scale * std::max({scale.x, scale.y, scale.z});
 
     for (auto child : tree->children()) {
         draw_tree(queue, camera, child,
-                  root_transform, root_inv_transform,
                   root_max_axis_scale);
     }
 
@@ -66,8 +64,8 @@ void Scene::draw_tree(RenderQueue *queue, Camera *camera, Transform *tree,
     if (!r) return;
 
     queue->add_command(RenderCommand(r->mesh().get(),
-                                     root_transform,
-                                     root_inv_transform,
+                                     tree->world_transform(),
+                                     tree->inverse_world_transform(),
                                      root_max_axis_scale,
                                      r->material().get(),
                                      camera));

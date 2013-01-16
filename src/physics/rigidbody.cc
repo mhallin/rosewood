@@ -2,6 +2,9 @@
 
 #include "rosewood/math/math_types.h"
 #include "rosewood/math/vector.h"
+#include "rosewood/math/quaternion.h"
+
+#include "rosewood/core/transform.h"
 
 #include "rosewood/physics/bullet_common.h"
 #include "rosewood/physics/shape.h"
@@ -21,14 +24,14 @@ Rigidbody::Rigidbody(Entity owner, btDiscreteDynamicsWorld *world, float mass)
     auto world_rot = transform(owner)->world_rotation();
     auto world_pos = transform(owner)->world_position();
 
-    _motion_state = make_unique<btDefaultMotionState>(to_bt(world_pos, world_rot));
+    _motion_state = btDefaultMotionState(to_bt(world_pos, world_rot));
 
     reload_shape();
 
     btVector3 inertia;
     _shape.calculateLocalInertia(mass, inertia);
 
-    btRigidBody::btRigidBodyConstructionInfo info(mass, _motion_state.get(), &_shape, inertia);
+    btRigidBody::btRigidBodyConstructionInfo info(mass, &_motion_state, &_shape, inertia);
     
     _rigidbody = make_unique<btRigidBody>(info);
 
@@ -39,10 +42,16 @@ Rigidbody::Rigidbody(Entity owner, btDiscreteDynamicsWorld *world, float mass)
 }
 
 void Rigidbody::synchronize() {
-    auto world_transform = _motion_state->m_graphicsWorldTrans;
-
-    transform(entity())->set_local_position(from_bt(world_transform.getOrigin()));
-    transform(entity())->set_local_rotation(from_bt(world_transform.getRotation()));
+    auto world_transform = _motion_state.m_graphicsWorldTrans;
+    auto new_position = from_bt(world_transform.getOrigin());
+    auto new_rotation = from_bt(world_transform.getRotation());
+    
+    auto my_transform = transform(entity());
+    if (my_transform->local_position() != new_position ||
+        my_transform->local_rotation() != new_rotation) {
+        my_transform->set_local_position(new_position);
+        my_transform->set_local_rotation(new_rotation);
+    }
 }
 
 void Rigidbody::reload_shape() {

@@ -15,15 +15,15 @@ namespace rosewood { namespace core {
     public:
         Transform(Entity owner);
 
-        const Transform *parent() const;
-        Transform *parent();
+        const Transform *parent() const { return _parent; }
+        Transform *parent() { return _parent; }
         
         void add_child(Transform *child);
-        const std::vector<Transform*> &children() const;
+        const std::vector<Transform*> &children() const { return _children; }
         
-        math::Vector3 local_position() const;
-        math::Quaternion local_rotation() const;
-        math::Vector3 local_scale() const;
+        math::Vector3 local_position() const { return _local_position; }
+        math::Quaternion local_rotation() const { return _local_rotation; }
+        math::Vector3 local_scale() const { return _local_scale; }
         
         void set_local_position(math::Vector3 v);
         void set_local_position(float x, float y, float z);
@@ -53,49 +53,54 @@ namespace rosewood { namespace core {
         std::vector<Transform*> _children;
         Transform *_parent;
         
-        math::Vector3 _position;
-        math::Quaternion _rotation;
-        math::Vector3 _scale;
+        math::Vector3 _local_position;
+        math::Quaternion _local_rotation;
+        math::Vector3 _local_scale;
+        
+        mutable math::Matrix4 _local_transform;
+        mutable math::Matrix4 _inverse_local_transform;
+        
+        mutable math::Matrix4 _world_transform;
+        mutable math::Matrix4 _inverse_world_transform;
+        
+        mutable bool _transform_matrices_invalid;
+        
+        void invalidate_transform_matrices();
+        void construct_transform_matrices_if_invalid() const;
+        void construct_transform_matrices() const;
     };
     
     inline Transform *transform(Entity entity) {
         return entity.component<Transform>();
     }
 
-    inline const Transform *Transform::parent() const { return _parent; }
-    inline Transform *Transform::parent() { return _parent; }
-    
     inline void Transform::add_child(Transform *child) {
         _children.push_back(child);
         child->_parent = this;
+        child->invalidate_transform_matrices();
     }
     
-    inline const std::vector<Transform*> &Transform::children() const {
-        return _children;
-    }
-    
-    inline math::Vector3 Transform::local_position() const { return _position; }
-    inline math::Quaternion Transform::local_rotation() const { return _rotation; }
-    inline math::Vector3 Transform::local_scale() const { return _scale; }
-
     inline void Transform::set_local_position(math::Vector3 v) {
-        _position = v;
+        _local_position = v;
+        invalidate_transform_matrices();
     }
     
     inline void Transform::set_local_position(float x, float y, float z) {
-        _position = math::Vector3(x, y, z);
+        set_local_position(math::Vector3(x, y, z));
     }
     
     inline void Transform::set_local_rotation(math::Quaternion rotation) {
-        _rotation = rotation;
+        _local_rotation = rotation;
+        invalidate_transform_matrices();
     }
     
     inline void Transform::set_local_scale(math::Vector3 v) {
-        _scale = v;
+        _local_scale = v;
+        invalidate_transform_matrices();
     }
     
     inline void Transform::set_local_scale(float x, float y, float z) {
-        _scale = math::Vector3(x, y, z);
+        set_local_scale(math::Vector3(x, y, z));
     }
     
     inline void Transform::set_world_position(math::Vector3 v) {
@@ -104,6 +109,39 @@ namespace rosewood { namespace core {
     
     inline void Transform::set_world_position(float x, float y, float z) {
         set_world_position(math::Vector3(x, y, z));
+    }
+    
+    inline math::Matrix4 Transform::local_transform() const {
+        construct_transform_matrices_if_invalid();
+        return _local_transform;
+    }
+    
+    inline math::Matrix4 Transform::inverse_local_transform() const {
+        construct_transform_matrices_if_invalid();
+        return _inverse_local_transform;
+    }
+    
+    inline math::Matrix4 Transform::world_transform() const {
+        construct_transform_matrices_if_invalid();
+        return _world_transform;
+    }
+    
+    inline math::Matrix4 Transform::inverse_world_transform() const {
+        construct_transform_matrices_if_invalid();
+        return _inverse_world_transform;
+    }
+    
+    inline void Transform::invalidate_transform_matrices() {
+        _transform_matrices_invalid = true;
+        for (auto child : _children) {
+            child->invalidate_transform_matrices();
+        }
+    }
+    
+    inline void Transform::construct_transform_matrices_if_invalid() const {
+        if (_transform_matrices_invalid) {
+            construct_transform_matrices();
+        }
     }
 
 } }

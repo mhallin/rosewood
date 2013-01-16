@@ -4,9 +4,12 @@
 #include "rosewood/core/entity.h"
 #include "rosewood/core/memory.h"
 #include "rosewood/core/component.h"
-#include "rosewood/core/transform.h"
 
 #include "rosewood/physics/bullet_common.h"
+
+namespace rosewood { namespace core {
+    class Transform;
+} }
 
 namespace rosewood { namespace physics {
     
@@ -25,8 +28,8 @@ namespace rosewood { namespace physics {
 
     private:
         btCompoundShape _shape;
+        btDefaultMotionState _motion_state;
 
-        std::unique_ptr<btDefaultMotionState> _motion_state;
         std::unique_ptr<btRigidBody> _rigidbody;
 
         void add_shapes_from(core::Transform *node);

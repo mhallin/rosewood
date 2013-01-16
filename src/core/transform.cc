@@ -13,8 +13,11 @@ using rosewood::math::Quaternion;
 using rosewood::math::quaternion_from_axis_angle;
 using rosewood::math::quaternion_identity;
 
-Transform::Transform(Entity entity) : core::Component<Transform>(entity)
-, _parent(nullptr), _position(0, 0, 0), _scale(1, 1, 1), _rotation(quaternion_identity()) {
+Transform::Transform(Entity entity)
+: core::Component<Transform>(entity)
+, _parent(nullptr), _local_position(0, 0, 0)
+, _local_scale(1, 1, 1), _local_rotation(quaternion_identity())
+, _transform_matrices_invalid(true) {
 }
 
 void Transform::set_local_axis_angle(float x, float y, float z, float angle) {
@@ -41,28 +44,25 @@ Quaternion Transform::world_to_local(math::Quaternion q) const {
     return q * parent()->inverse_world_rotation();
 }
 
-Matrix4 Transform::local_transform() const {
-    Matrix4 t = math::make_translation(_position);
-    math::apply_rotate_by(t, _rotation);
-    math::apply_scale_by(t, _scale);
-    return t;
-}
-
-Matrix4 Transform::inverse_local_transform() const {
-    Matrix4 t = math::make_scale(1/_scale);
-    math::apply_rotate_by(t, conjugate(_rotation));
-    math::apply_translate_by(t, -_position);
-    return t;
-}
-
-Matrix4 Transform::world_transform() const {
-    Matrix4 parent_transform = _parent ? _parent->world_transform() : math::make_identity();
-    return parent_transform * local_transform();
-}
-
-Matrix4 Transform::inverse_world_transform() const {
-    Matrix4 inv_transform = inverse_local_transform();
-    return _parent ? (inv_transform * _parent->inverse_world_transform()) : inv_transform;
+void Transform::construct_transform_matrices() const {
+    Matrix4 local_transform = math::make_translation(_local_position);
+    math::apply_rotate_by(local_transform, _local_rotation);
+    math::apply_scale_by(local_transform, _local_scale);
+    
+    Matrix4 inverse_local_transform = math::make_scale(1.0f / _local_scale);
+    math::apply_rotate_by(inverse_local_transform, conjugate(_local_rotation));
+    math::apply_translate_by(inverse_local_transform, -_local_position);
+    
+    Matrix4 parent_world_transform = _parent ? _parent->world_transform() : math::make_identity();
+    Matrix4 inverse_parent_world_transform = (_parent
+                                              ? _parent->inverse_world_transform()
+                                              : math::make_identity());
+    
+    _local_transform = local_transform;
+    _inverse_local_transform = inverse_local_transform;
+    _world_transform = parent_world_transform * _local_transform;
+    _inverse_world_transform = _inverse_local_transform * inverse_parent_world_transform;
+    _transform_matrices_invalid = false;
 }
 
 Quaternion Transform::inverse_world_rotation() const {
