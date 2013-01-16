@@ -340,16 +340,17 @@ context:(void *)__unused context {
 
 - (void)worker:(id<RWBuildWorker>)__unused worker reportsBuildSuccessFromSources:(NSArray *)__unused sourcePaths toDestinations:(NSArray *)destinationPaths {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSString *dest = destinationPaths[0];
-        NSUserNotification *notification = [[NSUserNotification alloc] init];
-        notification.title = @"Asset Build Successful";
-        notification.subtitle = [NSString stringWithFormat:@"Built %@", dest.pathComponents.lastObject];
+        for (NSString *dest in destinationPaths) {
+            NSUserNotification *notification = [[NSUserNotification alloc] init];
+            notification.title = @"Asset Build Successful";
+            notification.subtitle = [NSString stringWithFormat:@"Built %@", dest.pathComponents.lastObject];
 
-        NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
-        [center deliverNotification:notification];
+            NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
+            [center deliverNotification:notification];
 
-        for (NSString *path in destinationPaths) {
-            [self sendAsset:path];
+            for (NSString *path in destinationPaths) {
+                [self sendAsset:path];
+            }
         }
     });
 }
@@ -453,7 +454,12 @@ moreComing:(BOOL)moreComing {
     NSData *data = [NSData dataWithContentsOfFile:path];
     NSString *relative = [path substringFromIndex:_projectRoot.length + @"/asset-build/".length];
 
-    [_connection appendCommand:@[@"reload_asset", relative, data]];
+    if (data) {
+        [_connection appendCommand:@[@"reload_asset", relative, data]];
+    }
+    else {
+        NSLog(@"WARNING: No data at path: %@", data);
+    }
 }
 
 @end

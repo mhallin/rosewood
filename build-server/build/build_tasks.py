@@ -81,19 +81,26 @@ def build_file(bld, path):
 class BuildMeshTask(TaskNode):
     default_import_settings = {'normals': 'from-mesh',
                                'normals-recalculate-name': None,
-                               'normals-recalculate-angle': 60}
+                               'normals-recalculate-angle': 60,
+                               'generate-mesh': True,
+                               'generate-convex-hull': False,
+                               'import-name': None}
     def __init__(self, bld, src, dest):
         if not dest:
             dest = bld.as_output_node(change_ext(src.filename, '.mesh-mp'))
 
         self.settings_node = bld.as_file_node(src.filename + '.rwsettings')
+        self.mesh_node = src
+
+        self.mesh_dest_node = None
+        self.hull_dest_node = None
 
         super(BuildMeshTask, self).__init__(bld,
                                             [src, self.settings_node],
-                                            [dest])
+                                            [])
 
-        self.mesh_node = src
-        self.dest_node = dest
+
+        self._update_dependents(bld)
 
     @property
     def name(self):
@@ -104,33 +111,82 @@ class BuildMeshTask(TaskNode):
         return self.mesh_node.is_valid
 
     def run(self, bld):
+        self._update_dependents(bld)
+
         with file(self.mesh_node.filename) as fbxfile:
             objs = fbx.parse_fbx(fbxfile)['Objects']
 
+        import_settings = self._load_import_settings()
+        mesh = self._load_mesh(objs, import_settings['import-name'])
+
+        if import_settings['normals'] == 'recalculate':
+            mesh.recalculate_normals(import_settings['normals-recalculate-name'])
+
+        if import_settings['generate-mesh']:
+            self._write_mesh(mesh)
+
+        if import_settings['generate-convex-hull']:
+            self._write_convex_hull(mesh)
+
+        return True
+
+    def _load_import_settings(self):
         import_settings = dict(self.default_import_settings)
         if os.path.exists(self.settings_node.filename):
             with file(self.settings_node.filename) as settingsfile:
                 import_settings.update(json.load(settingsfile))
 
-        models = objs.find_objects('Model')
-        mesh_object = [obj for obj in models if obj.properties[1] == 'Mesh'][0]
-        mesh = fbx.construct_mesh(mesh_object)
+        return import_settings
 
-        if import_settings['normals'] == 'recalculate':
-            mesh.recalculate_normals(import_settings['normals-recalculate-name'])
+    def _load_mesh(self, objects, mesh_name):
+        for model in objects.find_objects('Model'):
+            if (mesh_name is None or model.properties[0] == mesh_name) and model.properties[1] == 'Mesh':
+                return fbx.construct_mesh(model)
 
+        return None
+
+    def _write_mesh(self, mesh):
         data = mesh.make_flattened_dict()
 
         vertices = data['vertices']
         normals = data['normals']
         texcoords = data['uvs']
 
-        ensure_dir_for_file_exists(self.dest_node.filename)
+        ensure_dir_for_file_exists(self.mesh_dest_node.filename)
 
-        with file(self.dest_node.filename, 'w') as mesh_output_file:
+        with file(self.mesh_dest_node.filename, 'w') as mesh_output_file:
             msgpack.pack([vertices, normals, texcoords], mesh_output_file)
 
-        return True
+    def _write_convex_hull(self, mesh):
+        vertices = set()
+        for poly in mesh.polygons:
+            vertices.update(poly)
+
+        ensure_dir_for_file_exists(self.hull_dest_node.filename)
+
+        with file(self.hull_dest_node.filename, 'w') as hull_output_file:
+            msgpack.pack(fbx.flatten(vertices), hull_output_file)
+
+    def _update_dependents(self, bld):
+        if self.mesh_dest_node:
+            disconnect_nodes(self, self.mesh_dest_node)
+            self.mesh_dest_node = None
+
+        if self.hull_dest_node:
+            disconnect_nodes(self, self.hull_dest_node)
+            self.hull_dest_node = None
+
+        import_settings = self._load_import_settings()
+
+        src_filename = self.mesh_node.filename
+
+        if import_settings['generate-mesh']:
+            self.mesh_dest_node = bld.as_output_node(change_ext(src_filename, '.mesh-mp'))
+            connect_nodes(self, self.mesh_dest_node)
+
+        if import_settings['generate-convex-hull']:
+            self.hull_dest_node = bld.as_output_node(change_ext(src_filename, '.hull-mp'))
+            connect_nodes(self, self.hull_dest_node)
 
 
 @build_task_single('\.png$', 'Copy PNG', lambda p: p)
