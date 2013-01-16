@@ -1,2 +1,4 @@
 asset-build
 xcuserdata
+*.pyc
+build-server/build/graph.png
