@@ -1,33 +1,56 @@
 #include "rosewood/physics/rigidbody.h"
 
+#include <iostream>
+
 #include "rosewood/math/math_types.h"
 #include "rosewood/math/vector.h"
 #include "rosewood/math/quaternion.h"
+#include "rosewood/math/matrix4.h"
+#include "rosewood/math/math_ostream.h"
 
 #include "rosewood/core/transform.h"
 
 #include "rosewood/physics/bullet_common.h"
 #include "rosewood/physics/shape.h"
 
+using rosewood::math::Vector3;
 using rosewood::math::from_bt;
 using rosewood::math::to_bt;
+using rosewood::math::quaternion_identity;
 
 using rosewood::core::Entity;
 using rosewood::core::Transform;
 using rosewood::core::transform;
 
 using rosewood::physics::Rigidbody;
+using rosewood::physics::shape;
+
+static void add_shapes_from(btCompoundShape *destination, Transform *root, Transform *node) {
+    for (auto child : node->children()) {
+        add_shapes_from(destination, root, child);
+    }
+    
+    auto shape_comp = shape(node->entity());
+    if (shape_comp) {
+        auto shape = shape_comp->shape();
+        auto shape_pos = node->convert_to(Vector3(0, 0, 0), root);
+        auto shape_rot = node->convert_to(quaternion_identity(), root);
+        auto transform = to_bt(shape_pos, shape_rot);
+        
+        destination->addChildShape(transform, shape.get());
+    }
+}
 
 Rigidbody::Rigidbody(Entity owner, btDiscreteDynamicsWorld *world, float mass)
 : core::Component<Rigidbody>(owner)
 {
+    reload_shape();
+
     auto world_rot = transform(owner)->world_rotation();
     auto world_pos = transform(owner)->world_position();
 
     _motion_state = btDefaultMotionState(to_bt(world_pos, world_rot));
-
-    reload_shape();
-
+    
     btVector3 inertia;
     _shape.calculateLocalInertia(mass, inertia);
 
@@ -36,7 +59,6 @@ Rigidbody::Rigidbody(Entity owner, btDiscreteDynamicsWorld *world, float mass)
     _rigidbody = make_unique<btRigidBody>(info);
 
     if (_shape.getNumChildShapes()) {
-
         world->addRigidBody(_rigidbody.get());
     }
 }
@@ -59,19 +81,5 @@ void Rigidbody::reload_shape() {
         _shape.removeChildShapeByIndex(0);
     }
 
-    add_shapes_from(transform(entity()));
-}
-
-void Rigidbody::add_shapes_from(Transform *node) {
-    for (auto child : node->children()) {
-        add_shapes_from(child);
-    }
-
-    auto shape_comp = shape(node->entity());
-    if (shape_comp) {
-        auto shape = shape_comp->shape();
-        auto transform = to_bt(node->local_position(), node->local_rotation());
-
-        _shape.addChildShape(transform, shape.get());
-    }
+    add_shapes_from(&_shape, transform(entity()), transform(entity()));
 }

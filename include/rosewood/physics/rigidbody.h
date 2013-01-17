@@ -31,8 +31,6 @@ namespace rosewood { namespace physics {
         btDefaultMotionState _motion_state;
 
         std::unique_ptr<btRigidBody> _rigidbody;
-
-        void add_shapes_from(core::Transform *node);
     };
 
 } }
