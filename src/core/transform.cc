@@ -24,24 +24,46 @@ void Transform::set_local_axis_angle(float x, float y, float z, float angle) {
     set_local_rotation(quaternion_from_axis_angle(Vector3(x, y, z), angle));
 }
 
-Vector3 Transform::world_position() const {
-    if (!parent()) return local_position();
-    return world_to_local(local_position());
+void Transform::set_world_axis_angle(float x, float y, float z, float angle) {
+    set_world_rotation(quaternion_from_axis_angle(Vector3(x, y, z), angle));
 }
 
 Quaternion Transform::world_rotation() const {
-    if (!parent()) return local_rotation();
-    return world_to_local(local_rotation());
+    Quaternion q = local_rotation();
+    return parent() ? (parent()->world_rotation() * q) : q;
+}
+
+Quaternion Transform::inverse_world_rotation() const {
+    Quaternion q = conjugate(local_rotation());
+    return _parent ? (q * _parent->inverse_world_rotation()) : q;
 }
 
 Vector3 Transform::world_to_local(Vector3 v) const {
-    if (!parent()) return v;
-    return parent()->inverse_local_transform() * v;
+    return inverse_world_transform() * v;
 }
 
-Quaternion Transform::world_to_local(math::Quaternion q) const {
-    if (!parent()) return q;
-    return q * parent()->inverse_world_rotation();
+Quaternion Transform::world_to_local(Quaternion q) const {
+    return q * inverse_world_rotation();
+}
+
+Vector3 Transform::local_to_world(Vector3 v) const {
+    return world_transform() * v;
+}
+
+Quaternion Transform::local_to_world(Quaternion q) const {
+    return world_rotation() * q;
+}
+
+void Transform::set_local_position_preserving_child_world_positions(Vector3 v) {
+    std::vector<Vector3> child_positions;
+    for (auto child : _children) {
+        child_positions.push_back(child->world_position());
+    }
+    _local_position = v;
+    invalidate_transform_matrices();
+    for (size_t i = 0; i < _children.size(); ++i) {
+        _children[i]->set_world_position(child_positions[i]);
+    }
 }
 
 void Transform::construct_transform_matrices() const {
@@ -63,10 +85,4 @@ void Transform::construct_transform_matrices() const {
     _world_transform = parent_world_transform * _local_transform;
     _inverse_world_transform = _inverse_local_transform * inverse_parent_world_transform;
     _transform_matrices_invalid = false;
-}
-
-Quaternion Transform::inverse_world_rotation() const {
-    Quaternion q = conjugate(local_rotation());
-    
-    return _parent ? (q * _parent->inverse_world_rotation()) : q;
 }
