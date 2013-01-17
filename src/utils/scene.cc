@@ -39,9 +39,12 @@ void Scene::draw() {
     }
 
     _queue->clear();
-    _scene_mutex.lock();
-    draw_camera(_queue.get(), camera_comp);
-    _scene_mutex.unlock();
+    
+    {
+        std::lock_guard<std::mutex> lock(_scene_mutex);
+        draw_camera(_queue.get(), camera_comp);
+    }
+
     _queue->sort();
     _queue->run();
 }

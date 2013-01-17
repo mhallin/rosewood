@@ -4,6 +4,8 @@
 #include <vector>
 #include <mutex>
 
+#include "rosewood/math/vector.h"
+
 #include "rosewood/core/memory.h"
 
 #include "rosewood/graphics/platform_gl.h"

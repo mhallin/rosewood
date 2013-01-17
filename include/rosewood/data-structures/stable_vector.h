@@ -45,7 +45,7 @@ namespace rosewood { namespace data_structures {
         
         size_t capacity() const { return _element_arrays.size() * _slice_size; }
 
-        // can only be called wher capacity() == 0
+        // can only be called when capacity() == 0
         void set_slice_size(size_t size) {
             if (capacity()) {
                 throw std::range_error("Can not change slice size when capacity() != 0");

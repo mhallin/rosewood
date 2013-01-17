@@ -57,14 +57,13 @@ void DebugRenderer::draw() {
     graphics::gl_state::bind_array_buffer(_vbo);
     graphics::gl_state::disable(GL_DEPTH_TEST);
 
-    _draw_mutex.lock();
-
-    upload_vbo_data();
-    draw_lines();
+    {
+        std::lock_guard<std::mutex> lock(_draw_mutex);
+        upload_vbo_data();
+        draw_lines();
+    }
 
     graphics::gl_state::enable(GL_DEPTH_TEST);
-
-    _draw_mutex.unlock();
 }
 
 void DebugRenderer::drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color) {
