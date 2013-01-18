@@ -59,3 +59,7 @@ Quaternion rosewood::math::operator*(const Quaternion lhs, const Quaternion rhs)
                       lhs._w*rhs._y + lhs._y*rhs._w + lhs._z*rhs._x - lhs._x*rhs._z,
                       lhs._w*rhs._z + lhs._z*rhs._w + lhs._x*rhs._y - lhs._y*rhs._x);
 }
+
+Vector3 rosewood::math::operator*(const Quaternion q, const Vector3 v) {
+    return mat4(q) * v;
+}

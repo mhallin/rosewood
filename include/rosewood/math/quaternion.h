@@ -24,6 +24,7 @@ namespace rosewood { namespace math {
     Quaternion  operator*  (const Quaternion lhs, const Quaternion rhs);
     Quaternion  operator*  (const Quaternion lhs, float rhs);
     Quaternion  operator*  (float lhs, const Quaternion rhs);
+    Vector3     operator*  (const Quaternion lhs, const Vector3 rhs);
     Quaternion  operator/  (const Quaternion lhs, float rhs);
     
     bool        operator== (const Quaternion lhs, const Quaternion rhs);
