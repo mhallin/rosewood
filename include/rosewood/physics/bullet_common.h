@@ -9,6 +9,7 @@
 #pragma cclang diagnostic pop
 
 #include "rosewood/math/math_types.h"
+#include "rosewood/core/transform.h"
 
 namespace rosewood { namespace math {
 
@@ -39,6 +40,10 @@ namespace rosewood { namespace math {
 
     inline btTransform to_bt(const Vector3 &origin, const Quaternion &rotation) {
         return btTransform(to_bt(rotation), to_bt(origin));
+    }
+    
+    inline btTransform to_bt(const core::Transform *tf_comp) {
+        return to_bt(tf_comp->world_position(), tf_comp->world_rotation());
     }
 
 } }

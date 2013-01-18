@@ -25,6 +25,8 @@ namespace rosewood { namespace physics {
 
         void synchronize();
         void reload_shape();
+        
+        btRigidBody *rigidbody() { return _rigidbody.get(); }
 
     private:
         btCompoundShape _shape;
@@ -32,6 +34,10 @@ namespace rosewood { namespace physics {
 
         std::unique_ptr<btRigidBody> _rigidbody;
     };
+    
+    inline Rigidbody *rigidbody(core::Entity entity) {
+        return entity.component<Rigidbody>();
+    }
 
 } }
 
