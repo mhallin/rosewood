@@ -57,6 +57,9 @@ Rigidbody::Rigidbody(Entity owner, btDiscreteDynamicsWorld *world, float mass)
     btRigidBody::btRigidBodyConstructionInfo info(mass, &_motion_state, &_shape, inertia);
     
     _rigidbody = make_unique<btRigidBody>(info);
+    _rigidbody->setRollingFriction(0.3f);
+    _rigidbody->setFriction(0.8f);
+    _rigidbody->setUserPointer(this);
 
     if (_shape.getNumChildShapes()) {
         world->addRigidBody(_rigidbody.get());
