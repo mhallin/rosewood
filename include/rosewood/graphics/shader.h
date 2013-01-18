@@ -11,6 +11,8 @@
 namespace rosewood { namespace math {
     class Matrix4;
     class Matrix3;
+    class Vector3;
+    class Vector4;
 } }
 
 namespace rosewood { namespace core {
@@ -43,6 +45,8 @@ namespace rosewood { namespace graphics {
         void set_projection_uniform(math::Matrix4 projection_matrix) const;
         void set_modelview_uniform(math::Matrix4 modelview_matrix) const;
         void set_normal_uniform(math::Matrix3 normal_matrix) const;
+        void set_light_position_uniform(math::Vector3 light_position) const;
+        void set_light_color_uniform(math::Vector4 light_color) const;
         void set_texture_sampler_uniform(int sampler) const;
 
         void initialize_attribute_arrays() const;
@@ -57,6 +61,8 @@ namespace rosewood { namespace graphics {
             kModelViewMatrixUniform,
             kNormalMatrixUniform,
             kTextureSamplerUniform,
+            kLightPositionUniform,
+            kLightColorUniform,
             kNumUniforms
         };
         

@@ -18,7 +18,9 @@ using rosewood::math::Matrix4;
 
 using rosewood::graphics::Material;
 
-Material::Material() : _vbo(UINT_MAX), _vao(UINT_MAX), _last_size(0), _buffer_index(0), _vertex_count(0) { }
+Material::Material()
+: _light(nullptr), _vbo(UINT_MAX), _vao(UINT_MAX)
+, _last_size(0), _buffer_index(0), _vertex_count(0) { }
 
 Material::~Material() {
     if (_vbo != UINT_MAX) {

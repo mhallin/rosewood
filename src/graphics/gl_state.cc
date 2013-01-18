@@ -11,6 +11,7 @@
 #include "rosewood/math/math_types.h"
 #include "rosewood/math/matrix4.h"
 #include "rosewood/math/matrix3.h"
+#include "rosewood/math/vector.h"
 
 #include "rosewood/graphics/gl_func.h"
 
@@ -151,6 +152,9 @@ namespace rosewood { namespace graphics { namespace gl_state {
                 case UniformDataType::Matrix4:
                     set_uniform(program, pair.first, pair.second.data.mat4);
                     break;
+                case UniformDataType::Vector4:
+                    set_uniform(program, pair.first, pair.second.data.vec4);
+                    break;
                 case UniformDataType::Empty:
                     break;
             }
@@ -191,6 +195,23 @@ namespace rosewood { namespace graphics { namespace gl_state {
         });
     }
     
+    void set_uniform(GLuint program, GLint uniform, math::Vector4 vec4) {
+        if (gCurrentProgram == program) {
+            set_uniform(uniform, vec4);
+        }
+        else {
+            gNewShaderStates[program][uniform] = UniformData(vec4);
+        }
+    }
+    
+    void set_uniform(GLint uniform, math::Vector4 vec4) {
+        if (gCurrentProgram == UINT_MAX) return;
+        
+        if_changed(gCurrentUniforms, uniform, UniformData(vec4), [=](){
+            GL_FUNC(glUniform4fv)(uniform, 1, math::ptr(vec4));
+        });
+    }
+    
     void set_uniform(GLuint program, GLint uniform, int i) {
         if (gCurrentProgram == program) {
             set_uniform(uniform, i);
@@ -199,7 +220,7 @@ namespace rosewood { namespace graphics { namespace gl_state {
             gNewShaderStates[program][uniform] = UniformData(i);
         }
     }
-
+    
     void set_uniform(GLint uniform, int i) {
         if (gCurrentProgram == UINT_MAX) return;
 
@@ -240,6 +261,7 @@ namespace rosewood { namespace graphics {
     UniformData::UniformData(int i1) : type(UniformDataType::Int1), data(i1) { }
     UniformData::UniformData(math::Matrix3 mat3) : type(UniformDataType::Matrix3), data(mat3) { }
     UniformData::UniformData(math::Matrix4 mat4) : type(UniformDataType::Matrix4), data(mat4) { }
+    UniformData::UniformData(math::Vector4 vec4) : type(UniformDataType::Vector4), data(vec4) { }
 
     bool operator== (const UniformData &lhs, const UniformData &rhs) {
         if (lhs.type != rhs.type) return false;
@@ -249,6 +271,7 @@ namespace rosewood { namespace graphics {
             case UniformDataType::Int1: return lhs.data.i1 == rhs.data.i1;
             case UniformDataType::Matrix3: return lhs.data.mat3 == rhs.data.mat3;
             case UniformDataType::Matrix4: return lhs.data.mat4 == rhs.data.mat4;
+            case UniformDataType::Vector4: return lhs.data.vec4 == rhs.data.vec4;
         }
 
         assert(0);

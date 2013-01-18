@@ -15,16 +15,19 @@ namespace rosewood { namespace graphics {
         Empty,
         Int1,
         Matrix3, Matrix4,
+        Vector4,
     };
 
     union UniformDataUnion {
         int i1;
         math::Matrix3 mat3;
         math::Matrix4 mat4;
+        math::Vector4 vec4;
 
         explicit UniformDataUnion(int i1) : i1(i1) { }
         explicit UniformDataUnion(math::Matrix3 mat3) : mat3(mat3) { }
         explicit UniformDataUnion(math::Matrix4 mat4) : mat4(mat4) { }
+        explicit UniformDataUnion(math::Vector4 vec4) : vec4(vec4) { }
     };
 
     struct UniformData {
@@ -35,6 +38,7 @@ namespace rosewood { namespace graphics {
         explicit UniformData(int i1);
         explicit UniformData(math::Matrix3 mat3);
         explicit UniformData(math::Matrix4 mat4);
+        explicit UniformData(math::Vector4 vec4);
     };
 
     bool operator== (const UniformData &lhs, const UniformData &rhs);
@@ -91,6 +95,8 @@ namespace rosewood { namespace graphics {
         void set_uniform(GLint uniform, math::Matrix4 m);
         void set_uniform(GLuint program, GLint uniform, math::Matrix3 m);
         void set_uniform(GLint uniform, math::Matrix3 m);
+        void set_uniform(GLuint program, GLint uniform, math::Vector4 m);
+        void set_uniform(GLint uniform, math::Vector4 m);
         void set_uniform(GLuint program, GLint uniform, int i);
         void set_uniform(GLint uniform, int i);
 

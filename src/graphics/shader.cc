@@ -16,6 +16,7 @@ using rosewood::core::Asset;
 
 using rosewood::math::Matrix4;
 using rosewood::math::Matrix3;
+using rosewood::math::Vector4;
 
 using rosewood::graphics::Shader;
 
@@ -26,7 +27,9 @@ const char *Shader::kAttributeNames[(int)Shader::Attributes::kNumAttributes] = {
 };
 
 const char *Shader::kUniformNames[(int)Shader::Uniforms::kNumUniforms] = {
-    "rw_projection_matrix", "rw_modelview_matrix", "rw_normal_matrix", "rw_texture",
+    "rw_projection_matrix", "rw_modelview_matrix", "rw_normal_matrix",
+    "rw_texture",
+    "rw_light_position", "rw_light_color"
 };
 
 std::shared_ptr<Shader> Shader::create(const std::string &resource_path) {
@@ -71,6 +74,18 @@ void Shader::set_texture_sampler_uniform(int sampler) const {
     gl_state::set_uniform(_program,
                           _uniforms.at(kUniformNames[(int)Uniforms::kTextureSamplerUniform]),
                           sampler);
+}
+
+void Shader::set_light_position_uniform(math::Vector3 light_position) const {
+    gl_state::set_uniform(_program,
+                          _uniforms.at(kUniformNames[(int)Uniforms::kLightPositionUniform]),
+                          Vector4(light_position.x, light_position.y, light_position.z, 0));
+}
+
+void Shader::set_light_color_uniform(math::Vector4 light_color) const {
+    gl_state::set_uniform(_program,
+                          _uniforms.at(kUniformNames[(int)Uniforms::kLightColorUniform]),
+                          light_color);
 }
 
 void Shader::initialize_attribute_arrays() const {

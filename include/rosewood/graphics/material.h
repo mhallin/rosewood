@@ -15,6 +15,7 @@ namespace rosewood { namespace graphics {
     class Shader;
     class Mesh;
     class Texture;
+    class Light;
 
     class Material {
     public:
@@ -26,6 +27,9 @@ namespace rosewood { namespace graphics {
         
         std::shared_ptr<Texture> texture() const;
         void set_texture(std::shared_ptr<Texture> texture);
+        
+        const Light *light() const { return _light; }
+        void set_light(Light *light) { _light = light; }
 
         void clear_vertex_buffer();
         void enqueue_mesh(const Mesh *mesh,
@@ -38,6 +42,8 @@ namespace rosewood { namespace graphics {
     private:
         std::shared_ptr<Shader> _shader;
         std::shared_ptr<Texture> _texture;
+        
+        Light *_light;
 
         std::vector<float> _buffer;
         GLuint _vbo;

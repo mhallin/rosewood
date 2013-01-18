@@ -50,6 +50,10 @@ void DebugRenderer::end_update() {
 }
 
 void DebugRenderer::draw() {
+    std::lock_guard<std::mutex> lock(_draw_mutex);
+    
+    if (_line_count == 0) return;
+
     if (_vbo == UINT_MAX) init_vbo();
     if (_vao == UINT_MAX) init_vao();
 
@@ -57,12 +61,9 @@ void DebugRenderer::draw() {
     graphics::gl_state::bind_array_buffer(_vbo);
     graphics::gl_state::disable(GL_DEPTH_TEST);
 
-    {
-        std::lock_guard<std::mutex> lock(_draw_mutex);
-        upload_vbo_data();
-        draw_lines();
-    }
-
+    upload_vbo_data();
+    draw_lines();
+        
     graphics::gl_state::enable(GL_DEPTH_TEST);
 }
 

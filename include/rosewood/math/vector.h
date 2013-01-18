@@ -90,6 +90,12 @@ namespace rosewood { namespace math {
 
     inline Vector4 normalized      (const Vector4   v)                      { return v/length(v); }
     
+    inline bool    operator==      (const Vector4 lhs, const Vector4 rhs) { return (lhs.x == rhs.x &&
+                                                                                    lhs.y == rhs.y &&
+                                                                                    lhs.z == rhs.z &&
+                                                                                    lhs.w == rhs.w); }
+    inline bool    operator!=      (const Vector4 lhs, const Vector4 rhs) { return !(lhs == rhs); }
+
 } }
 
 #endif

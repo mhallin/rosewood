@@ -7,6 +7,8 @@
 #include "rosewood/math/math_types.h"
 #include "rosewood/math/matrix3.h"
 #include "rosewood/math/matrix4.h"
+#include "rosewood/math/quaternion.h"
+#include "rosewood/math/vector.h"
 
 #include "rosewood/graphics/shader.h"
 #include "rosewood/graphics/camera.h"
@@ -14,6 +16,9 @@
 #include "rosewood/graphics/gl_state.h"
 #include "rosewood/graphics/mesh.h"
 #include "rosewood/graphics/view_frustum.h"
+#include "rosewood/graphics/light.h"
+
+using rosewood::core::transform;
 
 using rosewood::graphics::RenderCommand;
 using rosewood::graphics::RenderQueue;
@@ -55,6 +60,13 @@ void RenderCommand::flush() const {
         shader->set_projection_uniform(_camera->projection_matrix());
         shader->set_modelview_uniform(math::make_identity());
         shader->set_normal_uniform(mat3(math::make_identity()));
+        
+        auto light_rot = transform(_material->light()->entity())->world_rotation();
+        auto inv_camera_rot = transform(_camera->entity())->inverse_world_rotation();
+        auto light_dir = light_rot * inv_camera_rot * math::Vector3(0, 0, 1);
+        
+        shader->set_light_position_uniform(light_dir);
+        shader->set_light_color_uniform(_material->light()->color());
         shader->use();
         _material->submit_draw_calls();
     }
