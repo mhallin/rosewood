@@ -48,7 +48,8 @@ void Texture::reload_image_data() {
     GL_FUNC(glTexImage2D)(GL_TEXTURE_2D, 0, GL_RGBA,
                           _image_data.width, _image_data.height, 0,
                           GL_RGBA, GL_UNSIGNED_BYTE, &_image_data.bytes[0]);
-    GL_FUNC(glTexParameteri)(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    GL_FUNC(glGenerateMipmap)(GL_TEXTURE_2D);
+    GL_FUNC(glTexParameteri)(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     GL_FUNC(glTexParameteri)(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
     GL_FUNC(glTexParameteri)(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

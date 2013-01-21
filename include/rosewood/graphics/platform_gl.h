@@ -18,6 +18,7 @@
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 #define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED
 #include <OpenGL/gl3.h>
+#include <OpenGL/gl3ext.h>
 
 #define SHADER_EXT "gl32"
 
