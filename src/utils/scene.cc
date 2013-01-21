@@ -50,10 +50,11 @@ void Scene::draw() {
 void Scene::draw_camera(RenderQueue *queue, Camera *camera) {
     for (auto renderer : _root_node.owner->components<Renderer>()) {
         auto tform = transform(renderer->entity());
+        auto scale = tform->local_scale();
         queue->add_command(RenderCommand(renderer->mesh().get(),
                                          tform->world_transform(),
                                          tform->inverse_world_transform(),
-                                         1,
+                                         std::max({scale.x, scale.y, scale.z}),
                                          renderer->material().get(),
                                          camera));
     }
