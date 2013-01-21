@@ -121,6 +121,8 @@ class BuildMeshTask(TaskNode):
 
         if import_settings['normals'] == 'recalculate':
             mesh.recalculate_normals(import_settings['normals-recalculate-name'])
+            mesh.smooth_normals(import_settings['normals-recalculate-angle'],
+                                import_settings['normals-recalculate-name'])
 
         if import_settings['generate-mesh']:
             self._write_mesh(mesh)

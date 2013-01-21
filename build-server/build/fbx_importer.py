@@ -187,7 +187,7 @@ def make_vertices(verts, size):
     for i, p in enumerate(verts):
         v.append(p)
         if len(v) == size:
-            vs.append(tuple(v))
+            vs.append(v)
             v = []
 
     return vs
@@ -195,7 +195,7 @@ def make_vertices(verts, size):
 
 def tesselate_poly(poly):
     if len(poly) == 3:
-        return [tuple(poly)]
+        return [poly]
 
     if len(poly) == 4:
         t1 = (poly[0], poly[1], poly[2])
@@ -246,6 +246,22 @@ def triangle_normal(tri):
     return vec_normalized(norm)
 
 
+def vec_len(v):
+    return math.sqrt(sum(c*c for c in v))
+
+
+def angle_between(v1, v2):
+    dot = sum(v1p * v2p for v1p, v2p in zip(v1, v2))
+    if dot > 1:
+        dot = 1
+
+    return math.acos(dot)
+
+
+def lerp(v1, v2, mix):
+    return [v1c + (v2c - v1c) * mix for v1c, v2c in zip(v1, v2)]
+
+
 class FBXMesh(object):
     def __init__(self, name, vertices, vertex_indices):
         self.name = name
@@ -267,7 +283,7 @@ class FBXMesh(object):
 
     def map_polygon_indices(self, fn):
         def map_inner(poly):
-            return tuple(map(fn, poly))
+            return map(fn, poly)
 
         return map(map_inner, self.polygon_indices)
 
@@ -304,10 +320,44 @@ class FBXMesh(object):
             tri = self.polygons[pi]
             assert len(tri) == 3
 
-            tri_norm = (triangle_normal(tri), ) * 3
+            tri_norm = [triangle_normal(tri), ] * 3
             normals.append(tri_norm)
 
         self.normals[key] = normals
+
+    def smooth_normals(self, threshold, key=None):
+        if key is None:
+            normals = self.normals.values()[0]
+        else:
+            normals = self.normals[key]
+
+        threshold *= math.pi / 180.0
+
+        for pi, tri in enumerate(self.polygons):
+            for vi in range(len(tri)):
+                src_norm = normals[pi][vi]
+                for shared_pi, shared_vi in self._shared_edges(pi, vi):
+                    dst_norm = normals[shared_pi][shared_vi]
+
+                    angle = angle_between(src_norm, dst_norm)
+
+                    if angle <= threshold:
+                        norm = lerp(src_norm, dst_norm, 0.5)
+                        normals[pi][vi] = norm
+                        normals[shared_pi][shared_vi] = norm
+
+
+    def _shared_edges(self, pi, vi):
+        v = self.polygons[pi][vi]
+        shared = []
+
+        for poly, tri in enumerate(self.polygons):
+            for i, vert in enumerate(tri):
+                if vert == v and (pi, vi) != (poly, i):
+                    shared.append((poly, i))
+
+        return shared
+
 
     def _construct_polygon_indices(self):
         polys = []
@@ -315,7 +365,7 @@ class FBXMesh(object):
         for idx in self.vertex_indices:
             poly.append(vertex_index(idx))
             if idx < 0:
-                polys.append(tuple(poly))
+                polys.append(poly)
                 poly = []
 
         self.polygon_indices = polys
@@ -387,13 +437,14 @@ if __name__ == '__main__':
             mesh = construct_mesh(mesh_object)
             print 'recalculating normals'
             mesh.recalculate_normals()
+            mesh.smooth_normals(40)
             for pi in range(len(mesh.polygons)):
                 verts = mesh.polygons[pi]
                 norms = mesh.normals[''][pi]
                 uvs = mesh.uvs.values()[0][pi]
 
                 for i in range(len(verts)):
-                    print '{:25}{:25}{}'.format(verts[i], uvs[i], norms[i])
+                    print '{:35}{:40}{}'.format(verts[i], uvs[i], norms[i])
 
 from io import StringIO
 from unittest import TestCase
