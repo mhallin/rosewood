@@ -16,6 +16,7 @@
 using rosewood::core::Entity;
 using rosewood::core::Transform;
 using rosewood::core::transform;
+using rosewood::core::ComponentArrayView;
 
 using rosewood::math::Matrix4;
 
@@ -27,9 +28,6 @@ using rosewood::graphics::camera;
 using rosewood::graphics::renderer;
 
 using rosewood::utils::Scene;
-
-static void draw_tree(RenderQueue *queue, Camera *camera, Transform *tree,
-                      float max_axis_scale);
 
 void Scene::draw() {
     auto camera_comp = camera(_main_camera_node);
@@ -50,26 +48,13 @@ void Scene::draw() {
 }
 
 void Scene::draw_camera(RenderQueue *queue, Camera *camera) {
-    draw_tree(queue, camera, transform(_root_node), 1);
-}
-
-static void draw_tree(RenderQueue *queue, Camera *camera, Transform *tree,
-                      float max_axis_scale) {
-    auto scale = tree->local_scale();
-    auto root_max_axis_scale = max_axis_scale * std::max({scale.x, scale.y, scale.z});
-
-    for (auto child : tree->children()) {
-        draw_tree(queue, camera, child,
-                  root_max_axis_scale);
+    for (auto renderer : _root_node.owner->components<Renderer>()) {
+        auto tform = transform(renderer->entity());
+        queue->add_command(RenderCommand(renderer->mesh().get(),
+                                         tform->world_transform(),
+                                         tform->inverse_world_transform(),
+                                         1,
+                                         renderer->material().get(),
+                                         camera));
     }
-
-    auto r = renderer(tree->entity());
-    if (!r) return;
-
-    queue->add_command(RenderCommand(r->mesh().get(),
-                                     tree->world_transform(),
-                                     tree->inverse_world_transform(),
-                                     root_max_axis_scale,
-                                     r->material().get(),
-                                     camera));
 }
