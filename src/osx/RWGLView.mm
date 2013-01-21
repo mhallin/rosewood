@@ -38,6 +38,8 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     CVDisplayLinkRef _displayLink;
 
     NSTimeInterval _lastFrame;
+
+    NSTimer *_updateTimer;
 }
 
 + (NSOpenGLPixelFormat *)defaultPixelFormat {
@@ -59,6 +61,7 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 - (void)awakeFromNib {
     _needsReshape = NO;
     _haveViewport = NO;
+    _isPaused = NO;
 
     self.pixelFormat = [[self class] defaultPixelFormat];
 
@@ -75,6 +78,22 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     CVDisplayLinkRelease(_displayLink);
 }
 
+- (void)setIsPaused:(BOOL)isPaused {
+    if (isPaused == _isPaused) return;
+
+    _isPaused = isPaused;
+
+    if (_isPaused) {
+        CVDisplayLinkStop(_displayLink);
+        [_updateTimer invalidate];
+        _updateTimer = nil;
+    }
+    else {
+        CVDisplayLinkStart(_displayLink);
+        [self _startTimer];
+    }
+}
+
 - (void)_setupOpenGL {
     [self.openGLContext makeCurrentContext];
     rosewood::utils::mark_frame_beginning();
@@ -83,11 +102,11 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 }
 
 - (void)_startTimer {
-    [NSTimer scheduledTimerWithTimeInterval:1.0/240.0
-                                     target:self
-                                   selector:@selector(updateScene:)
-                                   userInfo:nil
-                                    repeats:YES];
+    _updateTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/240.0
+                                                    target:self
+                                                  selector:@selector(updateScene:)
+                                                  userInfo:nil
+                                                   repeats:YES];
 }
 
 - (void)_startDisplayLink {

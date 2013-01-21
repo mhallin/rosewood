@@ -24,6 +24,8 @@
 @interface RWGLView : NSOpenGLView
 @property (weak, nonatomic) IBOutlet id<RWGLViewDelegate> delegate;
 
+@property (nonatomic) BOOL isPaused;
+
 - (CVReturn)drawForTime:(const CVTimeStamp *)time;
 
 @end
