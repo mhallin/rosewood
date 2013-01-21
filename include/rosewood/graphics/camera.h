@@ -34,6 +34,8 @@ namespace rosewood { namespace graphics {
         math::Matrix4 projection_matrix() const;
         math::Matrix4 inverse_projection_matrix() const;
         
+        math::Vector3 projection_to_world(math::Vector3 proj_point) const;
+        
     private:
         float _fov;
         float _aspect;
