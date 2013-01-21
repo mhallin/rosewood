@@ -90,7 +90,7 @@ namespace rosewood { namespace utils {
                                                   float duration,
                                                   std::function<float(float)> easing_function,
                                                   uint64_t start_time) {
-        return Animatable<TValue>(start_value, target_value, start_time, duration * kUsecPerSec, true, easing_function);
+        return Animatable<TValue>(start_value, target_value, start_time, (uint64_t)duration * kUsecPerSec, true, easing_function);
     }
     
 } }

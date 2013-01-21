@@ -86,3 +86,9 @@ void Rigidbody::reload_shape() {
 
     add_shapes_from(&_shape, transform(entity()), transform(entity()));
 }
+
+void Rigidbody::debug_draw(btIDebugDraw *renderer) {
+    auto center = transform(entity())->world_position();
+    
+    renderer->drawLine(to_bt(center), to_bt(center) + rigidbody()->getTotalForce(), btVector3(0, 1, 1));
+}

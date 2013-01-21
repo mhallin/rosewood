@@ -137,7 +137,7 @@
 
 /* Begin PBXFileReference section */
 		8A1F61E816866A4500E53FBB /* resource_manager.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = resource_manager.cc; sourceTree = "<group>"; };
-		8A1F61EA16866A4500E53FBB /* camera.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = camera.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		8A1F61EA16866A4500E53FBB /* camera.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = camera.cc; sourceTree = "<group>"; };
 		8A1F61EB16866A4500E53FBB /* component.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = component.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		8A1F61EC16866A4500E53FBB /* gl_func.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = gl_func.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		8A1F61ED16866A4500E53FBB /* gl_state.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = gl_state.cc; sourceTree = "<group>"; };
@@ -150,7 +150,7 @@
 		8A1F61F416866A4500E53FBB /* texture.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = texture.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		8A1F61F516866A4500E53FBB /* view_frustum.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = view_frustum.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		8A1F61F716866A4500E53FBB /* matrix3.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = matrix3.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		8A1F61F816866A4500E53FBB /* matrix4.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = matrix4.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		8A1F61F816866A4500E53FBB /* matrix4.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = matrix4.cc; sourceTree = "<group>"; };
 		8A1F61F916866A4500E53FBB /* quaternion.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = quaternion.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		8A1F61FB16866A4500E53FBB /* command_dispatch.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = command_dispatch.cc; sourceTree = "<group>"; };
 		8A1F61FC16866A4500E53FBB /* event_loop.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = event_loop.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -200,7 +200,7 @@
 		8A1F628E16866EBD00E53FBB /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = shader.h; sourceTree = "<group>"; };
 		8A1F628F16866EBD00E53FBB /* texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = texture.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8A1F629016866EBD00E53FBB /* view_frustum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = view_frustum.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		8A1F629316866EBD00E53FBB /* math_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = math_types.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		8A1F629316866EBD00E53FBB /* math_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = math_types.h; sourceTree = "<group>"; };
 		8A1F629416866EBD00E53FBB /* matrix3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = matrix3.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8A1F629516866EBD00E53FBB /* matrix4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = matrix4.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8A1F629616866EBD00E53FBB /* quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = quaternion.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -208,10 +208,10 @@
 		8A1F629816866EBD00E53FBB /* vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = vector.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8A1F629B16866EBD00E53FBB /* command_dispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = command_dispatch.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8A1F629C16866EBD00E53FBB /* event_loop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = event_loop.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		8A1F629E16866EBD00E53FBB /* animatable-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "animatable-impl.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		8A1F629F16866EBD00E53FBB /* animatable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = animatable.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		8A1F629E16866EBD00E53FBB /* animatable-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "animatable-impl.h"; sourceTree = "<group>"; };
+		8A1F629F16866EBD00E53FBB /* animatable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = animatable.h; sourceTree = "<group>"; };
 		8A1F62A016866EBD00E53FBB /* bundle_resource_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = bundle_resource_loader.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		8A1F62A216866EBD00E53FBB /* interpolate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = interpolate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		8A1F62A216866EBD00E53FBB /* interpolate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = interpolate.h; sourceTree = "<group>"; };
 		8A1F62A316866EBD00E53FBB /* scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = scene.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8A1F62A416866EBD00E53FBB /* time.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = time.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8A1F62A516866EBD00E53FBB /* url_downloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = url_downloader.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };

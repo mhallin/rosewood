@@ -9,6 +9,7 @@
 namespace rosewood { namespace graphics {
     class Camera;
     class RenderQueue;
+    class Renderer;
 } }
 
 namespace rosewood { namespace utils {

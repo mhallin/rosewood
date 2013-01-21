@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "rosewood/core/transform.h"
+#include "rosewood/core/stats.h"
 
 #include "rosewood/math/matrix4.h"
 #include "rosewood/math/matrix3.h"
@@ -136,4 +137,6 @@ void DebugRenderer::draw_lines() {
     _shader->set_projection_uniform(_camera->projection_matrix());
 
     GL_FUNC(glDrawArrays)(GL_LINES, 0, _line_count * 2);
+    
+    core::stats::draw_calls.increment();
 }

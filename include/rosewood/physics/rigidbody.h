@@ -26,6 +26,8 @@ namespace rosewood { namespace physics {
         void synchronize();
         void reload_shape();
         
+        void debug_draw(btIDebugDraw *renderer);
+        
         btRigidBody *rigidbody() { return _rigidbody.get(); }
 
     private:

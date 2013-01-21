@@ -21,7 +21,7 @@ namespace rosewood { namespace utils {
         }
         
         float halfTheta = acosf(cosHalfTheta);
-        float sinHalfTheta = sqrtf(1.0 - cosHalfTheta*cosHalfTheta);
+        float sinHalfTheta = sqrtf(1.0f - cosHalfTheta*cosHalfTheta);
         
         if (std::abs(sinHalfTheta) < 0.001) {
             return 0.5f * (from + to);
@@ -33,16 +33,16 @@ namespace rosewood { namespace utils {
         return ratioA * from + ratioB * to;
     }
     
-    float cubic_ease_in(float mix) {
+    inline float cubic_ease_in(float mix) {
         return mix*mix*mix;
     }
     
-    float cubic_ease_out(float mix) {
+    inline float cubic_ease_out(float mix) {
         mix -= 1;
         return mix*mix*mix + 1;
     }
     
-    float cubic_ease_in_out(float mix) {
+    inline float cubic_ease_in_out(float mix) {
         if (mix < 0.5f) {
             return cubic_ease_in(mix * 2) * 0.5f;
         }

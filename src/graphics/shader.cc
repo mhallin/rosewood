@@ -8,6 +8,7 @@
 
 #include "rosewood/math/math_types.h"
 #include "rosewood/math/matrix4.h"
+#include "rosewood/math/vector.h"
 
 #include "rosewood/graphics/gl_state.h"
 #include "rosewood/graphics/gl_func.h"
