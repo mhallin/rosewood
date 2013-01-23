@@ -63,7 +63,7 @@ void RenderCommand::flush() const {
         
         auto light_rot = transform(_material->light()->entity())->world_rotation();
         auto inv_camera_rot = transform(_camera->entity())->inverse_world_rotation();
-        auto light_dir = light_rot * inv_camera_rot * math::Vector3(0, 0, 1);
+        auto light_dir = (inv_camera_rot * light_rot) * math::Vector3(0, 0, 1);
         
         shader->set_light_position_uniform(light_dir);
         shader->set_light_color_uniform(_material->light()->color());
