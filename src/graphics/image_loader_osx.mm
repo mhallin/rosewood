@@ -6,7 +6,7 @@
 
 namespace rosewood { namespace graphics { namespace image_loader {
 
-    ImageData rosewood::graphics::image_loader::load_bytes(const std::string &file_contents) {
+    ImageData load_bytes(const std::string &file_contents) {
         const int kBitsPerComponent = 8;
         const int kNumComponents = 4;
         const int kBytesPerPixel = kBitsPerComponent * kNumComponents / 8;

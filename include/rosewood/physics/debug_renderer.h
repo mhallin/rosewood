@@ -48,6 +48,8 @@ namespace rosewood { namespace physics {
 
         virtual int getDebugMode() const override;
 
+        static DebugRenderer *current;
+
     private:
         int _debug_mode;
         std::vector<float> _line_vertex_data;

@@ -33,6 +33,11 @@ Quaternion rosewood::math::quaternion_from_euler_angles(float x, float y, float 
                       c1*s2*c3 - s1*c2*s3);
 }
 
+Quaternion rosewood::math::quaternion_from_euler_angles(Vector3 euler_angles) {
+    return quaternion_from_euler_angles(
+        euler_angles.x, euler_angles.y, euler_angles.z);
+}
+
 Matrix4 rosewood::math::mat4(const Quaternion q) {
     auto w2 = q._w*q._w, x2 = q._x*q._x, y2 = q._y*q._y, z2 = q._z*q._z;
     auto wx = q._w*q._x, wy = q._w*q._y, wz = q._w*q._z;

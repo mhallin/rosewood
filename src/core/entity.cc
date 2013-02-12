@@ -8,14 +8,14 @@ void Entity::destroy() {
 }
 
 bool Entity::is_valid() const {
-    return owner->is_valid(*this);
+    return owner && owner->is_valid(*this);
 }
 
 EntityManager::EntityManager() : _max_eid(0) { }
 
 Entity EntityManager::create_entity() {
     EntityId eid;
-    
+
     if (_free_list.empty()) {
         eid = ++_max_eid;
     }
@@ -23,7 +23,7 @@ Entity EntityManager::create_entity() {
         eid = _free_list.back();
         _free_list.pop_back();
     }
-    
+
     return Entity{this, eid};
 }
 

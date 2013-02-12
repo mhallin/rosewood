@@ -6,7 +6,7 @@
 namespace rosewood { namespace math {
 
     template<typename T>
-    T clampf(T value, T min, T max) {
+    T clamp(T value, T min, T max) {
         return std::min(std::max(value, min), max);
     }
 

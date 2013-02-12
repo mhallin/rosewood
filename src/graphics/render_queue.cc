@@ -60,13 +60,15 @@ void RenderCommand::flush() const {
         shader->set_projection_uniform(_camera->projection_matrix());
         shader->set_modelview_uniform(math::make_identity());
         shader->set_normal_uniform(mat3(math::make_identity()));
-        
-        auto light_rot = transform(_material->light()->entity())->world_rotation();
-        auto inv_camera_rot = transform(_camera->entity())->inverse_world_rotation();
-        auto light_dir = (inv_camera_rot * light_rot) * math::Vector3(0, 0, 1);
-        
-        shader->set_light_position_uniform(light_dir);
-        shader->set_light_color_uniform(_material->light()->color());
+
+        if (_light) {
+            auto light_mat = transform(_light->entity())->world_transform();
+            auto inv_camera_mat = transform(_camera->entity())->inverse_world_transform();
+            auto light_dir = (inv_camera_mat * light_mat) * math::Vector4(0, 0, 1, 0);
+
+            shader->set_light_position_uniform(math::Vector3(light_dir.x, light_dir.y, light_dir.z));
+            shader->set_light_color_uniform(_light->color());
+        }
         shader->use();
         _material->submit_draw_calls();
     }

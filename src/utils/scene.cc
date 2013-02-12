@@ -12,6 +12,7 @@
 #include "rosewood/graphics/material.h"
 #include "rosewood/graphics/mesh.h"
 #include "rosewood/graphics/render_queue.h"
+#include "rosewood/graphics/light.h"
 
 using rosewood::core::Entity;
 using rosewood::core::Transform;
@@ -24,6 +25,7 @@ using rosewood::graphics::Camera;
 using rosewood::graphics::RenderQueue;
 using rosewood::graphics::Renderer;
 using rosewood::graphics::RenderCommand;
+using rosewood::graphics::Light;
 using rosewood::graphics::camera;
 using rosewood::graphics::renderer;
 
@@ -31,13 +33,13 @@ using rosewood::utils::Scene;
 
 void Scene::draw() {
     auto camera_comp = camera(_main_camera_node);
-    
+
     if (!_queue) {
         _queue = make_unique<RenderQueue>();
     }
 
     _queue->clear();
-    
+
     {
         std::lock_guard<std::mutex> lock(_scene_mutex);
         draw_camera(_queue.get(), camera_comp);
@@ -48,6 +50,8 @@ void Scene::draw() {
 }
 
 void Scene::draw_camera(RenderQueue *queue, Camera *camera) {
+    auto first_light = *_root_node.owner->components<Light>().begin();
+
     for (auto renderer : _root_node.owner->components<Renderer>()) {
         auto tform = transform(renderer->entity());
         auto scale = tform->local_scale();
@@ -56,6 +60,7 @@ void Scene::draw_camera(RenderQueue *queue, Camera *camera) {
                                          tform->inverse_world_transform(),
                                          std::max({scale.x, scale.y, scale.z}),
                                          renderer->material().get(),
-                                         camera));
+                                         camera,
+                                         first_light));
     }
 }

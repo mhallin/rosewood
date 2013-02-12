@@ -12,31 +12,32 @@ namespace rosewood { namespace core {
 } }
 
 namespace rosewood { namespace physics {
-    
+
     class Rigidbody;
-    
+
     Rigidbody *rigidbody(core::Entity entity);
 
-    class Rigidbody : public core::Component<Rigidbody> {
+    class Rigidbody : public core::Component<Rigidbody>, public btMotionState {
     public:
-        Rigidbody(core::Entity owner,
-                  btDiscreteDynamicsWorld *world,
-                  float mass);
+        Rigidbody(core::Entity owner, btDynamicsWorld *world, float mass);
+        virtual ~Rigidbody();
 
-        void synchronize();
         void reload_shape();
-        
+
         void debug_draw(btIDebugDraw *renderer);
-        
-        btRigidBody *rigidbody() { return _rigidbody.get(); }
+
+        btRigidBody *rigidbody() { return &_rigidbody; }
+
+        // btMotionState interface
+        virtual void getWorldTransform(btTransform& worldTrans) const override;
+        virtual void setWorldTransform(const btTransform& worldTrans) override;
 
     private:
         btCompoundShape _shape;
-        btDefaultMotionState _motion_state;
 
-        std::unique_ptr<btRigidBody> _rigidbody;
+        btRigidBody _rigidbody;
     };
-    
+
     inline Rigidbody *rigidbody(core::Entity entity) {
         return entity.component<Rigidbody>();
     }

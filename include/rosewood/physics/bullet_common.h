@@ -3,6 +3,7 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
 
 #include "btBulletDynamicsCommon.h"
 
@@ -41,7 +42,7 @@ namespace rosewood { namespace math {
     inline btTransform to_bt(const Vector3 &origin, const Quaternion &rotation) {
         return btTransform(to_bt(rotation), to_bt(origin));
     }
-    
+
     inline btTransform to_bt(const core::Transform *tf_comp) {
         return to_bt(tf_comp->world_position(), tf_comp->world_rotation());
     }

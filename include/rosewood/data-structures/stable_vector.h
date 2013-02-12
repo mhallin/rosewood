@@ -50,6 +50,9 @@ namespace rosewood { namespace data_structures {
             if (capacity()) {
                 throw std::range_error("Can not change slice size when capacity() != 0");
             }
+            if (!size) {
+                throw std::range_error("Can not have zero slice size");
+            }
             _slice_size = size;
         }
         
@@ -108,7 +111,11 @@ namespace rosewood { namespace data_structures {
     
     template<typename T>
     StableVector<T>::StableVector(size_t slice_size, size_t slice_data_alignment)
-    : _slice_size(slice_size), _total_size(0), _slice_data_alignment(slice_data_alignment) { }
+    : _slice_size(slice_size), _total_size(0), _slice_data_alignment(slice_data_alignment) {
+        if (!slice_size) {
+            throw std::range_error("Can not have zero slice size");
+        }
+    }
     
     template<typename T>
     StableVector<T>::~StableVector() {

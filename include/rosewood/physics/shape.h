@@ -8,9 +8,9 @@
 class btCollisionShape;
 
 namespace rosewood { namespace physics {
-    
+
     class Shape;
-    
+
     Shape *shape(core::Entity entity);
 
     class Shape : public core::Component<Shape> {
@@ -18,13 +18,14 @@ namespace rosewood { namespace physics {
         Shape(core::Entity owner, const std::shared_ptr<btCollisionShape> &shape);
 
         const std::shared_ptr<btCollisionShape> &shape() const;
+        void set_shape(const std::shared_ptr<btCollisionShape> &shape);
 
         static Shape *from_collision_shape(const btCollisionShape *shape);
 
     private:
         std::shared_ptr<btCollisionShape> _shape;
     };
-    
+
     inline Shape *shape(core::Entity entity) {
         return entity.component<Shape>();
     }

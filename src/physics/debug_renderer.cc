@@ -22,6 +22,8 @@ using rosewood::graphics::Camera;
 
 using rosewood::physics::DebugRenderer;
 
+DebugRenderer *DebugRenderer::current = nullptr;
+
 DebugRenderer::DebugRenderer(const std::shared_ptr<Shader> &shader, Camera *camera)
 : _line_count(0)
 , _shader(shader)
@@ -42,17 +44,19 @@ DebugRenderer::~DebugRenderer() {
 
 void DebugRenderer::start_update() {
     _draw_mutex.lock();
+    DebugRenderer::current = this;
     _line_vertex_data.clear();
     _line_count = 0;
 }
 
 void DebugRenderer::end_update() {
+    DebugRenderer::current = nullptr;
     _draw_mutex.unlock();
 }
 
 void DebugRenderer::draw() {
     std::lock_guard<std::mutex> lock(_draw_mutex);
-    
+
     if (_line_count == 0) return;
 
     if (_vbo == UINT_MAX) init_vbo();
@@ -64,7 +68,7 @@ void DebugRenderer::draw() {
 
     upload_vbo_data();
     draw_lines();
-        
+
     graphics::gl_state::enable(GL_DEPTH_TEST);
 }
 
@@ -137,6 +141,6 @@ void DebugRenderer::draw_lines() {
     _shader->set_projection_uniform(_camera->projection_matrix());
 
     GL_FUNC(glDrawArrays)(GL_LINES, 0, _line_count * 2);
-    
+
     core::stats::draw_calls.increment();
 }

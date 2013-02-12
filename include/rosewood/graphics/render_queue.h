@@ -19,6 +19,7 @@ namespace rosewood { namespace graphics {
     class Material;
     class RenderQueue;
     class Shader;
+    class Light;
 
     class RenderCommand {
     public:
@@ -27,7 +28,8 @@ namespace rosewood { namespace graphics {
                       math::Matrix4 inverse_transform,
                       float max_axis_scale,
                       Material *material,
-                      Camera *camera);
+                      Camera *camera,
+                      Light *light);
 
         void execute(const RenderCommand *previous) const;
         void flush() const;
@@ -40,6 +42,7 @@ namespace rosewood { namespace graphics {
         float _max_axis_scale;
         Material *_material;
         Shader *_shader;
+        Light *_light;
 
         void activate_material() const;
 
@@ -63,11 +66,13 @@ namespace rosewood { namespace graphics {
                                         math::Matrix4 inverse_transform,
                                         float max_axis_scale,
                                         Material *material,
-                                        Camera *camera)
+                                        Camera *camera,
+                                        Light *light)
     : _camera(camera), _mesh(mesh)
     , _max_axis_scale(max_axis_scale)
     , _material(material)
-    , _shader(material->shader().get()) {
+    , _shader(material->shader().get())
+    , _light(light) {
         auto camera_transform = core::transform(camera->entity());
         _transform = math::make_hand_shift() * camera_transform->inverse_world_transform() * transform;
         _inverse_transform = inverse_transform * camera_transform->world_transform() * math::make_hand_shift();
