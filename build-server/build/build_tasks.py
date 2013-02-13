@@ -200,6 +200,19 @@ def copy_png(i, o):
     return True
 
 
+@build_task_single('\.json$', 'JSON to msgpack', lambda p: change_ext(p, '.mp'))
+def json_to_msgpack(i, o):
+    ensure_dir_for_file_exists(o.filename)
+
+    with file(i.filename) as infile:
+        data = json.load(infile)
+
+    with file(o.filename, 'w') as outfile:
+        msgpack.pack(data, outfile)
+
+    return True
+
+
 @build_task_single('\.rwshader$')
 class BuildShaderTask(TaskNode):
     def __init__(self, bld, src, dest):
