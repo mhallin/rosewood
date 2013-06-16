@@ -207,6 +207,7 @@ namespace rosewood { namespace remote_control {
             std::cerr << "No loop inited\n";
             delete gServer;
             gServer = nullptr;
+            return;
         }
         
         ev_io_start(EV_A_ gServer->io());

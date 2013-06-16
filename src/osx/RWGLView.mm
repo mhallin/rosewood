@@ -107,6 +107,7 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
                                                   selector:@selector(updateScene:)
                                                   userInfo:nil
                                                    repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:_updateTimer forMode:NSEventTrackingRunLoopMode];
 }
 
 - (void)_startDisplayLink {

@@ -3,7 +3,11 @@
 
 #include <array>
 
+#include <TargetConditionals.h>
+
+#if __SSE__
 #include <x86intrin.h>
+#endif
 
 namespace rosewood { namespace math {
 
@@ -25,9 +29,11 @@ namespace rosewood { namespace math {
 
         union {
             float _m[kSize];
+#if __SSE__
             struct {
                 __m128 _c1, _c2, _c3, _c4;
             };
+#endif
         };
     };
 
@@ -47,15 +53,20 @@ namespace rosewood { namespace math {
         Vector4(float x, float y, float z, float w);
         Vector4(const Vector4 &v);
         explicit Vector4(const Vector3 &v, float w);
+
+#if __SSE__
         explicit Vector4(__m128 v);
+#endif
 
         Vector4 &operator=(const Vector4 &rhs);
 
         union {
-            __m128 m128;
             struct {
                 float x, y, z, w;
             };
+#if __SSE__
+            __m128 m128;
+#endif
         };
     };
 
@@ -64,10 +75,13 @@ namespace rosewood { namespace math {
         Vector3(float x, float y, float z);
         Vector3(const Vector3 &v);
         explicit Vector3(const Vector4 &v);
+#if __SSE__
         explicit Vector3(__m128 v);
+#endif
 
         Vector3 &operator=(const Vector3 &rhs);
 
+#if __SSE__
         __m128 m128;
 
         float x() const { float r[4]; _mm_store_ps(r, m128); return r[0]; }
@@ -83,6 +97,7 @@ namespace rosewood { namespace math {
         void set_z(float z) {
             float r[4]; _mm_store_ps(r, m128); r[2] = z; m128 = _mm_load_ps(r);
         }
+#endif
     };
 
     struct Vector2 {

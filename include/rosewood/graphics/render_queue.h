@@ -1,6 +1,8 @@
 #ifndef __ROSEWOOD_GRAPHICS_RENDER_QUEUE_H__
 #define __ROSEWOOD_GRAPHICS_RENDER_QUEUE_H__
 
+#include <assert.h>
+
 #include <memory>
 #include <vector>
 
@@ -74,6 +76,9 @@ namespace rosewood { namespace graphics {
     , _material(material)
     , _shader(material->shader().get())
     , _light(light) {
+        assert(_material);
+        assert(_camera);
+        assert(_mesh);
         auto camera_transform = core::transform(camera->entity());
         _transform = math::make_hand_shift4() * camera_transform->inverse_world_transform() * transform;
         _inverse_transform = inverse_transform * camera_transform->world_transform() * math::make_hand_shift4();

@@ -1,7 +1,6 @@
 #include "rosewood/graphics/render_queue.h"
 
 #include <algorithm>
-
 #include <iostream>
 
 #include "rosewood/core/stats.h"
