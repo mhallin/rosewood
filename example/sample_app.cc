@@ -41,17 +41,18 @@ RosewoodApp::RosewoodApp() : _render_system(&_entity_manager, &_scene_mutex), _r
     gl_state::enable(GL_CULL_FACE);
 
     gl_state::set_blend_func(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    GL_FUNC(glFrontFace)(GL_CW);
     GL_FUNC(glCullFace)(GL_BACK);
 
     auto checkered = Texture::create("Space.png");
     auto shader = Shader::create("Shaders/main_shader." SHADER_EXT);
 
-    auto camera_object = _entity_manager.create_entity<Transform, Camera>();
-    _main_camera = camera_object.component<Camera>();
+    auto camera_object = _entity_manager.create_entity();
+    _main_camera = camera_object.add_component<Camera>();
     _main_camera->set_fov(deg2rad(45.0f));
     _main_camera->set_z_planes(0.1f, 100.0f);
 
-    camera_object.component<Transform>()->set_local_position(0.0f, 0.0f, 4.0f);
+    camera_object.add_component<Transform>()->set_local_position(0.0f, 0.0f, -4.0f);
 
     auto mesh = Mesh::create(get_resource("Cube 1x1x1.mesh-mp"));
     mesh->set_default_texcoord_data_key("Wrap");
