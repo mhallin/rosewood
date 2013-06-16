@@ -5,11 +5,11 @@ in vec2 texcoordVarying;
 
 out vec4 fragColor;
 
-uniform sampler2D tex_sampler;
+uniform sampler2D rw_texture;
 
 void main()
 {
-	vec4 tc = texture(tex_sampler, texcoordVarying).rgba;
+	vec4 tc = texture(rw_texture, texcoordVarying).rgba;
 	float ta = tc.a;
     fragColor = vec4(colorVarying, 0.5)*(1.0-ta) + tc;
 }

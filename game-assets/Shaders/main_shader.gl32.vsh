@@ -1,27 +1,28 @@
 #version 150 core
 
-in vec4 position;
-in vec3 normal;
-in vec2 texcoord;
+in vec4 rw_vertex;
+in vec3 rw_normal;
+in vec2 rw_texcoord;
 
 out vec3 colorVarying;
 out vec2 texcoordVarying;
 
-uniform mat4 it_projection_matrix;
-uniform mat4 it_mv_matrix;
-uniform mat3 it_n_matrix;
+uniform mat4 rw_projection_matrix;
+uniform mat4 rw_modelview_matrix;
+uniform mat3 rw_normal_matrix;
+
+uniform vec4 rw_light_position;
+uniform vec4 rw_light_color;
 
 void main()
 {
-    vec3 eyeNormal = normalize(it_n_matrix * normal);
-    vec3 lightPosition = vec3(0.0, 0.0, 3.0);
-    vec3 diffuseColor = vec3(0.2, 0.6, 0.2);
+    vec3 eyeNormal = normalize(rw_normal_matrix * rw_normal);
 
-    float nDotVP = max(0.0, dot(eyeNormal, normalize(lightPosition)));
+    float nDotVP = max(0.0, dot(eyeNormal, normalize(rw_light_position.xyz)));
 
-    colorVarying = diffuseColor * nDotVP;
+    colorVarying = rw_light_color.rgb * nDotVP;
 
-    gl_Position = it_projection_matrix * it_mv_matrix * position;
+    gl_Position = rw_projection_matrix * rw_modelview_matrix * rw_vertex;
 
-	texcoordVarying = texcoord;
+	texcoordVarying = rw_texcoord;
 }

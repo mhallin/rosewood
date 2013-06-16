@@ -1,0 +1,11 @@
+{
+    "vertex-shader": "main_shader.gl32.vsh",
+    "fragment-shader": "main_shader.gl32.fsh",
+    "extra-attributes": [
+    ],
+    "extra-uniforms": [
+    ],
+    "queue-index": 1000,
+    "depth-test": true,
+    "depth-write": true
+}
