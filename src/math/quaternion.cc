@@ -4,6 +4,7 @@
 
 #include "rosewood/math/vector.h"
 #include "rosewood/math/matrix4.h"
+#include "rosewood/math/trig.h"
 
 using rosewood::math::Quaternion;
 using rosewood::math::Vector3;
@@ -15,9 +16,9 @@ Quaternion rosewood::math::quaternion_from_axis_angle(const Vector3 axis, float 
     auto sa = sinf(hangle);
 
     auto w = cosf(hangle);
-    auto x = vn.x * sa;
-    auto y = vn.y * sa;
-    auto z = vn.z * sa;
+    auto x = vn.x() * sa;
+    auto y = vn.y() * sa;
+    auto z = vn.z() * sa;
 
     return Quaternion(w, x, y, z);
 }
@@ -35,7 +36,7 @@ Quaternion rosewood::math::quaternion_from_euler_angles(float x, float y, float 
 
 Quaternion rosewood::math::quaternion_from_euler_angles(Vector3 euler_angles) {
     return quaternion_from_euler_angles(
-        euler_angles.x, euler_angles.y, euler_angles.z);
+        euler_angles.x(), euler_angles.y(), euler_angles.z());
 }
 
 Matrix4 rosewood::math::mat4(const Quaternion q) {
@@ -67,4 +68,16 @@ Quaternion rosewood::math::operator*(const Quaternion lhs, const Quaternion rhs)
 
 Vector3 rosewood::math::operator*(const Quaternion q, const Vector3 v) {
     return mat4(q) * v;
+}
+
+float rosewood::math::rotation_around(const Quaternion q, const Vector3 axis) {
+    auto n_axis = normalized(axis);
+    Vector3 p1;
+
+    construct_plane(n_axis, &p1, nullptr);
+
+    auto transformed = q * p1;
+    auto in_plane = transformed - dot(transformed, n_axis) * n_axis;
+    return signed_angle_between(p1, in_plane, n_axis);
+    // return acosf(dot(p1, in_plane));
 }

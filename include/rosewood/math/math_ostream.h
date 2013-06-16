@@ -8,7 +8,7 @@
 namespace rosewood { namespace math {
 
     inline ::std::ostream &operator<<(::std::ostream &os, Vector3 v) {
-        return (os << "Vector3(" << v.x << ", " << v.y << ", " << v.z << ")");
+        return (os << "Vector3(" << v.x() << ", " << v.y() << ", " << v.z() << ")");
     }
     
     inline ::std::ostream &operator<<(::std::ostream &os, Quaternion q) {

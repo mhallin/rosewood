@@ -41,7 +41,8 @@ static void add_shapes_from(btCompoundShape *destination, Transform *root, Trans
     }
 }
 
-Rigidbody::Rigidbody(Entity owner, btDynamicsWorld *world, float mass)
+Rigidbody::Rigidbody(Entity owner, btDynamicsWorld *world, float mass,
+                     short collision_group, short collision_mask)
 : core::Component<Rigidbody>(owner)
 , _rigidbody(mass, this, &_shape)
 {
@@ -56,7 +57,7 @@ Rigidbody::Rigidbody(Entity owner, btDynamicsWorld *world, float mass)
     _rigidbody.setUserPointer(this);
 
     if (_shape.getNumChildShapes()) {
-        world->addRigidBody(&_rigidbody);
+        world->addRigidBody(&_rigidbody, collision_group, collision_mask);
     }
 }
 

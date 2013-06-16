@@ -67,19 +67,19 @@ void Transform::set_local_position_preserving_child_world_positions(Vector3 v) {
 }
 
 void Transform::construct_transform_matrices() const {
-    Matrix4 local_transform = math::make_translation(_local_position);
+    Matrix4 local_transform = math::make_translation4(_local_position);
     math::apply_rotate_by(local_transform, _local_rotation);
     math::apply_scale_by(local_transform, _local_scale);
-    
-    Matrix4 inverse_local_transform = math::make_scale(1.0f / _local_scale);
+
+    Matrix4 inverse_local_transform = math::make_scale4(1.0f / _local_scale);
     math::apply_rotate_by(inverse_local_transform, conjugate(_local_rotation));
     math::apply_translate_by(inverse_local_transform, -_local_position);
-    
-    Matrix4 parent_world_transform = _parent ? _parent->world_transform() : math::make_identity();
+
+    Matrix4 parent_world_transform = _parent ? _parent->world_transform() : math::make_identity4();
     Matrix4 inverse_parent_world_transform = (_parent
                                               ? _parent->inverse_world_transform()
-                                              : math::make_identity());
-    
+                                              : math::make_identity4());
+
     _local_transform = local_transform;
     _inverse_local_transform = inverse_local_transform;
     _world_transform = parent_world_transform * _local_transform;

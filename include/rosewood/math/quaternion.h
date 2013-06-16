@@ -32,6 +32,8 @@ namespace rosewood { namespace math {
 
     Quaternion  normalized (const Quaternion q);
 
+    float       rotation_around(const Quaternion q, const Vector3 axis);
+
 
     // Quaternion function implementations
     inline Quaternion::Quaternion() { *this = quaternion_identity(); }

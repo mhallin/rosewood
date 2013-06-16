@@ -22,6 +22,11 @@ namespace rosewood { namespace core {
         extern Counter<size_t> draw_calls;
         extern Counter<size_t> triangle_count;
         extern Counter<size_t> shader_change_count;
+
+        extern size_t render_queue_size;
+
+        extern int debug_single_draw_call_index;
+        extern bool debug_single_draw_call_enabled;
     }
 
 } }

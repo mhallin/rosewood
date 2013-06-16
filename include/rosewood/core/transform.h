@@ -23,6 +23,9 @@ namespace rosewood { namespace core {
         const Transform *parent() const { return _parent; }
         Transform *parent() { return _parent; }
 
+        const Transform *root() const { return _parent ? _parent->root() : this; }
+        Transform *root() { return _parent ? _parent->root() : this; }
+
         void add_child(Transform *child);
         const std::vector<Transform*> &children() const { return _children; }
 
@@ -84,7 +87,12 @@ namespace rosewood { namespace core {
         }
 
         void set_world_rotation(math::Quaternion rotation) {
-            set_local_rotation(world_to_local(rotation));
+            if (_parent) {
+                set_local_rotation(_parent->world_to_local(rotation));
+            }
+            else {
+                set_local_rotation(rotation);
+            }
         }
 
         void set_world_axis_angle(float x, float y, float z, float angle);

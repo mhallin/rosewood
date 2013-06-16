@@ -52,7 +52,7 @@ void Material::submit_draw_calls() {
     if (!_buffer_index) return;
     if (_vbo == UINT_MAX) init_vbo();
     if (_vao == UINT_MAX) init_vao();
-    
+
     gl_state::bind_vertex_array_object(_vao);
     gl_state::bind_array_buffer(_vbo);
 
@@ -103,7 +103,10 @@ void Material::upload_vbo_data() {
 }
 
 void Material::draw_triangles() const {
-    GL_FUNC(glDrawArrays)(GL_TRIANGLES, 0, (int)_vertex_count);
+    if (!core::stats::debug_single_draw_call_enabled
+        || core::stats::draw_calls.read() == core::stats::debug_single_draw_call_index) {
+        GL_FUNC(glDrawArrays)(GL_TRIANGLES, 0, (int)_vertex_count);
+    }
     core::stats::draw_calls.increment();
     core::stats::triangle_count.increment(_vertex_count/3);
 }

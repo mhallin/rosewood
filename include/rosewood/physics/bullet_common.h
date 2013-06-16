@@ -32,7 +32,7 @@ namespace rosewood { namespace math {
     }
 
     inline btVector3 to_bt(const Vector3 &v3) {
-        return btVector3(v3.x, v3.y, v3.z);
+        return btVector3(v3.x(), v3.y(), v3.z());
     }
 
     inline btQuaternion to_bt(const Quaternion &q) {

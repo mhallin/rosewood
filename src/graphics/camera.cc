@@ -13,11 +13,11 @@ using rosewood::core::transform;
 using rosewood::graphics::Camera;
 
 Matrix4 Camera::projection_matrix() const {
-    return math::make_perspective(_fov, _aspect, _z_near, _z_far);
+    return math::make_perspective4(_fov, _aspect, _z_near, _z_far);
 }
 
 Matrix4 Camera::inverse_projection_matrix() const {
-    return math::make_inverse_perspective(_fov, _aspect, _z_near, _z_far);
+    return math::make_inverse_perspective4(_fov, _aspect, _z_near, _z_far);
 }
 
 Vector3 Camera::projection_to_world(Vector3 proj_point) const {

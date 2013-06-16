@@ -15,11 +15,11 @@ const std::string &Asset::str() const { return _file_contents; }
 
 void Asset::set_file_contents(const std::string &file_contents) {
     _file_contents = file_contents;
-    
+
     for (auto weak_view : _views) {
         auto view = weak_view.lock();
         if (!view) continue;
-        
+
         view->notify_change();
     }
 }
@@ -49,8 +49,8 @@ void rosewood::core::add_resource_loader(std::unique_ptr<IResourceLoader> loader
 
 static bool load_newest_asset_contents(const std::string &path, std::string *out_contents) {
     IResourceLoader *newest_loader = nullptr;
-    struct timespec newest_spec{0};
-    
+    struct timespec newest_spec{0, 0};
+
     for (const auto &loader : gResourceLoaders) {
         auto info = loader->find_file(path);
         if (info.exists && newest_spec.tv_sec < info.mtime.tv_sec) {
@@ -58,36 +58,36 @@ static bool load_newest_asset_contents(const std::string &path, std::string *out
             newest_spec = info.mtime;
         }
     }
-    
+
     if (newest_loader) {
         *out_contents = newest_loader->read_file(path);
         return true;
     }
-    
+
     return false;
 }
 
 std::shared_ptr<Asset> rosewood::core::get_resource(std::string path) {
     if (gLoadedAssets.find(path) == gLoadedAssets.end() || gLoadedAssets[path].expired()) {
         std::string file_contents;
-        
+
         if (load_newest_asset_contents(path, &file_contents)) {
             auto asset = std::make_shared<Asset>(file_contents);
             gLoadedAssets[path] = asset;
             return asset;
         }
-        
+
         return nullptr;
     }
-    
+
     return gLoadedAssets[path].lock();
 }
 
 void rosewood::core::notify_file_changed(std::string path) {
     if (gLoadedAssets.find(path) == gLoadedAssets.end()) return;
-    
+
     auto asset = get_resource(path);
-    
+
     std::string file_contents;
     if (load_newest_asset_contents(path, &file_contents)) {
         asset->set_file_contents(file_contents);

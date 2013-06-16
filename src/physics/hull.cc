@@ -24,12 +24,11 @@ Hull::Hull(const std::shared_ptr<Asset> &hull_asset)
     reload_hull_asset();
 }
 
-std::vector<float> Hull::scaled_hull_points(Vector3 scale) const {
-    std::vector<float> scaled_points(_hull_points);
+std::vector<Vector3> Hull::scaled_hull_points(Vector3 scale) const {
+    std::vector<Vector3> scaled_points(_hull_points);
 
-    int i = 0;
-    for (float &f : scaled_points) {
-        f *= get(scale, i++ % 3);
+    for (auto &f : scaled_points) {
+        f = emult(f, scale);
     }
 
     return scaled_points;
@@ -42,5 +41,12 @@ void Hull::reload_hull_asset() {
 
     auto data = msg.get();
 
-    _hull_points = data.as<std::vector<float>>();
+    auto points = data.as<std::vector<float>>();
+
+    _hull_points.clear();
+    for (int i = 0; i < points.size(); i += 3) {
+        _hull_points.emplace_back(points[i+0],
+                                  points[i+1],
+                                  points[i+2]);
+    }
 }

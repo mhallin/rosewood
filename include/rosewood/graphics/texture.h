@@ -17,22 +17,24 @@ namespace rosewood { namespace graphics {
         int width;
         int height;
     };
-    
+
     class Texture {
     public:
         static std::shared_ptr<Texture> create(const std::string &resource_path);
-        
+
         Texture(const std::shared_ptr<core::Asset> &image_asset);
         Texture(const ImageData &image_data);
         ~Texture();
-        
+
         void bind() const;
-        
+
+        size_t index() const { return _texture + 1; }
+
     private:
         GLuint _texture;
         std::shared_ptr<core::AssetView> _image_asset;
         ImageData _image_data;
-        
+
         void reload_image_asset();
         void reload_image_data();
     };

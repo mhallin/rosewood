@@ -22,12 +22,6 @@ using rosewood::math::length2;
 
 using rosewood::graphics::Mesh;
 
-union Mesh::AttributeData {
-    Vector4 vec4_data;
-
-    explicit AttributeData(Vector4 v) : vec4_data(v) { }
-};
-
 std::shared_ptr<Mesh> Mesh::create(const std::shared_ptr<Asset> &mesh_asset) {
     return std::make_shared<Mesh>(mesh_asset);
 }
@@ -52,26 +46,27 @@ void Mesh::instantiate(Matrix4 transform, Matrix4 inverse_transform,
     auto &n_data = normal_data();
     auto &tc_data = texcoord_data();
 
-    typedef std::tuple<const Shader::AttributeSpec*, const std::vector<AttributeData>*> attribute_tuple;
+    typedef std::tuple<const Shader::AttributeSpec*, const AttributeData*> attribute_tuple;
 
     attribute_tuple *extra_attributes = static_cast<attribute_tuple*>(alloca(sizeof(attribute_tuple) * attribute_specs.size()));
+    new(extra_attributes) attribute_tuple();
 
     for (int i = 0; i < attribute_specs.size(); ++i) {
         std::get<0>(extra_attributes[i]) = &attribute_specs[i];
         std::get<1>(extra_attributes[i]) = &_extra_data.at(attribute_specs[i].name);
     }
-    
+
     for (size_t i = 0; i < _vertex_data.size(); ++i) {
         auto v = transform * v_data[i];
         auto n = n_matrix * n_data[i];
         auto t = tc_data[i];
 
-        *destination++ = v.x;
-        *destination++ = v.y;
-        *destination++ = v.z;
-        *destination++ = n.x;
-        *destination++ = n.y;
-        *destination++ = n.z;
+        *destination++ = v.x();
+        *destination++ = v.y();
+        *destination++ = v.z();
+        *destination++ = n.x();
+        *destination++ = n.y();
+        *destination++ = n.z();
         *destination++ = t.x;
         *destination++ = t.y;
 
@@ -82,7 +77,7 @@ void Mesh::instantiate(Matrix4 transform, Matrix4 inverse_transform,
             switch (spec.type) {
                 case kTypeFloat:
                     if (spec.n_comps == 4) {
-                        auto v4 = data[i].vec4_data;
+                        auto v4 = data.get<std::vector<Vector4>>()[i];
                         *destination++ = v4.x;
                         *destination++ = v4.y;
                         *destination++ = v4.z;
@@ -95,11 +90,7 @@ void Mesh::instantiate(Matrix4 transform, Matrix4 inverse_transform,
 }
 
 void Mesh::set_extra_data(const data_map_key &key, const std::vector<math::Vector4> &vec4_data) {
-    _extra_data[key].clear();
-    std::transform(begin(vec4_data), end(vec4_data), std::back_inserter(_extra_data[key]),
-                   [](Vector4 v) {
-                       return AttributeData(v);
-                   });
+    _extra_data[key].get<std::vector<math::Vector4>>() = vec4_data;
     _mesh_asset = nullptr;
 }
 
@@ -112,9 +103,9 @@ void Mesh::reload_mesh_asset() {
     auto &contents = _mesh_asset->str();
     msgpack::unpacked msg;
     msgpack::unpack(&msg, contents.c_str(), contents.size());
-    
+
     auto arrays = msg.get();
-    
+
     auto vertex_float_array = arrays.via.array.ptr[0].as<std::vector<float>>();
     auto normal_float_arrays = arrays.via.array.ptr[1].as<std::map<std::string, std::vector<float>>>();
     auto texcoord_float_arrays = arrays.via.array.ptr[2].as<std::map<std::string, std::vector<float>>>();
@@ -122,7 +113,7 @@ void Mesh::reload_mesh_asset() {
     _vertex_data.clear();
     _normal_datas.clear();
     _texcoord_datas.clear();
-    
+
     _vertex_data.reserve(vertex_float_array.size()/3);
 
     for (size_t i = 0; i < vertex_float_array.size()/3; ++i) {

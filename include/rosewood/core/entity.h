@@ -38,6 +38,8 @@ namespace rosewood { namespace core {
         }
     };
 
+    inline constexpr Entity nil_entity() { return Entity{nullptr, 0}; }
+
     inline bool operator==(const Entity &e1, const Entity &e2) {
         return e1.owner == e2.owner && e1.eid == e2.eid;
     }

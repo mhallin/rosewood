@@ -33,6 +33,7 @@ namespace rosewood { namespace graphics {
 
         void execute(const RenderCommand *previous) const;
         void flush() const;
+        bool is_visible() const;
 
     private:
         Camera *_camera;
@@ -53,7 +54,7 @@ namespace rosewood { namespace graphics {
     class RenderQueue {
     public:
         void clear();
-        void add_command(RenderCommand command);
+        void add_command(const RenderCommand &command);
         void sort();
         void run();
 
@@ -74,12 +75,14 @@ namespace rosewood { namespace graphics {
     , _shader(material->shader().get())
     , _light(light) {
         auto camera_transform = core::transform(camera->entity());
-        _transform = math::make_hand_shift() * camera_transform->inverse_world_transform() * transform;
-        _inverse_transform = inverse_transform * camera_transform->world_transform() * math::make_hand_shift();
+        _transform = math::make_hand_shift4() * camera_transform->inverse_world_transform() * transform;
+        _inverse_transform = inverse_transform * camera_transform->world_transform() * math::make_hand_shift4();
     }
 
-    inline void RenderQueue::add_command(RenderCommand command) {
-        _commands.push_back(command);
+    inline void RenderQueue::add_command(const RenderCommand &command) {
+        if (command.is_visible()) {
+            _commands.emplace_back(command);
+        }
     }
 } }
 

@@ -74,16 +74,16 @@ void DebugRenderer::draw() {
 
 void DebugRenderer::drawLine(const btVector3 &from, const btVector3 &to, const btVector3 &color) {
     auto tform = transform(_camera->entity());
-    auto v1 = math::make_hand_shift() * tform->inverse_world_transform() * from_bt(from);
-    auto v2 = math::make_hand_shift() * tform->inverse_world_transform() * from_bt(to);
+    auto v1 = math::make_hand_shift4() * tform->inverse_world_transform() * from_bt(from);
+    auto v2 = math::make_hand_shift4() * tform->inverse_world_transform() * from_bt(to);
 //    auto v1 = from_bt(from), v2 = from_bt(to);
 
     float vertex_data[24] = {
-        v1.x, v1.y, v1.z, // rw_vertex
+        v1.x(), v1.y(), v1.z(), // rw_vertex
         0, 0, 0, // rw_normal
         0, 0, // rw_texcoord
         color.x(), color.y(), color.z(), 1, // color
-        v2.x, v2.y, v2.z, // rw_vertex
+        v2.x(), v2.y(), v2.z(), // rw_vertex
         0, 0, 0, // rw_normal
         0, 0, // rw_texcoord
         color.x(), color.y(), color.z(), 1 // color
@@ -136,8 +136,8 @@ void DebugRenderer::upload_vbo_data() {
 void DebugRenderer::draw_lines() {
     _shader->use();
 //    _shader->set_modelview_uniform(_camera->owner()->inverse_world_transform());
-    _shader->set_modelview_uniform(math::make_identity());
-    _shader->set_normal_uniform(mat3(math::make_identity()));
+    _shader->set_modelview_uniform(math::make_identity4());
+    _shader->set_normal_uniform(mat3(math::make_identity4()));
     _shader->set_projection_uniform(_camera->projection_matrix());
 
     GL_FUNC(glDrawArrays)(GL_LINES, 0, _line_count * 2);

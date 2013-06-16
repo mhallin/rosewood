@@ -15,7 +15,7 @@ namespace rosewood { namespace math {
         auto normal = normalized(cross(v2, v1));
         auto p = -dot(normal, p2);
 
-        return Plane(normal.x, normal.y, normal.z, p);
+        return Plane(normal.x(), normal.y(), normal.z(), p);
     }
 
     float distance(Plane p, Vector3 v) {

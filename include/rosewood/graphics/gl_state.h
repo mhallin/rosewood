@@ -5,44 +5,18 @@
 
 #include <stddef.h>
 
+#include "rosewood/data-structures/variant.h"
+
 #include "rosewood/math/math_types.h"
 
 #include "rosewood/graphics/platform_gl.h"
 
 namespace rosewood { namespace graphics {
 
-    enum class UniformDataType {
-        Empty,
-        Int1,
-        Matrix3, Matrix4,
-        Vector4,
-    };
+    typedef rosewood::data_structures::Variant<
+        void, int, math::Matrix3, math::Matrix4, math::Vector4> UniformData;
 
-    union UniformDataUnion {
-        int i1;
-        math::Matrix3 mat3;
-        math::Matrix4 mat4;
-        math::Vector4 vec4;
-
-        explicit UniformDataUnion(int i1) : i1(i1) { }
-        explicit UniformDataUnion(math::Matrix3 mat3) : mat3(mat3) { }
-        explicit UniformDataUnion(math::Matrix4 mat4) : mat4(mat4) { }
-        explicit UniformDataUnion(math::Vector4 vec4) : vec4(vec4) { }
-    };
-
-    struct UniformData {
-        UniformDataType type;
-        UniformDataUnion data;
-
-        UniformData();
-        explicit UniformData(int i1);
-        explicit UniformData(math::Matrix3 mat3);
-        explicit UniformData(math::Matrix4 mat4);
-        explicit UniformData(math::Vector4 vec4);
-    };
-
-    bool operator== (const UniformData &lhs, const UniformData &rhs);
-    bool operator!= (const UniformData &lhs, const UniformData &rhs);
+    static_assert(std::is_same<UniformData::alignment_type, math::Vector4>::value, "incorrect alignment");
 
     enum VertexAttribPointerType {
         kTypeFloat = GL_FLOAT,
@@ -81,12 +55,17 @@ namespace rosewood { namespace graphics {
         void enable(GLenum state);
         void disable(GLenum state);
 
+        void set_depth_func(GLenum depth_func);
+        void set_depth_mask(bool flag);
+        void set_blend_func(GLenum sfactor, GLenum dfactor);
+        void set_polygon_offset(float factor, float units);
+
         void bind_vertex_array_object(GLuint vao);
         void bind_array_buffer(GLuint buffer);
-        
+
         void bind_texture(GLuint texture);
         void delete_texture(GLuint texture);
-        
+
         void activate_texture_unit(GLuint unit);
 
         void use_program(GLuint program);

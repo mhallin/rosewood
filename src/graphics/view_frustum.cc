@@ -64,17 +64,17 @@ bool ViewFrustum::is_visible(const Mesh *mesh,
     }
 
     return true;
-    
+
 //    auto &points = mesh->vertex_data();
 //    auto pm = _projection_matrix * transform;
-//    
+//
 //    return std::any_of(begin(points), end(points), [=](Vector3 p) {
 //        return is_proj_point_visible(pm * p);
 //    });
 }
 
 bool ViewFrustum::is_proj_point_visible(Vector3 proj_point) const {
-    return (proj_point.x >= -1 && proj_point.x <= 1 &&
-            proj_point.y >= -1 && proj_point.y <= 1 &&
-            proj_point.z >= -1 && proj_point.z <= 1);
+    return (proj_point.x() >= -1 && proj_point.x() <= 1 &&
+            proj_point.y() >= -1 && proj_point.y() <= 1 &&
+            proj_point.z() >= -1 && proj_point.z() <= 1);
 }

@@ -11,7 +11,7 @@ using rosewood::math::Vector4;
 using rosewood::math::Vector3;
 
 Matrix4::Matrix4() {
-    std::fill(begin(_m), end(_m), 0);
+    std::fill(std::begin(_m), std::end(_m), 0);
 }
 
 Matrix4::Matrix4(float m11, float m12, float m13, float m14,
@@ -55,35 +55,35 @@ Matrix3 rosewood::math::mat3(const Matrix4 &m) {
 }
 
 void rosewood::math::apply_translate_by(Matrix4 &m, Vector3 v) {
-    m *= make_translation(v);
+    m *= make_translation4(v);
 }
 
 void rosewood::math::apply_rotate_by(Matrix4 &m, Quaternion q) {
-    m *= make_rotation(q);
+    m *= make_rotation4(q);
 }
 
 void rosewood::math::apply_scale_by(Matrix4 &m, Vector3 v) {
-    m *= make_scale(v);
+    m *= make_scale4(v);
 }
 
-Matrix4 rosewood::math::make_identity() {
+Matrix4 rosewood::math::make_identity4() {
     return Matrix4(1, 0, 0, 0,
                    0, 1, 0, 0,
                    0, 0, 1, 0,
                    0, 0, 0, 1);
 }
 
-Matrix4 rosewood::math::make_hand_shift() {
+Matrix4 rosewood::math::make_hand_shift4() {
     return Matrix4(1, 0, 0, 0,
                    0, 1, 0, 0,
                    0, 0, -1, 0,
                    0, 0, 0, 1);
 }
 
-Matrix4 rosewood::math::make_perspective(float fovy,
-                                         float aspect,
-                                         float z_near,
-                                         float z_far) {
+Matrix4 rosewood::math::make_perspective4(float fovy,
+                                          float aspect,
+                                          float z_near,
+                                          float z_far) {
     float f = cotf(fovy/2);
 
     return Matrix4(f/aspect, 0,                             0,                                 0,
@@ -92,34 +92,34 @@ Matrix4 rosewood::math::make_perspective(float fovy,
                    0,        0,                            -1,                                 0);
 }
 
-Matrix4 rosewood::math::make_inverse_perspective(float fovy,
-                                                 float aspect,
-                                                 float z_near,
-                                                 float z_far) {
+Matrix4 rosewood::math::make_inverse_perspective4(float fovy,
+                                                  float aspect,
+                                                  float z_near,
+                                                  float z_far) {
     float f = cotf(fovy/2);
-    
+
     return Matrix4(aspect/f,   0,                               0,                               0,
                    0,        1/f,                               0,                               0,
                    0,          0,                               0,                              -1,
                    0,          0, -(z_near-z_far)/(2*z_far*z_near), -(z_far+z_near)/(2*z_far*z_near));
 }
 
-Matrix4 rosewood::math::make_translation(Vector3 v) {
-    return Matrix4(1, 0, 0, v.x,
-                   0, 1, 0, v.y,
-                   0, 0, 1, v.z,
+Matrix4 rosewood::math::make_translation4(Vector3 v) {
+    return Matrix4(1, 0, 0, v.x(),
+                   0, 1, 0, v.y(),
+                   0, 0, 1, v.z(),
                    0, 0, 0,   1);
 }
 
-Matrix4 rosewood::math::make_rotation(Quaternion q) {
+Matrix4 rosewood::math::make_rotation4(Quaternion q) {
     return mat4(q);
 }
 
-Matrix4 rosewood::math::make_scale(Vector3 v) {
-    return Matrix4(v.x,   0,   0,   0,
-                     0, v.y,   0,   0,
-                     0,   0, v.z,   0,
-                     0,   0,   0,   1);
+Matrix4 rosewood::math::make_scale4(Vector3 v) {
+    return Matrix4(v.x(),   0,     0,   0,
+                     0, v.y(),     0,   0,
+                     0,     0, v.z(),   0,
+                     0,     0,     0,   1);
 }
 
 Matrix4 &rosewood::math::operator*=(Matrix4 &lhs, const Matrix4 &rhs) {
@@ -129,7 +129,7 @@ Matrix4 &rosewood::math::operator*=(Matrix4 &lhs, const Matrix4 &rhs) {
 
 Matrix4 rosewood::math::operator*(const Matrix4 &lhs, const Matrix4 &rhs) {
     Matrix4 result;
-    
+
     float * __restrict r = ptr(result);
     const float * __restrict a = ptr(lhs), * __restrict b = ptr(rhs);
 
@@ -139,20 +139,20 @@ Matrix4 rosewood::math::operator*(const Matrix4 &lhs, const Matrix4 &rhs) {
      // Load LHS to the Q0-Q3 (D0-D7) registers and RHS to the Q4-Q7 (D8-D11) registers.
      "vldm %0, { q0-q3 } \n"
      "vldm %1, { q4-q7 } \n"
-     
+
      // Calculate first column of result matrix: Multiply first column in LHS with first row of RHS.
      // The rows are accessed by scalars in D8 & D9
      "vmul.f32 q8, q0, d8[0] \n"
      "vmla.f32 q8, q1, d8[1] \n"
      "vmla.f32 q8, q2, d9[0] \n"
      "vmla.f32 q8, q3, d9[1] \n"
-     
+
      // Second column of result matrix
      "vmul.f32 q9, q0, d10[0] \n"
      "vmla.f32 q9, q1, d10[1] \n"
      "vmla.f32 q9, q2, d11[0] \n"
      "vmla.f32 q9, q3, d11[1] \n"
-     
+
      // Third column of result matrix
      "vmul.f32 q10, q0, d12[0] \n"
      "vmla.f32 q10, q1, d12[1] \n"
@@ -164,7 +164,7 @@ Matrix4 rosewood::math::operator*(const Matrix4 &lhs, const Matrix4 &rhs) {
      "vmla.f32 q11, q1, d14[1] \n"
      "vmla.f32 q11, q2, d15[0] \n"
      "vmla.f32 q11, q3, d15[1] \n"
-     
+
      // Store Q8-Q11 at the result pointer
      "vstm %2, { q8-q11 } \n"
      :
@@ -189,7 +189,7 @@ Matrix4 rosewood::math::operator*(const Matrix4 &lhs, const Matrix4 &rhs) {
     r[14] = a[ 2]*b[12] + a[ 6]*b[13] + a[10]*b[14] + a[14]*b[15];
     r[15] = a[ 3]*b[12] + a[ 7]*b[13] + a[11]*b[14] + a[15]*b[15];
 #endif
-    
+
     return result;
 }
 
@@ -204,7 +204,7 @@ Vector3 rosewood::math::operator*(const Matrix4 &lhs, const Vector3 &rhs) {
     r[ 0] = (a[ 0]*b[ 0] + a[ 4]*b[ 1] + a[ 8]*b[ 2] + a[12]) / w;
     r[ 1] = (a[ 1]*b[ 0] + a[ 5]*b[ 1] + a[ 9]*b[ 2] + a[13]) / w;
     r[ 2] = (a[ 2]*b[ 0] + a[ 6]*b[ 1] + a[10]*b[ 2] + a[14]) / w;
-    
+
     return result;
 }
 
@@ -220,13 +220,13 @@ Vector4 rosewood::math::operator*(const Matrix4 &lhs, const Vector4 &rhs) {
      // Load LHS to the Q0-Q3 (D0-D7) registers and RHS to the Q4 (D8-D9) register.
      "vldm %0, { q0-q3 } \n"
      "vldm %1, { q4 } \n"
-     
+
      // Calculate first column of result matrix: Multiply first column in LHS with RHS.
      "vmul.f32 q5, q0, d8[0] \n"
      "vmla.f32 q5, q1, d8[1] \n"
      "vmla.f32 q5, q2, d9[0] \n"
      "vmla.f32 q5, q3, d9[1] \n"
-     
+
      // Store Q8-Q11 at the result pointer
      "vstm %2, { q5 } \n"
      :
@@ -239,7 +239,7 @@ Vector4 rosewood::math::operator*(const Matrix4 &lhs, const Vector4 &rhs) {
     r[ 2] = a[ 2]*b[ 0] + a[ 6]*b[ 1] + a[10]*b[ 2] + a[14]*b[ 3];
     r[ 3] = a[ 3]*b[ 0] + a[ 7]*b[ 1] + a[11]*b[ 2] + a[15]*b[ 3];
 #endif
-    
+
     return result;
 }
 

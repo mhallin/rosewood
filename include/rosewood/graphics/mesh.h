@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <memory>
 
+#include "rosewood/data-structures/variant.h"
+
 #include "rosewood/graphics/shader.h"
 
 namespace rosewood { namespace math {
@@ -27,7 +29,6 @@ namespace rosewood { namespace graphics {
         typedef std::vector<math::Vector3> vertex_list;
         typedef std::vector<math::Vector3> normal_list;
         typedef std::vector<math::Vector2> texcoord_list;
-        typedef std::vector<math::Vector4> color_list;
 
         typedef std::string data_map_key;
 
@@ -51,7 +52,7 @@ namespace rosewood { namespace graphics {
 
         const normal_list &normal_data(const data_map_key &key) const;
         const texcoord_list &texcoord_data(const data_map_key &key) const;
-        
+
         void set_vertex_data(const vertex_list &vertex_data);
         void set_normal_data(const normal_list &normal_data);
         void set_texcoord_data(const texcoord_list &texcoord_data);
@@ -66,11 +67,11 @@ namespace rosewood { namespace graphics {
 
         void set_default_normal_data_key(const data_map_key &key);
         void set_default_texcoord_data_key(const data_map_key &key);
-        
+
         std::shared_ptr<Mesh> copy() const;
 
         float bounding_sphere_radius2() const;
-        
+
     private:
         vertex_list _vertex_data;
         normal_list_map _normal_datas;
@@ -81,33 +82,33 @@ namespace rosewood { namespace graphics {
 
         float _bounding_sphere_radius2;
 
-        union AttributeData;
-        std::unordered_map<std::string, std::vector<AttributeData>> _extra_data;
+        typedef data_structures::Variant<std::vector<math::Vector4>> AttributeData;
+        std::unordered_map<std::string, AttributeData> _extra_data;
 
         std::shared_ptr<core::AssetView> _mesh_asset;
-        
+
         void reload_mesh_asset();
         void recompute_bounds();
     };
-    
+
     inline const Mesh::vertex_list &Mesh::vertex_data() const { return _vertex_data; }
     inline const Mesh::normal_list &Mesh::normal_data() const { return _normal_datas.at(_default_normal_data_key); }
     inline const Mesh::texcoord_list &Mesh::texcoord_data() const { return _texcoord_datas.at(_default_texcoord_data_key); }
 
     inline const Mesh::normal_list &Mesh::normal_data(const data_map_key &key) const { return _normal_datas.at(key); }
     inline const Mesh::texcoord_list &Mesh::texcoord_data(const data_map_key &key) const { return _texcoord_datas.at(key); }
-    
+
     inline void Mesh::set_vertex_data(const Mesh::vertex_list &vertex_data) {
         _vertex_data = vertex_data;
         _mesh_asset = nullptr;
         recompute_bounds();
     }
-    
+
     inline void Mesh::set_normal_data(const Mesh::normal_list &normal_data) {
         _normal_datas[_default_normal_data_key] = normal_data;
         _mesh_asset = nullptr;
     }
-    
+
     inline void Mesh::set_texcoord_data(const Mesh::texcoord_list &texcoord_data) {
         _texcoord_datas[_default_texcoord_data_key] = texcoord_data;
         _mesh_asset = nullptr;
@@ -140,7 +141,7 @@ namespace rosewood { namespace graphics {
     }
 
     inline float Mesh::bounding_sphere_radius2() const { return _bounding_sphere_radius2; }
-    
+
 } }
 
 #endif

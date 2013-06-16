@@ -15,15 +15,19 @@
 
 #include "rosewood/graphics/gl_func.h"
 
+using rosewood::math::Matrix3;
+using rosewood::math::Matrix4;
+using rosewood::math::Vector4;
+
 namespace rosewood { namespace graphics { namespace gl_state {
 
     // Helper function for state management: Looks up `key` in `map`,
     // compares it to `value` and calls `if_changed_fn` if they aren't
     // equal (or if `key` does not exist). Updates `map` after the
     // callback has been called
-    template<typename TKey, typename TValue>
+    template<typename TKey, typename TValue, typename TNewValue>
     static void if_changed(std::unordered_map<TKey, TValue> &map,
-                           TKey key, const TValue &value,
+                           TKey key, const TNewValue &value,
                            std::function<void()> if_changed_fn) {
         if (map.find(key) == end(map) || map.at(key) != value) {
             if_changed_fn();
@@ -49,6 +53,10 @@ namespace rosewood { namespace graphics { namespace gl_state {
     static GLuint gCurrentTexture = UINT_MAX; // glBindTexture
     static GLuint gCurrentProgram = UINT_MAX; // glUseProgram
     static GLuint gCurrentTextureUnit = UINT_MAX; // glActiveTexture
+    static GLenum gCurrentDepthFunc = GL_LESS;
+    static bool gCurrentDepthMask = true;
+    static std::pair<GLenum, GLenum> gCurrentBlendFunc = std::make_pair(GL_ONE, GL_ZERO);
+    static std::pair<float, float> gCurrentPolygonOffset = std::make_pair(0, 0);
     static uniform_map gCurrentUniforms; // All glUniform*
     static std::unordered_map<GLuint, uniform_map> gSavedShaderStates;
     static std::unordered_map<GLuint, uniform_map> gNewShaderStates;
@@ -67,7 +75,33 @@ namespace rosewood { namespace graphics { namespace gl_state {
 
     void enable (GLenum state) { set_state(state, true); }
     void disable(GLenum state) { set_state(state, false); }
-    
+
+    void set_depth_func(GLenum depth_func) {
+        if_changed(gCurrentDepthFunc, depth_func, [=]() {
+            GL_FUNC(glDepthFunc)(depth_func);
+        });
+    }
+
+    void set_depth_mask(bool depth_mask) {
+        if_changed(gCurrentDepthMask, depth_mask, [=]() {
+            GL_FUNC(glDepthMask)(depth_mask ? GL_TRUE : GL_FALSE);
+        });
+    }
+
+    void set_blend_func(GLenum sfactor, GLenum dfactor) {
+        auto blend_func = std::make_pair(sfactor, dfactor);
+        if_changed(gCurrentBlendFunc, blend_func, [=]() {
+            GL_FUNC(glBlendFunc)(sfactor, dfactor);
+        });
+    }
+
+    void set_polygon_offset(float factor, float units) {
+        auto polygon_offset = std::make_pair(factor, units);
+        if_changed(gCurrentPolygonOffset, polygon_offset, [=]() {
+            GL_FUNC(glPolygonOffset)(factor, units);
+        });
+    }
+
     void bind_vertex_array_object(GLuint vao) {
         if_changed(gCurrentVAO, vao, [=]() {
             GL_FUNC(glBindVertexArray)(vao);
@@ -83,27 +117,27 @@ namespace rosewood { namespace graphics { namespace gl_state {
             gCurrentVertexAttribPointers.clear();
         });
     }
-    
+
     void bind_texture(GLuint texture) {
         if_changed(gCurrentTexture, texture, [=]() {
             GL_FUNC(glBindTexture)(GL_TEXTURE_2D, texture);
         });
     }
-                   
+
     void delete_texture(GLuint texture) {
         if (texture == gCurrentTexture) {
             bind_texture(0);
         }
-        
+
         GL_FUNC(glDeleteTextures)(1, &texture);
     }
-    
+
     void activate_texture_unit(GLuint unit) {
         if_changed(gCurrentTextureUnit, unit, [=] {
             GL_FUNC(glActiveTexture)(GL_TEXTURE0 + unit);
         });
     }
-    
+
     void use_program(GLuint program) {
         if_changed(gCurrentProgram, program, [=]() {
             GL_FUNC(glUseProgram)(program);
@@ -142,21 +176,17 @@ namespace rosewood { namespace graphics { namespace gl_state {
 
     void set_uniforms(GLuint program, const uniform_map &map) {
         for (auto pair : map) {
-            switch (pair.second.type) {
-                case UniformDataType::Int1:
-                    set_uniform(program, pair.first, pair.second.data.i1);
-                    break;
-                case UniformDataType::Matrix3:
-                    set_uniform(program, pair.first, pair.second.data.mat3);
-                    break;
-                case UniformDataType::Matrix4:
-                    set_uniform(program, pair.first, pair.second.data.mat4);
-                    break;
-                case UniformDataType::Vector4:
-                    set_uniform(program, pair.first, pair.second.data.vec4);
-                    break;
-                case UniformDataType::Empty:
-                    break;
+            if (pair.second.has<int>()) {
+                set_uniform(program, pair.first, pair.second.get<int>());
+            }
+            else if (pair.second.has<Matrix3>()) {
+                set_uniform(program, pair.first, pair.second.get<Matrix3>());
+            }
+            else if (pair.second.has<Matrix4>()) {
+                set_uniform(program, pair.first, pair.second.get<Matrix4>());
+            }
+            else if (pair.second.has<Vector4>()) {
+                set_uniform(program, pair.first, pair.second.get<Vector4>());
             }
         }
     }
@@ -166,14 +196,14 @@ namespace rosewood { namespace graphics { namespace gl_state {
             set_uniform(uniform, m);
         }
         else {
-            gNewShaderStates[program][uniform] = UniformData(m);
+            gNewShaderStates[program][uniform] = m;
         }
     }
 
     void set_uniform(GLint uniform, math::Matrix4 m) {
         if (gCurrentProgram == UINT_MAX) return;
 
-        if_changed(gCurrentUniforms, uniform, UniformData(m), [&](){
+        if_changed(gCurrentUniforms, uniform, m, [&](){
             GL_FUNC(glUniformMatrix4fv)(uniform, 1, GL_FALSE, ptr(m));
         });
     }
@@ -183,52 +213,52 @@ namespace rosewood { namespace graphics { namespace gl_state {
             set_uniform(uniform, m);
         }
         else {
-            gNewShaderStates[program][uniform] = UniformData(m);
+            gNewShaderStates[program][uniform] = m;
         }
     }
 
     void set_uniform(GLint uniform, math::Matrix3 m) {
         if (gCurrentProgram == UINT_MAX) return;
 
-        if_changed(gCurrentUniforms, uniform, UniformData(m), [&](){
+        if_changed(gCurrentUniforms, uniform, m, [&](){
             GL_FUNC(glUniformMatrix3fv)(uniform, 1, GL_FALSE, ptr(m));
         });
     }
-    
+
     void set_uniform(GLuint program, GLint uniform, math::Vector4 vec4) {
         if (gCurrentProgram == program) {
             set_uniform(uniform, vec4);
         }
         else {
-            gNewShaderStates[program][uniform] = UniformData(vec4);
+            gNewShaderStates[program][uniform] = vec4;
         }
     }
-    
+
     void set_uniform(GLint uniform, math::Vector4 vec4) {
         if (gCurrentProgram == UINT_MAX) return;
-        
-        if_changed(gCurrentUniforms, uniform, UniformData(vec4), [=](){
+
+        if_changed(gCurrentUniforms, uniform, vec4, [=](){
             GL_FUNC(glUniform4fv)(uniform, 1, math::ptr(vec4));
         });
     }
-    
+
     void set_uniform(GLuint program, GLint uniform, int i) {
         if (gCurrentProgram == program) {
             set_uniform(uniform, i);
         }
         else {
-            gNewShaderStates[program][uniform] = UniformData(i);
+            gNewShaderStates[program][uniform] = i;
         }
     }
-    
+
     void set_uniform(GLint uniform, int i) {
         if (gCurrentProgram == UINT_MAX) return;
 
-        if_changed(gCurrentUniforms, uniform, UniformData(i), [=](){
+        if_changed(gCurrentUniforms, uniform, i, [=](){
             GL_FUNC(glUniform1i)(uniform, i);
         });
     }
-    
+
     void delete_program(GLuint program) {
         gSavedShaderStates[program].clear();
         gNewShaderStates[program].clear();
@@ -256,30 +286,6 @@ namespace rosewood { namespace graphics { namespace gl_state {
 } } }
 
 namespace rosewood { namespace graphics {
-
-    UniformData::UniformData() : type(UniformDataType::Empty), data(0) { }
-    UniformData::UniformData(int i1) : type(UniformDataType::Int1), data(i1) { }
-    UniformData::UniformData(math::Matrix3 mat3) : type(UniformDataType::Matrix3), data(mat3) { }
-    UniformData::UniformData(math::Matrix4 mat4) : type(UniformDataType::Matrix4), data(mat4) { }
-    UniformData::UniformData(math::Vector4 vec4) : type(UniformDataType::Vector4), data(vec4) { }
-
-    bool operator== (const UniformData &lhs, const UniformData &rhs) {
-        if (lhs.type != rhs.type) return false;
-
-        switch (lhs.type) {
-            case UniformDataType::Empty: return true;
-            case UniformDataType::Int1: return lhs.data.i1 == rhs.data.i1;
-            case UniformDataType::Matrix3: return lhs.data.mat3 == rhs.data.mat3;
-            case UniformDataType::Matrix4: return lhs.data.mat4 == rhs.data.mat4;
-            case UniformDataType::Vector4: return lhs.data.vec4 == rhs.data.vec4;
-        }
-
-        assert(0);
-    }
-
-    bool operator!= (const UniformData &lhs, const UniformData &rhs) {
-        return !(lhs == rhs);
-    }
 
     VertexAttribPointer::VertexAttribPointer()
     : _size(-1), _type(kTypeFloat), _normalized(false), _stride(0), _offset(0) { }

@@ -22,18 +22,18 @@ namespace rosewood { namespace physics {
 
         Hull(const std::shared_ptr<core::Asset> &hull_asset);
 
-        const std::vector<float> &hull_points() const;
-        std::vector<float> scaled_hull_points(math::Vector3 scale) const;
+        const std::vector<math::Vector3> &hull_points() const;
+        std::vector<math::Vector3> scaled_hull_points(math::Vector3 scale) const;
 
     private:
         std::shared_ptr<core::AssetView> _hull_asset;
 
-        std::vector<float> _hull_points;
+        std::vector<math::Vector3> _hull_points;
 
         void reload_hull_asset();
     };
 
-    inline const std::vector<float> &Hull::hull_points() const {
+    inline const std::vector<math::Vector3> &Hull::hull_points() const {
         return _hull_points;
     }
 

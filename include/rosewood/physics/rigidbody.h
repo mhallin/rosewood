@@ -19,7 +19,8 @@ namespace rosewood { namespace physics {
 
     class Rigidbody : public core::Component<Rigidbody>, public btMotionState {
     public:
-        Rigidbody(core::Entity owner, btDynamicsWorld *world, float mass);
+        Rigidbody(core::Entity owner, btDynamicsWorld *world, float mass,
+                  short collision_group, short collision_mask);
         virtual ~Rigidbody();
 
         void reload_shape();
@@ -27,6 +28,24 @@ namespace rosewood { namespace physics {
         void debug_draw(btIDebugDraw *renderer);
 
         btRigidBody *rigidbody() { return &_rigidbody; }
+
+        // This rigidbody belongs to the following groups [bitmask]
+        short collision_groups() const {
+            return _rigidbody.getBroadphaseProxy()->m_collisionFilterGroup;
+        }
+
+        void set_collision_groups(short groups) {
+            _rigidbody.getBroadphaseProxy()->m_collisionFilterGroup = groups;
+        }
+
+        // This rigidbody collides with the following groups [bitmask]
+        short collision_mask() const {
+            return _rigidbody.getBroadphaseProxy()->m_collisionFilterMask;
+        }
+
+        void set_collision_mask(short mask) {
+            _rigidbody.getBroadphaseProxy()->m_collisionFilterMask = mask;
+        }
 
         // btMotionState interface
         virtual void getWorldTransform(btTransform& worldTrans) const override;

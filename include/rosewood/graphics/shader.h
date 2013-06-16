@@ -31,16 +31,16 @@ namespace rosewood { namespace graphics {
             VertexAttribPointerType type;
             bool normalized;
         };
-        
+
         struct UniformSpec {
-            
+
         };
 
         static std::shared_ptr<Shader> create(const std::string &resource_path);
-        
+
         Shader(std::shared_ptr<core::Asset> shader_spec_asset);
         ~Shader();
-        
+
         void use() const;
         void set_projection_uniform(math::Matrix4 projection_matrix) const;
         void set_modelview_uniform(math::Matrix4 modelview_matrix) const;
@@ -55,7 +55,7 @@ namespace rosewood { namespace graphics {
         int queue_index() const;
 
         const std::vector<AttributeSpec> &extra_attributes() const;
-        
+
         enum class Uniforms {
             kProjectionMatrixUniform,
             kModelViewMatrixUniform,
@@ -65,17 +65,17 @@ namespace rosewood { namespace graphics {
             kLightColorUniform,
             kNumUniforms
         };
-        
+
         enum class Attributes {
             kPositionAttribute,
             kNormalAttribute,
             kTexCoordAttribute,
             kNumAttributes
         };
-        
+
         Shader(const Shader&) = delete;
         Shader &operator=(const Shader&) = delete;
-        
+
         void reload_shader();
 
     private:
@@ -88,14 +88,24 @@ namespace rosewood { namespace graphics {
         std::vector<UniformSpec> _extra_uniforms;
 
         int _queue_index;
-        
+
+        bool _depth_test;
+        bool _depth_write;
+
+        bool _enable_blend;
+        GLenum _blend_sfactor;
+        GLenum _blend_dfactor;
+
+        float _polygon_offset_factor;
+        float _polygon_offset_units;
+
         void destroy_shader();
 
         static const int kDefaultQueueIndex;
-        
+
         static const char *kUniformNames[(int)Uniforms::kNumUniforms];
         static const char *kAttributeNames[(int)Attributes::kNumAttributes];
-        
+
         static bool compile_shader(GLuint *out_shader,
                                    GLenum shader_type,
                                    std::string shader_source);
@@ -103,7 +113,7 @@ namespace rosewood { namespace graphics {
     };
 
     inline int Shader::queue_index() const { return _queue_index; }
-    
+
 } }
 
 #endif

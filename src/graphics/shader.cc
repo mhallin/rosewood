@@ -33,6 +33,21 @@ const char *Shader::kUniformNames[(int)Shader::Uniforms::kNumUniforms] = {
     "rw_light_position", "rw_light_color"
 };
 
+static GLenum convert_blend_name(const std::string &name) {
+    static std::unordered_map<std::string, GLenum> blend_modes{
+        { "zero", GL_ZERO }, { "one", GL_ONE },
+        { "src-color", GL_SRC_COLOR },
+        { "src-alpha", GL_SRC_ALPHA },
+        { "dst-color", GL_DST_COLOR },
+        { "dst-alpha", GL_DST_ALPHA },
+        { "one-minus-src-color", GL_ONE_MINUS_SRC_COLOR },
+        { "one-minus-src-alpha", GL_ONE_MINUS_SRC_ALPHA },
+        { "one-minus-dst-color", GL_ONE_MINUS_DST_COLOR },
+        { "one-minus-dst-alpha", GL_ONE_MINUS_DST_ALPHA },
+    };
+    return blend_modes.at(name);
+}
+
 std::shared_ptr<Shader> Shader::create(const std::string &resource_path) {
     return std::make_shared<Shader>(core::get_resource(resource_path + ".rwshader-mp"));
 }
@@ -41,6 +56,9 @@ Shader::Shader(std::shared_ptr<Asset> shader_spec_asset)
 : _program(UINT_MAX)
 , _shader_spec(core::create_view(shader_spec_asset, [&] { reload_shader(); }))
 , _queue_index(kDefaultQueueIndex)
+, _depth_test(true), _depth_write(true)
+, _enable_blend(false)
+, _polygon_offset_factor(0), _polygon_offset_units(0)
 {
     reload_shader();
 }
@@ -51,6 +69,23 @@ Shader::~Shader() {
 
 void Shader::use() const {
     gl_state::use_program(_program);
+
+    gl_state::set_state(GL_DEPTH_TEST, _depth_test || _depth_write);
+    gl_state::set_depth_mask(_depth_write);
+    gl_state::set_depth_func(_depth_test ? GL_LESS : GL_ALWAYS);
+
+    gl_state::set_state(GL_BLEND, _enable_blend);
+    if (_enable_blend) {
+        gl_state::set_blend_func(_blend_sfactor, _blend_dfactor);
+    }
+
+    auto enable_offset = _polygon_offset_factor != 0 ||
+                         _polygon_offset_units != 0;
+    gl_state::set_state(GL_POLYGON_OFFSET_FILL, enable_offset);
+    if (enable_offset) {
+        gl_state::set_polygon_offset(_polygon_offset_factor,
+                                     _polygon_offset_units);
+    }
 }
 
 void Shader::set_projection_uniform(Matrix4 projection_matrix) const {
@@ -80,7 +115,7 @@ void Shader::set_texture_sampler_uniform(int sampler) const {
 void Shader::set_light_position_uniform(math::Vector3 light_position) const {
     gl_state::set_uniform(_program,
                           _uniforms.at(kUniformNames[(int)Uniforms::kLightPositionUniform]),
-                          Vector4(light_position.x, light_position.y, light_position.z, 0));
+                          Vector4(light_position.x(), light_position.y(), light_position.z(), 0));
 }
 
 void Shader::set_light_color_uniform(math::Vector4 light_color) const {
@@ -189,22 +224,44 @@ void Shader::reload_shader() {
         else if (key == "queue-index") {
             _queue_index = kv.val.as<int>();
         }
+        else if (key == "depth-test") {
+            _depth_test = kv.val.as<bool>();
+        }
+        else if (key == "depth-write") {
+            _depth_write = kv.val.as<bool>();
+        }
+        else if (key == "blend-mode") {
+            if (kv.val.is_nil()) continue;
+
+            auto sfactor_name = kv.val.via.array.ptr[0].as<std::string>();
+            auto dfactor_name = kv.val.via.array.ptr[1].as<std::string>();
+
+            _blend_dfactor = convert_blend_name(dfactor_name);
+            _blend_sfactor = convert_blend_name(sfactor_name);
+            _enable_blend = true;
+        }
+        else if (key == "polygon-offset") {
+            if (kv.val.is_nil()) continue;
+
+            _polygon_offset_factor = kv.val.via.array.ptr[0].as<float>();
+            _polygon_offset_units = kv.val.via.array.ptr[1].as<float>();
+        }
     }
-    
+
     _program = GL_FUNC(glCreateProgram)();
-    
+
     GLuint vertex_shader;
     if (!compile_shader(&vertex_shader, GL_VERTEX_SHADER, vertex_shader_source)) {
         std::cerr << "Could not compile vertex shader, aborting" << std::endl;
         return;
     }
-    
+
     GLuint fragment_shader;
     if (!compile_shader(&fragment_shader, GL_FRAGMENT_SHADER, fragment_shader_source)) {
         std::cerr << "Could not compile fragment shader, aborting" << std::endl;
         return;
     }
-    
+
     GL_FUNC(glAttachShader)(_program, vertex_shader);
     GL_FUNC(glAttachShader)(_program, fragment_shader);
 
@@ -218,11 +275,11 @@ void Shader::reload_shader() {
         GL_FUNC(glBindAttribLocation)(_program, n_attrs + index,
                                       _extra_attributes[index].name.c_str());
     }
-    
+
     if (!link_program(_program)) {
         std::cerr << "Could not link shader program, aborting" << std::endl;
     }
-    
+
     for (GLuint index = 0; index < (int)Uniforms::kNumUniforms; ++index) {
         auto name = kUniformNames[index];
         _uniforms[name] = GL_FUNC(glGetUniformLocation)(_program, name);
@@ -239,47 +296,47 @@ void Shader::reload_shader() {
 bool Shader::compile_shader(GLuint *out_shader, GLenum shader_type, std::string shader_source) {
     GLuint shader = GL_FUNC(glCreateShader)(shader_type);
     const char *source = shader_source.c_str();
-    
+
     GL_FUNC(glShaderSource)(shader, 1, &source, nullptr);
     GL_FUNC(glCompileShader)(shader);
-    
+
     GLint shader_log_length = 0;
     GL_FUNC(glGetShaderiv)(shader, GL_INFO_LOG_LENGTH, &shader_log_length);
     if (shader_log_length > 0) {
         std::string log((size_t)shader_log_length - 1, '\0');
         GL_FUNC(glGetShaderInfoLog)(shader, shader_log_length, &shader_log_length, &log.front());
-        
+
         std::cerr << "Shader info log: " << log << std::endl;
     }
-    
+
     GLint status = 0;
     GL_FUNC(glGetShaderiv)(shader, GL_COMPILE_STATUS, &status);
     if (status != GL_TRUE) {
         GL_FUNC(glDeleteShader)(shader);
         return false;
     }
-    
+
     *out_shader = shader;
     return true;
 }
 
 bool Shader::link_program(GLuint program) {
     GL_FUNC(glLinkProgram)(program);
-    
+
     GLint program_log_length = 0;
     GL_FUNC(glGetProgramiv)(program, GL_INFO_LOG_LENGTH, &program_log_length);
     if (program_log_length > 0) {
         std::string log((size_t)program_log_length - 1, '\0');
         GL_FUNC(glGetProgramInfoLog)(program, program_log_length, &program_log_length, &log.front());
-        
+
         std::cerr << "Program info log: " << log << std::endl;
     }
-    
+
     GLint status = 0;
     GL_FUNC(glGetProgramiv)(program, GL_LINK_STATUS, &status);
     if (status != GL_TRUE) {
         return false;
     }
-    
+
     return true;
 }
