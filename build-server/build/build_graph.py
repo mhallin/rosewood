@@ -239,8 +239,8 @@ def generate_graphviz(bld, f):
 
 
 def default_graph():
-    bld = BuildGraph('/Users/mhallin/Dropbox/Code/BWRenderer')
-    recursive_build(bld, '/Users/mhallin/Dropbox/Code/BWRenderer/game-assets')
+    bld = BuildGraph('/home/mhallin/src/rosewood')
+    recursive_build(bld, '/home/mhallin/src/rosewood/game-assets')
     return bld
 
 

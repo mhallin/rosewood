@@ -1,5 +1,7 @@
 #include "rosewood/graphics/mesh.h"
 
+#include <assert.h>
+
 #include <numeric>
 
 #include "rosewood/core/resource_manager.h"
@@ -41,6 +43,8 @@ void Mesh::instantiate(Matrix4 transform, Matrix4 inverse_transform,
                        std::vector<float>::iterator destination,
                        const std::vector<Shader::AttributeSpec> &attribute_specs) const {
     auto n_matrix = transposed(mat3(inverse_transform));
+
+	assert(this);
 
     auto &v_data = vertex_data();
     auto &n_data = normal_data();

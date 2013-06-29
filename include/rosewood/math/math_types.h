@@ -3,8 +3,6 @@
 
 #include <array>
 
-#include <TargetConditionals.h>
-
 #if __SSE__
 #include <x86intrin.h>
 #endif

@@ -1,4 +1,8 @@
-asset-build
+/asset-build
 xcuserdata
 *.pyc
-build-server/build/graph.png
+/build-server/build/graph.png
+/.lock-waf*
+/.waf-*
+/build
+/gtest-*

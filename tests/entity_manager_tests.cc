@@ -29,11 +29,11 @@ TEST_F(EntityManagerTests, DestroyEntity) {
 TEST_F(EntityManagerTests, ReuseId) {
     Entity e1 = _entities.create_entity();
     _entities.create_entity();
-    
+
     _entities.destroy_entity(e1);
-    
+
     Entity e3 = _entities.create_entity();
-    
+
     EXPECT_EQ(e1.eid, e3.eid);
 }
 
@@ -52,66 +52,66 @@ struct CtorDtorComponent : public Component<CtorDtorComponent> {
     {
         *ctor_called = true;
     }
-    
+
     ~CtorDtorComponent() {
         *_dtor_called = true;
     }
-    
+
 private:
     bool *_dtor_called;
 };
 
 TEST_F(EntityManagerTests, AddComponent) {
     Entity e1 = _entities.create_entity();
-    
+
     auto comp = _entities.add_component<TestComponent>(e1);
-    ASSERT_NE(nullptr, comp);
+    ASSERT_NE((TestComponent *)nullptr, comp);
 }
 
 TEST_F(EntityManagerTests, GetComponent) {
     Entity e1 = _entities.create_entity();
     Entity e2 = _entities.create_entity();
     auto comp = _entities.add_component<TestComponent>(e1);
-    
+
     ASSERT_EQ(comp, _entities.component<TestComponent>(e1));
-    ASSERT_EQ(nullptr, _entities.component<TestComponent>(e2));
+    ASSERT_EQ((TestComponent *)nullptr, _entities.component<TestComponent>(e2));
 }
 
 TEST_F(EntityManagerTests, AutoAddComponent) {
     Entity e1 = _entities.create_entity<TestComponent>();
-    
+
     auto comp = _entities.component<TestComponent>(e1);
-    ASSERT_NE(nullptr, comp);
+    ASSERT_NE((TestComponent *)nullptr, comp);
 }
 
 TEST_F(EntityManagerTests, AutoAddManyComponents) {
     Entity e1 = _entities.create_entity<TestComponent, TestComponent2>();
-    
-    ASSERT_NE(nullptr, _entities.component<TestComponent>(e1));
-    ASSERT_NE(nullptr, _entities.component<TestComponent2>(e1));
+
+    ASSERT_NE((TestComponent *)nullptr, _entities.component<TestComponent>(e1));
+    ASSERT_NE((TestComponent2 *)nullptr, _entities.component<TestComponent2>(e1));
 }
 
 TEST_F(EntityManagerTests, RemoveComponent) {
     bool ctor_called = false, dtor_called = false;
     Entity e1 = _entities.create_entity();
-    
+
     _entities.add_component<CtorDtorComponent>(e1, &ctor_called, &dtor_called);
-    
+
     EXPECT_TRUE(ctor_called);
     EXPECT_FALSE(dtor_called);
-    
+
     _entities.remove_component<CtorDtorComponent>(e1);
-    
+
     EXPECT_TRUE(dtor_called);
-    EXPECT_EQ(nullptr, _entities.component<CtorDtorComponent>(e1));
+    EXPECT_EQ((CtorDtorComponent *)nullptr, _entities.component<CtorDtorComponent>(e1));
 }
 
 TEST_F(EntityManagerTests, RemoveComponentsWhenEntityRemoved) {
     bool ctor_called = false, dtor_called = false;
     Entity e1 = _entities.create_entity();
-    
+
     _entities.add_component<CtorDtorComponent>(e1, &ctor_called, &dtor_called);
-    EXPECT_NE(nullptr, _entities.component<CtorDtorComponent>(e1));
+    EXPECT_NE((CtorDtorComponent *)nullptr, _entities.component<CtorDtorComponent>(e1));
 
     _entities.destroy_entity(e1);
     EXPECT_TRUE(dtor_called);
@@ -119,14 +119,14 @@ TEST_F(EntityManagerTests, RemoveComponentsWhenEntityRemoved) {
 
 struct __attribute__ ((aligned (1024))) AlignedComponent : public Component<AlignedComponent> {
     AlignedComponent(Entity entity, int i) : Component<AlignedComponent>(entity), i(i) { }
-    
+
     int i;
 };
 
 TEST_F(EntityManagerTests, AlignedComponentsSanity) {
     auto e1 = _entities.create_entity();
     AlignedComponent ac(e1, 123);
-    
+
     ASSERT_EQ(0, size_t(&ac) % 1024);
 }
 
@@ -140,7 +140,7 @@ TEST_F(EntityManagerTests, AlignedComponent) {
     auto c2 = _entities.add_component<AlignedComponent>(e2, 123);
     auto c3 = _entities.add_component<AlignedComponent>(e3, 123);
     auto c4 = _entities.add_component<AlignedComponent>(e4, 123);
-    
+
     EXPECT_EQ(0, size_t(c1) % 1024);
     EXPECT_EQ(0, size_t(c2) % 1024);
     EXPECT_EQ(0, size_t(c3) % 1024);

@@ -1,7 +1,7 @@
 #ifndef __ROSEWOOD_GRAPHICS_PLATFORM_GL_H__
 #define __ROSEWOOD_GRAPHICS_PLATFORM_GL_H__
 
-#include <TargetConditionals.h>
+#include <rosewood/target.h>
 
 #if TARGET_OS_IPHONE
 #include <OpenGLES/ES2/gl.h>
@@ -36,6 +36,17 @@
 #define glGenVertexArrays glGenVertexArraysOES
 #define glDeleteVertexArrays glDeleteVertexArraysOES
 #define glBindVertexArray glBindVertexArrayOES
+
+#endif
+
+#if TARGET_OS_UNIX
+
+#define GL_GLEXT_PROTOTYPES
+
+#include <GL/gl.h>
+#include <GL/glext.h>
+
+#define SHADER_EXT "gl32"
 
 #endif
 
