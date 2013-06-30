@@ -80,7 +80,7 @@ def configure(conf):
         conf.env.append_value('FRAMEWORK', 'OpenGL')
         conf.env.append_value('FRAMEWORK', 'CoreVideo')
 
-    if 'glx' in conf.env.RW_MODULES:
+    if 'x11' in conf.env.RW_MODULES:
         conf.env.append_value('LINKFLAGS', '-pthread')
 
     env = conf.env
@@ -108,7 +108,7 @@ def build(bld):
 
     uses = ['msgpack', 'ev']
 
-    if 'glx' in bld.env.RW_MODULES:
+    if 'x11' in bld.env.RW_MODULES:
         bld.read_shlib('GL')
         uses.append('GL')
 
