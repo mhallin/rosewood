@@ -1,4 +1,4 @@
-    # -*- mode: python -*-
+# -*- mode: python -*-
 
 import itertools
 import operator

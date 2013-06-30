@@ -56,17 +56,30 @@ using rosewood::core::add_resource_loader;
 
 using rosewood::utils::FolderResourceLoader;
 
+class ScopedDisplayLock {
+public:
+	ScopedDisplayLock(Display *display) : _display(display) { XLockDisplay(_display); }
+	~ScopedDisplayLock() { XUnlockDisplay(_display); }
+
+private:
+	Display *_display;
+};
+
 static void render_loop(GLXFBConfig fbcfg, bool *is_rendering) {
 	XLockDisplay(main_display);
 
 	gl_context = glXCreateContextAttribsARB(main_display, fbcfg, NULL, GL_TRUE, gl3_attributes);
 	glXMakeCurrent(main_display, dest_window, gl_context);
 
-	LOG(INFO) << "OpenGL visual id: " << (void*)visual_info->visualid;
-	LOG(INFO) << "OpenGL vendor:    " << glGetString(GL_VENDOR);
-	LOG(INFO) << "OpenGL renderer:  " << glGetString(GL_RENDERER);
-	LOG(INFO) << "OpenGL version:   " << glGetString(GL_VERSION);
-	LOG(INFO) << "GLSL version:     " << glGetString(GL_SHADING_LANGUAGE_VERSION);
+	XWindowAttributes window_attributes;
+	XGetWindowAttributes(main_display, dest_window, &window_attributes);
+
+	LOG(INFO) << "OpenGL visual id:  " << (void*)visual_info->visualid;
+	LOG(INFO) << "OpenGL vendor:     " << glGetString(GL_VENDOR);
+	LOG(INFO) << "OpenGL renderer:   " << glGetString(GL_RENDERER);
+	LOG(INFO) << "OpenGL version:    " << glGetString(GL_VERSION);
+	LOG(INFO) << "GLSL version:      " << glGetString(GL_SHADING_LANGUAGE_VERSION);
+	LOG(INFO) << "Window dimensions: " << window_attributes.width << "x" << window_attributes.height;
 
 	app = AppClass::create();
 
@@ -91,8 +104,12 @@ static void render_loop(GLXFBConfig fbcfg, bool *is_rendering) {
 
 		app->update();
 		app->draw();
-		glFlush();
-		glXSwapBuffers(main_display, dest_window);
+
+		{
+			ScopedDisplayLock lock(main_display);
+			glXSwapBuffers(main_display, dest_window);
+		}
+
 		++frames_since_last_print;
 
 		uint64_t now = rosewood::utils::current_usec_time();
@@ -124,6 +141,10 @@ int main(int, const char **) {
 
 	root_window = DefaultRootWindow(main_display);
 
+	XWindowAttributes root_attributes;
+	XGetWindowAttributes(main_display, root_window, &root_attributes);
+	LOG(INFO) << "Root window dimensions: " << root_attributes.width << "x" << root_attributes.height;
+
 	int fb_elem_count;
 	GLXFBConfig *fbcfg = glXChooseFBConfig(main_display, 0, visual_attributes, &fb_elem_count);
 	if (!fbcfg) {
@@ -144,7 +165,7 @@ int main(int, const char **) {
 	window_attributes.event_mask = ExposureMask | KeyPressMask;
 
 	dest_window = XCreateWindow(main_display, root_window,
-								0, 0, 1024, 768,
+								0, 0, root_attributes.width, root_attributes.height,
 								0, visual_info->depth,
 								InputOutput,
 								visual_info->visual,
@@ -165,28 +186,47 @@ int main(int, const char **) {
 	XMapWindow(main_display, dest_window);
 	XStoreName(main_display, dest_window, "Rosewood Example");
 
+	Atom wm_state = XInternAtom(main_display, "_NET_WM_STATE", False);
+	Atom fullscreen = XInternAtom(main_display, "_NET_WM_STATE_FULLSCREEN", False);
+
+	XEvent ev = {0};
+	ev.type = ClientMessage;
+	ev.xclient.window = dest_window;
+	ev.xclient.message_type = wm_state;
+	ev.xclient.format = 32;
+	ev.xclient.data.l[0] = 1;
+	ev.xclient.data.l[1] = fullscreen;
+	ev.xclient.data.l[2] = 0;
+
+	XSendEvent(main_display, root_window, False, SubstructureRedirectMask | SubstructureNotifyMask, &ev);
+	XFlush(main_display);
+
 	bool is_rendering = true;
 
 	std::thread render_thread(render_loop, fbcfg[0], &is_rendering);
 
 	LOG(INFO, "Starting X event processing");
 
-	while (is_rendering) {
-		XEvent event;
-		XNextEvent(main_display, &event);
+	XEvent event;
 
-		switch (event.type) {
-		case Expose:
-			// glXMakeCurrent(main_display, dest_window, gl_context);
-			// std::cerr << "Drawing\n";
-			// app->update();
-			// app->draw();
-			// glFlush();
-			// glXSwapBuffers(main_display, dest_window);
-			break;
-		case KeyPress:
-			is_rendering = false;
-			break;
+	while (is_rendering) {
+		usleep(100);
+
+		ScopedDisplayLock lock(main_display);
+
+		while (XPending(main_display)) {
+			XNextEvent(main_display, &event);
+
+			switch (event.type) {
+			case KeyPress: {
+				KeySym sym = XLookupKeysym(&event.xkey, 0);
+
+				if (sym == XK_q) {
+					is_rendering = false;
+				}
+				break;
+			}
+			}
 		}
 	}
 
