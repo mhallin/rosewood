@@ -1,10 +1,12 @@
 #include "rosewood/graphics/gl_func.h"
 
+#include "rosewood/core/logging.h"
+
 void rosewood::graphics::dump_gl_errors() {
     GLenum err = GL_NO_ERROR;
     
     while ((err = glGetError()) != GL_NO_ERROR) {
-        std::cerr << "GL Error " << err << ": " << format_gl_error(err) << std::endl;
+        LOG(ERROR) << "GL Error " << err << ": " << format_gl_error(err);
     }
 }
 

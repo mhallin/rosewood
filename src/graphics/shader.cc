@@ -5,6 +5,7 @@
 
 #include "rosewood/core/resource_manager.h"
 #include "rosewood/core/clang_msgpack.h"
+#include "rosewood/core/logging.h"
 
 #include "rosewood/math/math_types.h"
 #include "rosewood/math/matrix4.h"
@@ -252,13 +253,13 @@ void Shader::reload_shader() {
 
     GLuint vertex_shader;
     if (!compile_shader(&vertex_shader, GL_VERTEX_SHADER, vertex_shader_source)) {
-        std::cerr << "Could not compile vertex shader, aborting" << std::endl;
+        LOG(ERROR, "Could not compile vertex shader");
         return;
     }
 
     GLuint fragment_shader;
     if (!compile_shader(&fragment_shader, GL_FRAGMENT_SHADER, fragment_shader_source)) {
-        std::cerr << "Could not compile fragment shader, aborting" << std::endl;
+        LOG(ERROR, "Could not compile fragment shader");
         return;
     }
 
@@ -277,14 +278,14 @@ void Shader::reload_shader() {
     }
 
     if (!link_program(_program)) {
-        std::cerr << "Could not link shader program, aborting" << std::endl;
+        LOG(ERROR, "Could not link shader program");
     }
 
     for (GLuint index = 0; index < (int)Uniforms::kNumUniforms; ++index) {
         auto name = kUniformNames[index];
         _uniforms[name] = GL_FUNC(glGetUniformLocation)(_program, name);
         if (_uniforms[name] == -1) {
-            std::cerr << "Could not find uniform " << kUniformNames[index] << std::endl;
+            LOG(WARNING) << "Could not find uniform " << kUniformNames[index];
         }
     }
 
@@ -306,7 +307,7 @@ bool Shader::compile_shader(GLuint *out_shader, GLenum shader_type, std::string 
         std::string log((size_t)shader_log_length - 1, '\0');
         GL_FUNC(glGetShaderInfoLog)(shader, shader_log_length, &shader_log_length, &log.front());
 
-        std::cerr << "Shader info log: " << log << std::endl;
+        LOG(WARNING) << "Shader info log: " << log;
     }
 
     GLint status = 0;
@@ -329,7 +330,7 @@ bool Shader::link_program(GLuint program) {
         std::string log((size_t)program_log_length - 1, '\0');
         GL_FUNC(glGetProgramInfoLog)(program, program_log_length, &program_log_length, &log.front());
 
-        std::cerr << "Program info log: " << log << std::endl;
+        LOG(WARNING) << "Program info log: " << log;
     }
 
     GLint status = 0;

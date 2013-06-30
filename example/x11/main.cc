@@ -100,7 +100,7 @@ static void render_loop(GLXFBConfig fbcfg, bool *is_rendering) {
 
 		if (usec_diff >= rosewood::utils::kUsecPerSec) {
 			last_print_time = now;
-			LOG(DEBUG) << "FPS: " << (frames_since_last_print * rosewood::utils::kUsecPerSec / (double)usec_diff);
+			LOG(DBG) << "FPS: " << (frames_since_last_print * rosewood::utils::kUsecPerSec / (double)usec_diff);
 			frames_since_last_print = 0;
 		}
 	}

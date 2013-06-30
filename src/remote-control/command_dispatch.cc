@@ -8,6 +8,7 @@
 
 #include "rosewood/core/resource_manager.h"
 #include "rosewood/core/memory.h"
+#include "rosewood/core/logging.h"
 
 #include "rosewood/remote-control/event_loop.h"
 
@@ -64,7 +65,7 @@ namespace rosewood { namespace remote_control {
     
     static void reload_asset_command(const Client&, const msgpack::object_array &args) {
         if (args.size != 3) {
-            std::cerr << "Wrong number of arguments, reload_asset expects 2\n";
+            LOG(ERROR, "Wrong number of argumments, reload_asset expects 2");
             return;
         }
         
@@ -74,7 +75,7 @@ namespace rosewood { namespace remote_control {
     
     static void get_asset_command(Client &client, const msgpack::object_array &args) {
         if (args.size != 2) {
-            std::cerr << "Wrong number of arguments, get_asset expects 1\n";
+            LOG(ERROR, "Wrong number of arguments, get_asset expects 1");
             return;
         }
         
@@ -98,25 +99,25 @@ namespace rosewood { namespace remote_control {
     
     void dispatch_command(Client &client, msgpack::object obj) {
         if (obj.type != MSGPACK_OBJECT_ARRAY) {
-            std::cerr << "Command object is not an array\n";
+            LOG(WARNING, "Command object is not an array");
             return;
         }
 
         auto array = obj.via.array;
         if (array.size == 0) {
-            std::cerr << "Empty command array\n";
+            LOG(WARNING, "Empty command array");
             return;
         }
         
         auto cmd_obj = array.ptr[0];
         if (cmd_obj.type != MSGPACK_OBJECT_RAW) {
-            std::cerr << "Invalid command name object\n";
+            LOG(WARNING, "Invalid command name object");
             return;
         }
 
         auto cmd_name = array.ptr[0].as<std::string>();
         if (gCommands.find(cmd_name) == end(gCommands)) {
-            std::cerr << "Unknown command: " << cmd_name << "\n";
+            LOG(WARNING) << "Unknown command: " << cmd_name;
         }
         else {
             gCommands.at(cmd_name)(client, array);

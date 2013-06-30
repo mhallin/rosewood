@@ -1,17 +1,17 @@
-#ifndef __ROSEWOOD_UTILS_LOGGING_H__
-#define __ROSEWOOD_UTILS_LOGGING_H__
+#ifndef __ROSEWOOD_CORE_LOGGING_H__
+#define __ROSEWOOD_CORE_LOGGING_H__
 
-#define DEBUG rosewood::utils::LogLevel::kDebugLevel
-#define INFO rosewood::utils::LogLevel::kInfoLevel
-#define WARNING rosewood::utils::LogLevel::kWarningLevel
-#define ERROR rosewood::utils::LogLevel::kErrorLevel
+#define DBG rosewood::core::LogLevel::kDebugLevel
+#define INFO rosewood::core::LogLevel::kInfoLevel
+#define WARNING rosewood::core::LogLevel::kWarningLevel
+#define ERROR rosewood::core::LogLevel::kErrorLevel
 
-#define LOG(level, ...) rosewood::utils::LogWriter(level, __FILE__, __LINE__, ##__VA_ARGS__)
+#define LOG(level, ...) rosewood::core::LogWriter(level, __FILE__, __LINE__, ##__VA_ARGS__)
 
 #include <string>
 #include <sstream>
 
-namespace rosewood { namespace utils {
+namespace rosewood { namespace core {
 
 		enum class LogLevel {
 			kDebugLevel = 10,

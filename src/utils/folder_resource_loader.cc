@@ -6,6 +6,8 @@
 #include <iterator>
 #include <iostream>
 
+#include "rosewood/core/logging.h"
+
 using rosewood::core::IResourceLoader;
 
 using rosewood::utils::FolderResourceLoader;
@@ -20,7 +22,7 @@ rosewood::core::FileInfo FolderResourceLoader::find_file(std::string path) const
 	struct stat s;
 
 	if (stat(path.c_str(), &s)) {
-		std::cerr << "File " << path << " does not exist\n";
+        LOG(WARNING) << "File does not exist: " << path;
 		i.exists = false;
 	}
 	else {
@@ -36,7 +38,7 @@ std::string FolderResourceLoader::read_file(std::string path) const {
 
 	std::ifstream stream(path);
 	if (stream.bad()) {
-		std::cerr << "File " << path << " does not exist\n";
+        LOG(ERROR) << "File does not exist: " << path;
 	}
 
 	return std::string(std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>());

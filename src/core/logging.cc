@@ -1,11 +1,11 @@
-#include "rosewood/utils/logging.h"
+#include "rosewood/core/logging.h"
 
 #include <mutex>
 #include <map>
 #include <iostream>
 
-using rosewood::utils::LogLevel;
-using rosewood::utils::LogWriter;
+using rosewood::core::LogLevel;
+using rosewood::core::LogWriter;
 
 static std::string basename(const std::string &path) {
     size_t pos = path.rfind('/');

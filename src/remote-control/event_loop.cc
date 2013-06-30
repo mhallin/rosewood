@@ -13,6 +13,7 @@
 #include <unistd.h>
 
 #include "rosewood/core/memory.h"
+#include "rosewood/core/logging.h"
 
 #include "rosewood/remote-control/command_dispatch.h"
 
@@ -46,7 +47,7 @@ namespace rosewood { namespace remote_control {
     Client::Client(ServerDispatch *server, int fd) : _fd(fd), _server(server) {
         int flags = fcntl(_fd, F_GETFL);
         if (flags == -1) {
-            std::cerr << "Could not get file flags\n";
+            LOG(ERROR, "Could not get socket file flags");
             _fd = -1;
             return;
         }
@@ -54,7 +55,7 @@ namespace rosewood { namespace remote_control {
         flags |= O_NONBLOCK;
         
         if (fcntl(_fd, F_SETFL, flags) == -1) {
-            std::cerr << "Could not set file flags\n";
+            LOG(ERROR, "Could not set socket file flags");
             _fd = -1;
             return;
         }
@@ -80,12 +81,12 @@ namespace rosewood { namespace remote_control {
             auto n = recv(_fd, _unpacker.buffer(), _unpacker.buffer_capacity(), 0);
             if (n == -1) {
                 if (errno == EAGAIN) {
-                    std::cerr << "Could not read from client\n";
+                    LOG(ERROR, "Could not read from client");
                 }
                 return;
             }
             else if (n == 0) {
-                std::cerr << "Client disconnected\n";
+                LOG(ERROR, "Client disconnected");
                 ev_io_stop(EV_A_ io());
                 close(_fd);
                 _server->client_disconnected(this);
@@ -115,7 +116,7 @@ namespace rosewood { namespace remote_control {
         hints.ai_flags = AI_PASSIVE;
         
         if (getaddrinfo(nullptr, "7768", &hints, &res) != 0) {
-            std::cerr << "Could not get address info\n";
+            LOG(ERROR, "Could not get address info");
             return;
         }
         
@@ -127,13 +128,13 @@ namespace rosewood { namespace remote_control {
         
         _fd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
         if (_fd == -1) {
-            std::cerr << "Could not create socket\n";
+            LOG(ERROR, "Could not create socket");
             return;
         }
         
         int flags = fcntl(_fd, F_GETFL);
         if (flags == -1) {
-            std::cerr << "Could not get file flags\n";
+            LOG(ERROR, "Could not get socket file flags");
             _fd = -1;
             return;
         }
@@ -141,19 +142,19 @@ namespace rosewood { namespace remote_control {
         flags |= O_NONBLOCK;
         
         if (fcntl(_fd, F_SETFL, flags) == -1) {
-            std::cerr << "Could not set file flags\n";
+            LOG(ERROR, "Could not set socket file flags");
             _fd = -1;
             return;
         }
         
         if (bind(_fd, res->ai_addr, res->ai_addrlen) == -1 ) {
-            std::cerr << "Could not bind socket\n";
+            LOG(ERROR, "Could not bind socket");
             _fd = -1;
             return;
         }
         
         if (listen(_fd, 5) == -1) {
-            std::cerr << "Could not listen\n";
+            LOG(ERROR, "Could not listen on socket");
             _fd = -1;
             return;
         }
@@ -182,12 +183,12 @@ namespace rosewood { namespace remote_control {
             int client_fd = accept(_fd, nullptr, nullptr);
             if (client_fd == -1) {
                 if (errno != EAGAIN && errno != EWOULDBLOCK) {
-                    std::cerr << "accept() failed";
+                    LOG(ERROR, "accept() failed");
                 }
                 break;
             }
-            
-            std::cerr << "Accepted a client\n";
+
+            LOG(INFO, "Accepted a client");
             
             auto client = make_unique<Client>(this, client_fd);
             ev_io_start(EV_A_ client->io());
@@ -204,7 +205,7 @@ namespace rosewood { namespace remote_control {
         gServer = new ServerDispatch();
         
         if (!gServer->is_okay()) {
-            std::cerr << "No loop inited\n";
+            LOG(WARNING, "No loop inited");
             delete gServer;
             gServer = nullptr;
             return;
