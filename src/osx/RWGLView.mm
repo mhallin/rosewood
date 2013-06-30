@@ -32,8 +32,7 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 }
 
 @implementation RWGLView {
-    BOOL _needsReshape;
-    BOOL _haveViewport;
+    int _needsReshape;
 
     CVDisplayLinkRef _displayLink;
 
@@ -59,8 +58,7 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 }
 
 - (void)awakeFromNib {
-    _needsReshape = NO;
-    _haveViewport = NO;
+    _needsReshape = 0;
     _isPaused = NO;
 
     self.pixelFormat = [[self class] defaultPixelFormat];
@@ -129,7 +127,7 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 }
 
 - (void)setFrame:(NSRect)frameRect {
-    _needsReshape = YES;
+    _needsReshape = 2;
     [super setFrame:frameRect];
 }
 
@@ -146,10 +144,9 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 - (CVReturn)drawForTime:(const CVTimeStamp *)__unused time {
     [self.openGLContext makeCurrentContext];
 
-    if (_needsReshape || !_haveViewport) {
+    if (_needsReshape) {
         [_delegate rosewoodDidReshapeViewport:self];
-        _needsReshape = NO;
-        _haveViewport = YES;
+        --_needsReshape;
     }
 
     [_delegate rosewoodDrawDidTick:self];
