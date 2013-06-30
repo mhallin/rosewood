@@ -14,7 +14,7 @@ static std::string basename(const std::string &path) {
         return path;
     }
 
-    return path.substr(pos);
+    return path.substr(pos + 1);
 }
 
 static const std::map<LogLevel, std::string> kLogLevelNames {
