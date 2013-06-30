@@ -70,6 +70,7 @@ def configure(conf):
                             '-fcolor-diagnostics'] + warnings
 
     conf.env['LINKFLAGS'] = ['-std=c++11', '-stdlib=libc++']
+    conf.env['LIBPATH'] = ['/usr/lib', '/usr/local/lib']
 
     conf.env['INCLUDES'] = ['include', '/usr/local/include']
 
@@ -82,6 +83,20 @@ def configure(conf):
 
     if 'x11' in conf.env.RW_MODULES:
         conf.env.append_value('LINKFLAGS', '-pthread')
+
+        conf.check(header_name='GL/gl.h', features='c cprogram')
+        conf.check(lib='GL', features='c cprogram')
+
+        conf.check(header_name='thread', features='cxx cxxprogram')
+        conf.check(lib='pthread', features='c cprogram')
+
+    if 'libpng' in conf.env.RW_MODULES:
+        conf.check(header_name='png.h', lib='png', features='c cprogram')
+
+    conf.check(header_name='msgpack.h', features='c cprogram')
+    conf.check(lib='msgpack', features='c cprogram')
+    conf.check(header_name='ev.h', features='c cprogram')
+    conf.check(lib='ev', features='c cprogram')
 
     env = conf.env
 
@@ -102,22 +117,14 @@ def build(bld):
     if not bld.variant:
         bld.variant = 'debug'
 
-    bld.read_stlib('msgpack')
-    bld.read_stlib('ev')
-    #     bld.read_stlib('gtest', paths=['gtest'])
-
-    uses = ['msgpack', 'ev']
+    libs = ['msgpack', 'ev']
 
     if 'x11' in bld.env.RW_MODULES:
-        bld.read_shlib('GL')
-        uses.append('GL')
-
-        bld.read_shlib('pthread')
-        uses.append('pthread')
+        libs.append('GL')
+        libs.append('pthread')
 
     if 'libpng' in bld.env.RW_MODULES:
-        bld.read_shlib('png')
-        uses.append('png')
+        libs.append('png')
 
     def sources_in_modules(root, modules):
         return reduce(operator.concat,
@@ -142,7 +149,7 @@ def build(bld):
     bld.program(features='c cxx',
                 target='rwexample',
                 source=(rosewood_srcs + example_srcs),
-                use=uses)
+                lib=libs)
 
     bld.stlib(features='c cxx',
               target='gtest',
