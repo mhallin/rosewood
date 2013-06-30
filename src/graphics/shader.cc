@@ -303,11 +303,11 @@ bool Shader::compile_shader(GLuint *out_shader, GLenum shader_type, std::string 
 
     GLint shader_log_length = 0;
     GL_FUNC(glGetShaderiv)(shader, GL_INFO_LOG_LENGTH, &shader_log_length);
-    if (shader_log_length > 0) {
+    if (shader_log_length) {
         std::string log((size_t)shader_log_length - 1, '\0');
         GL_FUNC(glGetShaderInfoLog)(shader, shader_log_length, &shader_log_length, &log.front());
 
-        LOG(WARNING) << "Shader info log: " << log;
+		if (shader_log_length) LOG(WARNING) << "Shader info log: " << log;
     }
 
     GLint status = 0;
@@ -326,11 +326,11 @@ bool Shader::link_program(GLuint program) {
 
     GLint program_log_length = 0;
     GL_FUNC(glGetProgramiv)(program, GL_INFO_LOG_LENGTH, &program_log_length);
-    if (program_log_length > 0) {
+    if (program_log_length) {
         std::string log((size_t)program_log_length - 1, '\0');
         GL_FUNC(glGetProgramInfoLog)(program, program_log_length, &program_log_length, &log.front());
 
-        LOG(WARNING) << "Program info log: " << log;
+        if (program_log_length) LOG(WARNING) << "Program info log: " << log;
     }
 
     GLint status = 0;
