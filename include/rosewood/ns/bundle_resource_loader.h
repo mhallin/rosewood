@@ -9,7 +9,7 @@
 typedef NSBundle void
 #endif
 
-namespace rosewood { namespace utils {
+namespace rosewood { namespace ns {
 
     class NSBundleResourceLoader : public core::IResourceLoader {
     public:

@@ -1,4 +1,4 @@
-#include "rosewood/utils/url_downloader.h"
+#include "rosewood/utils/url_downloader_osx.h"
 
 #include "rosewood/graphics/texture.h"
 #include "rosewood/graphics/image_loader.h"

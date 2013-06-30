@@ -13,11 +13,11 @@
 
 #include "rosewood/utils/animatable.h"
 #include "rosewood/utils/time.h"
-#include "rosewood/utils/bundle_resource_loader.h"
+#include "rosewood/ns/bundle_resource_loader.h"
 
 using rosewood::core::add_resource_loader;
 
-using rosewood::utils::NSBundleResourceLoader;
+using rosewood::ns::NSBundleResourceLoader;
 
 static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
                                       __unused const CVTimeStamp *inNow,

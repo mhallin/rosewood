@@ -1,4 +1,4 @@
-    # -*- mode: python -*-
+# -*- mode: python -*-
 
 import itertools
 import operator
@@ -8,9 +8,9 @@ import os.path
 IBTOOL = 'ibtool ${IBFLAGS} ${SRC} --compile ${TGT}'
 COPY_FILE = 'cp ${SRC} ${TGT}'
 
-MODULES = ['ios', 'osx', 'ns',
+MODULES = ['ios', 'osx',
            'libpng',
-           'x11']
+           'glx']
 
 SRC_EXTS = ['cc', 'mm', 'c', 'm']
 
@@ -45,12 +45,9 @@ def in_subdir(subdir, names):
 def options(opt):
     opt.load('compiler_c compiler_cxx')
 
-    opt.add_option('--modules', action='store', default='', help='Rosewood modules to include')
-
 def configure(conf):
     conf.env['CC'] = 'clang'
     conf.env['CXX'] = 'clang++'
-    conf.env['RW_MODULES'] = conf.options.modules.split(',')
 
     conf.load('compiler_c compiler_cxx')
 
@@ -75,14 +72,6 @@ def configure(conf):
 
     conf.env['GTEST'] = 'gtest-1.6.0'
 
-    if 'osx' in conf.env.RW_MODULES:
-        conf.env.append_value('FRAMEWORK', 'Cocoa')
-        conf.env.append_value('FRAMEWORK', 'OpenGL')
-        conf.env.append_value('FRAMEWORK', 'CoreVideo')
-
-    if 'glx' in conf.env.RW_MODULES:
-        conf.env.append_value('LINKFLAGS', '-pthread')
-
     env = conf.env
 
     conf.setenv('debug', env)
@@ -102,34 +91,26 @@ def build(bld):
     if not bld.variant:
         bld.variant = 'debug'
 
-    bld.read_stlib('msgpack')
-    bld.read_stlib('ev')
+    bld.read_shlib('msgpack')
+    bld.read_shlib('ev')
     #     bld.read_stlib('gtest', paths=['gtest'])
-
-    uses = ['msgpack', 'ev']
-
-    if 'glx' in bld.env.RW_MODULES:
-        bld.read_shlib('GL')
-        uses.append('GL')
-
-        bld.read_shlib('pthread')
-        uses.append('pthread')
-
-    if 'libpng' in bld.env.RW_MODULES:
-        bld.read_shlib('png')
-        uses.append('png')
+    bld.read_shlib('GL')
+    bld.read_shlib('png')
+    bld.read_shlib('pthread')
 
     def sources_in_modules(root, modules):
         return reduce(operator.concat,
                       [bld.path.ant_glob('{}{}/*.{}'.format(root, '' if module == '.' else '/' + module, ext))
                        for module, ext in itertools.product(modules, SRC_EXTS)])
 
-    modules = ['core', 'graphics', 'ios', 'math', 'osx', 'remote-control', 'utils', 'ns']
+    modules = ['core', 'graphics', 'ios', 'math', 'osx', 'remote-control', 'utils']
     example_modules = ['.', 'ios', 'osx', 'x11']
 
-    rosewood_srcs = _filter_modules(bld.env.RW_MODULES, sources_in_modules('src', modules))
-    example_srcs = _filter_modules(bld.env.RW_MODULES, sources_in_modules('example', example_modules))
-    test_srcs = _filter_modules(bld.env.RW_MODULES, sources_in_modules('tests', ['.']))
+    enabled_modules = ['bsd', 'libpng']
+
+    rosewood_srcs = _filter_modules(enabled_modules, sources_in_modules('src', modules))
+    example_srcs = _filter_modules(enabled_modules, sources_in_modules('example', example_modules))
+    test_srcs = _filter_modules(enabled_modules, sources_in_modules('tests', ['.']))
 
     gtest_srcs = [bld.env.GTEST + '/src/gtest-all.cc']
 
@@ -142,17 +123,19 @@ def build(bld):
     bld.program(features='c cxx',
                 target='rwexample',
                 source=(rosewood_srcs + example_srcs),
-                use=uses)
+                use=['msgpack', 'ev', 'GL', 'png', 'pthread'])
 
     bld.stlib(features='c cxx',
               target='gtest',
               defines=['GTEST_USE_OWN_TR1_TUPLE=1'],
+              linkflags='-pthread',
               source=gtest_srcs,
               includes=[bld.env.GTEST + '/include', bld.env.GTEST])
 
     bld.program(features='c cxx',
                 target='rosewood_tests',
                 defines=['GTEST_USE_OWN_TR1_TUPLE=1'],
+                linkflags='-pthread',
                 source=(test_srcs + test_deps),
                 includes=[bld.env.GTEST + '/include'],
                 use='gtest')
