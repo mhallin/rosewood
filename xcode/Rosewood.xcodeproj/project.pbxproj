@@ -11,6 +11,8 @@
 		8A12865317803ED1002170B5 /* bundle_resource_loader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A12864E1780369B002170B5 /* bundle_resource_loader.mm */; };
 		8A12865A17806B89002170B5 /* logging.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A12865917806B85002170B5 /* logging.cc */; };
 		8A12865B17806B8A002170B5 /* logging.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A12865917806B85002170B5 /* logging.cc */; };
+		8A12865E1780A1E6002170B5 /* libev.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A12865C1780A1E6002170B5 /* libev.4.dylib */; };
+		8A12865F1780A1E6002170B5 /* libmsgpack.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A12865D1780A1E6002170B5 /* libmsgpack.3.dylib */; };
 		8A1F620D16866B0600E53FBB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F620C16866B0600E53FBB /* UIKit.framework */; };
 		8A1F620F16866B0600E53FBB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F620E16866B0600E53FBB /* Foundation.framework */; };
 		8A1F621116866B0600E53FBB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F621016866B0600E53FBB /* CoreGraphics.framework */; };
@@ -58,10 +60,6 @@
 		8A1F627716866E5900E53FBB /* time.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F620216866A4500E53FBB /* time.cc */; };
 		8A1F62A716866F7F00E53FBB /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F62A616866F7E00E53FBB /* OpenGL.framework */; };
 		8A1F62AD168675C500E53FBB /* RWGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F62AB168675B700E53FBB /* RWGLView.mm */; };
-		8A1F62B2168676C700E53FBB /* libev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F62B0168676C700E53FBB /* libev.a */; };
-		8A1F62B3168676C700E53FBB /* libev.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F62B0168676C700E53FBB /* libev.a */; };
-		8A1F62B4168676C700E53FBB /* libmsgpack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F62B1168676C700E53FBB /* libmsgpack.a */; };
-		8A1F62B5168676C700E53FBB /* libmsgpack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F62B1168676C700E53FBB /* libmsgpack.a */; };
 		8A1F62B71686782600E53FBB /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F62B61686782400E53FBB /* OpenGLES.framework */; };
 		8A1F62B91686787600E53FBB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F62B81686787500E53FBB /* GLKit.framework */; };
 		8A1F62BC1686789400E53FBB /* RWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F62BB1686789400E53FBB /* RWViewController.mm */; };
@@ -163,6 +161,8 @@
 		8A12864F178036A4002170B5 /* bundle_resource_loader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bundle_resource_loader.h; sourceTree = "<group>"; };
 		8A12865817806B77002170B5 /* logging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = logging.h; sourceTree = "<group>"; };
 		8A12865917806B85002170B5 /* logging.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = logging.cc; sourceTree = "<group>"; };
+		8A12865C1780A1E6002170B5 /* libev.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libev.4.dylib; path = ../../../../../../usr/local/Cellar/libev/4.15/lib/libev.4.dylib; sourceTree = "<group>"; };
+		8A12865D1780A1E6002170B5 /* libmsgpack.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmsgpack.3.dylib; path = ../../../../../../usr/local/Cellar/msgpack/0.5.7/lib/libmsgpack.3.dylib; sourceTree = "<group>"; };
 		8A1F61E816866A4500E53FBB /* resource_manager.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = resource_manager.cc; sourceTree = "<group>"; };
 		8A1F61EA16866A4500E53FBB /* camera.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = camera.cc; sourceTree = "<group>"; };
 		8A1F61EC16866A4500E53FBB /* gl_func.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = gl_func.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -234,8 +234,6 @@
 		8A1F62A81686723000E53FBB /* memory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = memory.h; sourceTree = "<group>"; };
 		8A1F62A91686759300E53FBB /* RWGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RWGLView.h; sourceTree = "<group>"; };
 		8A1F62AB168675B700E53FBB /* RWGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = RWGLView.mm; sourceTree = "<group>"; };
-		8A1F62B0168676C700E53FBB /* libev.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libev.a; sourceTree = "<group>"; };
-		8A1F62B1168676C700E53FBB /* libmsgpack.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmsgpack.a; sourceTree = "<group>"; };
 		8A1F62B61686782400E53FBB /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.0.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		8A1F62B81686787500E53FBB /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.0.sdk/System/Library/Frameworks/GLKit.framework; sourceTree = DEVELOPER_DIR; };
 		8A1F62BA1686789400E53FBB /* RWViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RWViewController.h; sourceTree = "<group>"; };
@@ -333,8 +331,6 @@
 				8A1F620D16866B0600E53FBB /* UIKit.framework in Frameworks */,
 				8A1F620F16866B0600E53FBB /* Foundation.framework in Frameworks */,
 				8A1F621116866B0600E53FBB /* CoreGraphics.framework in Frameworks */,
-				8A1F62B2168676C700E53FBB /* libev.a in Frameworks */,
-				8A1F62B4168676C700E53FBB /* libmsgpack.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,11 +338,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A12865E1780A1E6002170B5 /* libev.4.dylib in Frameworks */,
+				8A12865F1780A1E6002170B5 /* libmsgpack.3.dylib in Frameworks */,
 				8A3571D01691C91000EA130B /* CoreVideo.framework in Frameworks */,
 				8A1F62A716866F7F00E53FBB /* OpenGL.framework in Frameworks */,
 				8A1F623016866C2300E53FBB /* Cocoa.framework in Frameworks */,
-				8A1F62B3168676C700E53FBB /* libev.a in Frameworks */,
-				8A1F62B5168676C700E53FBB /* libmsgpack.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,7 +381,6 @@
 				8A1F627E16866EBD00E53FBB /* include */,
 				8A1F61E616866A4500E53FBB /* src */,
 				8A1F621216866B0600E53FBB /* example */,
-				8A1F62AF168676C500E53FBB /* lib */,
 				8AF05087168F7F85001B8093 /* Rosewood */,
 				8A1F620B16866B0600E53FBB /* Frameworks */,
 				8A1F620916866B0600E53FBB /* Products */,
@@ -488,6 +483,8 @@
 		8A1F620B16866B0600E53FBB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8A12865C1780A1E6002170B5 /* libev.4.dylib */,
+				8A12865D1780A1E6002170B5 /* libmsgpack.3.dylib */,
 				8A3571CF1691C91000EA130B /* CoreVideo.framework */,
 				8A357199168F875900EA130B /* Python.framework */,
 				8A1F62B81686787500E53FBB /* GLKit.framework */,
@@ -703,16 +700,6 @@
 				8A1F62AB168675B700E53FBB /* RWGLView.mm */,
 			);
 			path = osx;
-			sourceTree = "<group>";
-		};
-		8A1F62AF168676C500E53FBB /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				8A1F62B0168676C700E53FBB /* libev.a */,
-				8A1F62B1168676C700E53FBB /* libmsgpack.a */,
-			);
-			name = lib;
-			path = ../lib;
 			sourceTree = "<group>";
 		};
 		8A357196168F81F500EA130B /* build */ = {
@@ -1289,10 +1276,15 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../include\"",
+					/usr/local/include,
+				);
 				INFOPLIST_FILE = "../example/osx/RWSample-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../lib\"",
+					/usr/local/Cellar/libev/4.15/lib,
+					/usr/local/Cellar/msgpack/0.5.7/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1316,10 +1308,15 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../include\"",
+					/usr/local/include,
+				);
 				INFOPLIST_FILE = "../example/osx/RWSample-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../lib\"",
+					/usr/local/Cellar/libev/4.15/lib,
+					/usr/local/Cellar/msgpack/0.5.7/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
