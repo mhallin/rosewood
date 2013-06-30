@@ -9,13 +9,13 @@
 #include <thread>
 
 #include "rosewood/core/memory.h"
+#include "rosewood/core/logging.h"
 
 #include "rosewood/graphics/platform_gl.h"
 
 #include "rosewood/utils/animatable.h"
 #include "rosewood/utils/folder_resource_loader.h"
 #include "rosewood/utils/time.h"
-#include "rosewood/utils/logging.h"
 
 #define GLX_GLXEXT_PROTOTYPES
 
