@@ -113,42 +113,51 @@ def configure(conf):
     conf.env.append_value('CFLAGS', ['-O0', '-g', '-DCHECK_GL_CALLS'])
     conf.env.append_value('CXXFLAGS', ['-O0', '-g', '-DCHECK_GL_CALLS'])
 
+def sources_in_modules(bld, root, modules):
+    return reduce(operator.concat,
+                  [bld.path.ant_glob('{}{}/*.{}'.format(root, '' if module == '.' else '/' + module, ext))
+                   for module, ext in itertools.product(modules, SRC_EXTS)])
+
+def libs_from_env(env):
+    libs = ['msgpack', 'ev']
+
+    if 'x11' in env.RW_MODULES:
+        libs.append('GL')
+        libs.append('pthread')
+
+    if 'libpng' in env.RW_MODULES:
+        libs.append('png')
+
+    return libs
+
+def build_librosewood(bld):
+    modules = ['core', 'graphics', 'ios', 'math', 'osx', 'remote-control', 'utils', 'ns']
+    rosewood_srcs = _filter_modules(bld.env.RW_MODULES, sources_in_modules(bld, 'src', modules))
+
+    return bld.stlib(features='c cxx',
+                     target='rosewood',
+                     source=rosewood_srcs,
+                     lib=libs_from_env(bld.env))
+
 def build(bld):
     if not bld.variant:
         bld.variant = 'debug'
 
-    libs = ['msgpack', 'ev']
+    build_librosewood(bld)
 
-    if 'x11' in bld.env.RW_MODULES:
-        libs.append('GL')
-        libs.append('pthread')
+    libs = libs_from_env(bld.env)
 
-    if 'libpng' in bld.env.RW_MODULES:
-        libs.append('png')
-
-    def sources_in_modules(root, modules):
-        return reduce(operator.concat,
-                      [bld.path.ant_glob('{}{}/*.{}'.format(root, '' if module == '.' else '/' + module, ext))
-                       for module, ext in itertools.product(modules, SRC_EXTS)])
-
-    modules = ['core', 'graphics', 'ios', 'math', 'osx', 'remote-control', 'utils', 'ns']
     example_modules = ['.', 'ios', 'osx', 'x11']
 
-    rosewood_srcs = _filter_modules(bld.env.RW_MODULES, sources_in_modules('src', modules))
-    example_srcs = _filter_modules(bld.env.RW_MODULES, sources_in_modules('example', example_modules))
-    test_srcs = _filter_modules(bld.env.RW_MODULES, sources_in_modules('tests', ['.']))
+    example_srcs = _filter_modules(bld.env.RW_MODULES, sources_in_modules(bld, 'example', example_modules))
+    test_srcs = _filter_modules(bld.env.RW_MODULES, sources_in_modules(bld, 'tests', ['.']))
 
     gtest_srcs = [bld.env.GTEST + '/src/gtest-all.cc']
 
-    test_deps = in_subdir('src', [
-            'core/component_array.cc', 'core/component.cc', 'core/transform.cc',
-            'core/event.cc', 'core/entity.cc',
-            'math/matrix3.cc', 'math/matrix4.cc',
-            'math/quaternion.cc', 'math/vector.cc'])
-
     bld.program(features='c cxx',
                 target='rwexample',
-                source=(rosewood_srcs + example_srcs),
+                source=example_srcs,
+                use='rosewood',
                 lib=libs)
 
     bld.stlib(features='c cxx',
@@ -160,9 +169,9 @@ def build(bld):
     bld.program(features='c cxx',
                 target='rosewood_tests',
                 defines=['GTEST_USE_OWN_TR1_TUPLE=1'],
-                source=(test_srcs + test_deps),
+                source=test_srcs,
                 includes=[bld.env.GTEST + '/include'],
-                use='gtest')
+                use=['gtest', 'rosewood'])
 
 from waflib import TaskGen
 from waflib.Build import BuildContext, CleanContext

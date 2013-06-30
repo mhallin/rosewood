@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8A12865017803E8E002170B5 /* bundle_resource_loader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A12864E1780369B002170B5 /* bundle_resource_loader.mm */; };
 		8A12865317803ED1002170B5 /* bundle_resource_loader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A12864E1780369B002170B5 /* bundle_resource_loader.mm */; };
-		8A12865A17806B89002170B5 /* logging.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A12865917806B85002170B5 /* logging.cc */; };
 		8A12865B17806B8A002170B5 /* logging.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A12865917806B85002170B5 /* logging.cc */; };
 		8A12865E1780A1E6002170B5 /* libev.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A12865C1780A1E6002170B5 /* libev.4.dylib */; };
 		8A12865F1780A1E6002170B5 /* libmsgpack.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A12865D1780A1E6002170B5 /* libmsgpack.3.dylib */; };
@@ -45,21 +43,7 @@
 		8A1F625F16866E5800E53FBB /* event_loop.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61FC16866A4500E53FBB /* event_loop.cc */; };
 		8A1F626016866E5800E53FBB /* animatable.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61FE16866A4500E53FBB /* animatable.cc */; };
 		8A1F626216866E5800E53FBB /* time.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F620216866A4500E53FBB /* time.cc */; };
-		8A1F626416866E5900E53FBB /* camera.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61EA16866A4500E53FBB /* camera.cc */; };
-		8A1F626616866E5900E53FBB /* gl_func.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61EC16866A4500E53FBB /* gl_func.cc */; };
-		8A1F626716866E5900E53FBB /* gl_state.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61ED16866A4500E53FBB /* gl_state.cc */; };
-		8A1F626816866E5900E53FBB /* material.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61EE16866A4500E53FBB /* material.cc */; };
-		8A1F626916866E5900E53FBB /* mesh.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61EF16866A4500E53FBB /* mesh.cc */; };
-		8A1F626A16866E5900E53FBB /* render_queue.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F016866A4500E53FBB /* render_queue.cc */; };
-		8A1F626D16866E5900E53FBB /* shader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F316866A4500E53FBB /* shader.cc */; };
-		8A1F626E16866E5900E53FBB /* texture.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F416866A4500E53FBB /* texture.cc */; };
-		8A1F626F16866E5900E53FBB /* view_frustum.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F516866A4500E53FBB /* view_frustum.cc */; };
-		8A1F627316866E5900E53FBB /* command_dispatch.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61FB16866A4500E53FBB /* command_dispatch.cc */; };
-		8A1F627416866E5900E53FBB /* event_loop.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61FC16866A4500E53FBB /* event_loop.cc */; };
-		8A1F627516866E5900E53FBB /* animatable.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61FE16866A4500E53FBB /* animatable.cc */; };
-		8A1F627716866E5900E53FBB /* time.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F620216866A4500E53FBB /* time.cc */; };
 		8A1F62A716866F7F00E53FBB /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F62A616866F7E00E53FBB /* OpenGL.framework */; };
-		8A1F62AD168675C500E53FBB /* RWGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F62AB168675B700E53FBB /* RWGLView.mm */; };
 		8A1F62B71686782600E53FBB /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F62B61686782400E53FBB /* OpenGLES.framework */; };
 		8A1F62B91686787600E53FBB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F62B81686787500E53FBB /* GLKit.framework */; };
 		8A1F62BC1686789400E53FBB /* RWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F62BB1686789400E53FBB /* RWViewController.mm */; };
@@ -82,27 +66,46 @@
 		8A3720A7176DE1E200C0FEE5 /* event.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A2176DE1E200C0FEE5 /* event.cc */; };
 		8A3720A8176DE1E200C0FEE5 /* transform.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A3176DE1E200C0FEE5 /* transform.cc */; };
 		8A3720AA176DE1FA00C0FEE5 /* vector.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A9176DE1FA00C0FEE5 /* vector.cc */; };
-		8A3720B0176DE20C00C0FEE5 /* component.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A0176DE1E200C0FEE5 /* component.cc */; };
-		8A3720B1176DE20C00C0FEE5 /* component_array.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A37209F176DE1E200C0FEE5 /* component_array.cc */; };
-		8A3720B2176DE20C00C0FEE5 /* entity.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A1176DE1E200C0FEE5 /* entity.cc */; };
-		8A3720B3176DE20C00C0FEE5 /* event.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A2176DE1E200C0FEE5 /* event.cc */; };
-		8A3720B4176DE20C00C0FEE5 /* resource_manager.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61E816866A4500E53FBB /* resource_manager.cc */; };
-		8A3720B5176DE20C00C0FEE5 /* stats.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8AE143F01693476E00A92298 /* stats.cc */; };
-		8A3720B6176DE20C00C0FEE5 /* transform.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A3176DE1E200C0FEE5 /* transform.cc */; };
-		8A3720B8176DE21000C0FEE5 /* matrix3.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F716866A4500E53FBB /* matrix3.cc */; };
-		8A3720B9176DE21000C0FEE5 /* matrix4.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F816866A4500E53FBB /* matrix4.cc */; };
-		8A3720BA176DE21000C0FEE5 /* plane.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3571CB1691C8E200EA130B /* plane.cc */; };
-		8A3720BB176DE21000C0FEE5 /* quaternion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F916866A4500E53FBB /* quaternion.cc */; };
-		8A3720BC176DE21000C0FEE5 /* vector.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A9176DE1FA00C0FEE5 /* vector.cc */; };
 		8A3720BF176DE22700C0FEE5 /* debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720BD176DE22700C0FEE5 /* debug.cc */; };
-		8A3720C0176DE22700C0FEE5 /* debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720BD176DE22700C0FEE5 /* debug.cc */; };
 		8A3720C1176DE22700C0FEE5 /* render_system.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720BE176DE22700C0FEE5 /* render_system.cc */; };
-		8A3720C2176DE22700C0FEE5 /* render_system.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720BE176DE22700C0FEE5 /* render_system.cc */; };
+		8A99376E1780C05E00CFA977 /* component.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A0176DE1E200C0FEE5 /* component.cc */; };
+		8A99376F1780C05E00CFA977 /* component_array.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A37209F176DE1E200C0FEE5 /* component_array.cc */; };
+		8A9937701780C05E00CFA977 /* entity.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A1176DE1E200C0FEE5 /* entity.cc */; };
+		8A9937711780C05E00CFA977 /* event.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A2176DE1E200C0FEE5 /* event.cc */; };
+		8A9937721780C05E00CFA977 /* logging.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A12865917806B85002170B5 /* logging.cc */; };
+		8A9937731780C05E00CFA977 /* resource_manager.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61E816866A4500E53FBB /* resource_manager.cc */; };
+		8A9937741780C05E00CFA977 /* stats.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8AE143F01693476E00A92298 /* stats.cc */; };
+		8A9937751780C05E00CFA977 /* transform.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A3176DE1E200C0FEE5 /* transform.cc */; };
+		8A9937761780C05E00CFA977 /* camera.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61EA16866A4500E53FBB /* camera.cc */; };
+		8A9937771780C05E00CFA977 /* gl_func.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61EC16866A4500E53FBB /* gl_func.cc */; };
+		8A9937781780C05E00CFA977 /* gl_state.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61ED16866A4500E53FBB /* gl_state.cc */; };
+		8A99377A1780C05E00CFA977 /* image_loader_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8AE7628616872268006FC8BC /* image_loader_osx.mm */; };
+		8A99377B1780C05E00CFA977 /* material.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61EE16866A4500E53FBB /* material.cc */; };
+		8A99377C1780C05E00CFA977 /* mesh.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61EF16866A4500E53FBB /* mesh.cc */; };
+		8A99377D1780C05E00CFA977 /* render_queue.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F016866A4500E53FBB /* render_queue.cc */; };
+		8A99377E1780C05E00CFA977 /* shader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F316866A4500E53FBB /* shader.cc */; };
+		8A99377F1780C05E00CFA977 /* texture.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F416866A4500E53FBB /* texture.cc */; };
+		8A9937801780C05E00CFA977 /* view_frustum.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F516866A4500E53FBB /* view_frustum.cc */; };
+		8A9937811780C05E00CFA977 /* matrix3.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F716866A4500E53FBB /* matrix3.cc */; };
+		8A9937821780C05E00CFA977 /* matrix4.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F816866A4500E53FBB /* matrix4.cc */; };
+		8A9937831780C05E00CFA977 /* plane.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3571CB1691C8E200EA130B /* plane.cc */; };
+		8A9937841780C05E00CFA977 /* quaternion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61F916866A4500E53FBB /* quaternion.cc */; };
+		8A9937851780C05E00CFA977 /* vector.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A9176DE1FA00C0FEE5 /* vector.cc */; };
+		8A9937861780C05E00CFA977 /* bundle_resource_loader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A12864E1780369B002170B5 /* bundle_resource_loader.mm */; };
+		8A9937871780C05E00CFA977 /* RWGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F62AB168675B700E53FBB /* RWGLView.mm */; };
+		8A9937881780C05E00CFA977 /* command_dispatch.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61FB16866A4500E53FBB /* command_dispatch.cc */; };
+		8A9937891780C05E00CFA977 /* event_loop.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61FC16866A4500E53FBB /* event_loop.cc */; };
+		8A99378A1780C05E00CFA977 /* animatable.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F61FE16866A4500E53FBB /* animatable.cc */; };
+		8A99378B1780C05E00CFA977 /* debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720BD176DE22700C0FEE5 /* debug.cc */; };
+		8A99378C1780C05E00CFA977 /* folder_resource_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A12864B17803665002170B5 /* folder_resource_loader.cc */; };
+		8A99378D1780C05E00CFA977 /* render_system.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720BE176DE22700C0FEE5 /* render_system.cc */; };
+		8A99378E1780C05E00CFA977 /* time.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F620216866A4500E53FBB /* time.cc */; };
+		8A99378F1780C05E00CFA977 /* url_downloader_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A12864D17803665002170B5 /* url_downloader_osx.mm */; };
+		8A9937901780C06C00CFA977 /* librosewood-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A99376A1780C02400CFA977 /* librosewood-osx.a */; };
+		8A9937931780C0DF00CFA977 /* sample_app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8AE7628B16873E34006FC8BC /* sample_app.cc */; };
 		8AE143F11693476E00A92298 /* stats.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8AE143F01693476E00A92298 /* stats.cc */; };
-		8AE76288168723CE006FC8BC /* image_loader_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8AE7628616872268006FC8BC /* image_loader_osx.mm */; };
 		8AE7628A168726AF006FC8BC /* image_loader_ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8AE76289168726AF006FC8BC /* image_loader_ios.mm */; };
 		8AE7628D16873E34006FC8BC /* sample_app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8AE7628B16873E34006FC8BC /* sample_app.cc */; };
-		8AE7628E16873E34006FC8BC /* sample_app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8AE7628B16873E34006FC8BC /* sample_app.cc */; };
 		8AF05086168F7F85001B8093 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F622F16866C2300E53FBB /* Cocoa.framework */; };
 		8AF0508C168F7F85001B8093 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8AF0508A168F7F85001B8093 /* InfoPlist.strings */; };
 		8AF0508E168F7F85001B8093 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF0508D168F7F85001B8093 /* main.m */; };
@@ -110,6 +113,16 @@
 		8AF05095168F7F85001B8093 /* RWBuildController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF05094168F7F85001B8093 /* RWBuildController.m */; };
 		8AF05098168F7F85001B8093 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8AF05096168F7F85001B8093 /* MainMenu.xib */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8A9937911780C07100CFA977 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8A1F61DA1686696500E53FBB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8A9937691780C02400CFA977;
+			remoteInfo = "rosewood-osx";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		8A3571B2168F8FB400EA130B /* CopyFiles */ = {
@@ -262,6 +275,7 @@
 		8A3720A9176DE1FA00C0FEE5 /* vector.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector.cc; sourceTree = "<group>"; };
 		8A3720BD176DE22700C0FEE5 /* debug.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cc; sourceTree = "<group>"; };
 		8A3720BE176DE22700C0FEE5 /* render_system.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_system.cc; sourceTree = "<group>"; };
+		8A99376A1780C02400CFA977 /* librosewood-osx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "librosewood-osx.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AE143F01693476E00A92298 /* stats.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stats.cc; sourceTree = "<group>"; };
 		8AE143F31693477C00A92298 /* stats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stats.h; sourceTree = "<group>"; };
 		8AE7628516872251006FC8BC /* image_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image_loader.h; sourceTree = "<group>"; };
@@ -338,11 +352,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A9937901780C06C00CFA977 /* librosewood-osx.a in Frameworks */,
 				8A12865E1780A1E6002170B5 /* libev.4.dylib in Frameworks */,
 				8A12865F1780A1E6002170B5 /* libmsgpack.3.dylib in Frameworks */,
 				8A3571D01691C91000EA130B /* CoreVideo.framework in Frameworks */,
 				8A1F62A716866F7F00E53FBB /* OpenGL.framework in Frameworks */,
 				8A1F623016866C2300E53FBB /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A9937671780C02400CFA977 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,6 +498,7 @@
 				8A1F620816866B0600E53FBB /* RWSampleiOS.app */,
 				8A1F622D16866C2300E53FBB /* RWSampleOSX.app */,
 				8AF05084168F7F85001B8093 /* Rosewood.app */,
+				8A99376A1780C02400CFA977 /* librosewood-osx.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -843,6 +866,16 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		8A9937681780C02400CFA977 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		8A1F620716866B0600E53FBB /* RWSampleiOS */ = {
 			isa = PBXNativeTarget;
@@ -874,11 +907,29 @@
 			buildRules = (
 			);
 			dependencies = (
+				8A9937921780C07100CFA977 /* PBXTargetDependency */,
 			);
 			name = RWSampleOSX;
 			productName = RWSample;
 			productReference = 8A1F622D16866C2300E53FBB /* RWSampleOSX.app */;
 			productType = "com.apple.product-type.application";
+		};
+		8A9937691780C02400CFA977 /* rosewood-osx */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A99376D1780C02400CFA977 /* Build configuration list for PBXNativeTarget "rosewood-osx" */;
+			buildPhases = (
+				8A9937661780C02400CFA977 /* Sources */,
+				8A9937671780C02400CFA977 /* Frameworks */,
+				8A9937681780C02400CFA977 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "rosewood-osx";
+			productName = "rosewood-osx";
+			productReference = 8A99376A1780C02400CFA977 /* librosewood-osx.a */;
+			productType = "com.apple.product-type.library.static";
 		};
 		8AF05083168F7F85001B8093 /* Rosewood */ = {
 			isa = PBXNativeTarget;
@@ -922,6 +973,7 @@
 				8A1F620716866B0600E53FBB /* RWSampleiOS */,
 				8A1F622C16866C2300E53FBB /* RWSampleOSX */,
 				8AF05083168F7F85001B8093 /* Rosewood */,
+				8A9937691780C02400CFA977 /* rosewood-osx */,
 			);
 		};
 /* End PBXProject section */
@@ -1036,40 +1088,49 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A9937931780C0DF00CFA977 /* sample_app.cc in Sources */,
 				8A1F623C16866C2300E53FBB /* main.m in Sources */,
 				8A1F624316866C2300E53FBB /* RWOSXAppDelegate.mm in Sources */,
-				8A1F626416866E5900E53FBB /* camera.cc in Sources */,
-				8A12865017803E8E002170B5 /* bundle_resource_loader.mm in Sources */,
-				8A1F626616866E5900E53FBB /* gl_func.cc in Sources */,
-				8A1F626716866E5900E53FBB /* gl_state.cc in Sources */,
-				8A1F626816866E5900E53FBB /* material.cc in Sources */,
-				8A1F626916866E5900E53FBB /* mesh.cc in Sources */,
-				8A1F626A16866E5900E53FBB /* render_queue.cc in Sources */,
-				8A1F626D16866E5900E53FBB /* shader.cc in Sources */,
-				8A1F626E16866E5900E53FBB /* texture.cc in Sources */,
-				8A1F626F16866E5900E53FBB /* view_frustum.cc in Sources */,
-				8A1F627316866E5900E53FBB /* command_dispatch.cc in Sources */,
-				8A1F627416866E5900E53FBB /* event_loop.cc in Sources */,
-				8A1F627516866E5900E53FBB /* animatable.cc in Sources */,
-				8A12865A17806B89002170B5 /* logging.cc in Sources */,
-				8A1F627716866E5900E53FBB /* time.cc in Sources */,
-				8A1F62AD168675C500E53FBB /* RWGLView.mm in Sources */,
-				8AE76288168723CE006FC8BC /* image_loader_osx.mm in Sources */,
-				8AE7628E16873E34006FC8BC /* sample_app.cc in Sources */,
-				8A3720B0176DE20C00C0FEE5 /* component.cc in Sources */,
-				8A3720B1176DE20C00C0FEE5 /* component_array.cc in Sources */,
-				8A3720B2176DE20C00C0FEE5 /* entity.cc in Sources */,
-				8A3720B3176DE20C00C0FEE5 /* event.cc in Sources */,
-				8A3720B4176DE20C00C0FEE5 /* resource_manager.cc in Sources */,
-				8A3720B5176DE20C00C0FEE5 /* stats.cc in Sources */,
-				8A3720B6176DE20C00C0FEE5 /* transform.cc in Sources */,
-				8A3720B8176DE21000C0FEE5 /* matrix3.cc in Sources */,
-				8A3720B9176DE21000C0FEE5 /* matrix4.cc in Sources */,
-				8A3720BA176DE21000C0FEE5 /* plane.cc in Sources */,
-				8A3720BB176DE21000C0FEE5 /* quaternion.cc in Sources */,
-				8A3720BC176DE21000C0FEE5 /* vector.cc in Sources */,
-				8A3720C0176DE22700C0FEE5 /* debug.cc in Sources */,
-				8A3720C2176DE22700C0FEE5 /* render_system.cc in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A9937661780C02400CFA977 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A99376E1780C05E00CFA977 /* component.cc in Sources */,
+				8A99376F1780C05E00CFA977 /* component_array.cc in Sources */,
+				8A9937701780C05E00CFA977 /* entity.cc in Sources */,
+				8A9937711780C05E00CFA977 /* event.cc in Sources */,
+				8A9937721780C05E00CFA977 /* logging.cc in Sources */,
+				8A9937731780C05E00CFA977 /* resource_manager.cc in Sources */,
+				8A9937741780C05E00CFA977 /* stats.cc in Sources */,
+				8A9937751780C05E00CFA977 /* transform.cc in Sources */,
+				8A9937761780C05E00CFA977 /* camera.cc in Sources */,
+				8A9937771780C05E00CFA977 /* gl_func.cc in Sources */,
+				8A9937781780C05E00CFA977 /* gl_state.cc in Sources */,
+				8A99377A1780C05E00CFA977 /* image_loader_osx.mm in Sources */,
+				8A99377B1780C05E00CFA977 /* material.cc in Sources */,
+				8A99377C1780C05E00CFA977 /* mesh.cc in Sources */,
+				8A99377D1780C05E00CFA977 /* render_queue.cc in Sources */,
+				8A99377E1780C05E00CFA977 /* shader.cc in Sources */,
+				8A99377F1780C05E00CFA977 /* texture.cc in Sources */,
+				8A9937801780C05E00CFA977 /* view_frustum.cc in Sources */,
+				8A9937811780C05E00CFA977 /* matrix3.cc in Sources */,
+				8A9937821780C05E00CFA977 /* matrix4.cc in Sources */,
+				8A9937831780C05E00CFA977 /* plane.cc in Sources */,
+				8A9937841780C05E00CFA977 /* quaternion.cc in Sources */,
+				8A9937851780C05E00CFA977 /* vector.cc in Sources */,
+				8A9937861780C05E00CFA977 /* bundle_resource_loader.mm in Sources */,
+				8A9937871780C05E00CFA977 /* RWGLView.mm in Sources */,
+				8A9937881780C05E00CFA977 /* command_dispatch.cc in Sources */,
+				8A9937891780C05E00CFA977 /* event_loop.cc in Sources */,
+				8A99378A1780C05E00CFA977 /* animatable.cc in Sources */,
+				8A99378B1780C05E00CFA977 /* debug.cc in Sources */,
+				8A99378C1780C05E00CFA977 /* folder_resource_loader.cc in Sources */,
+				8A99378D1780C05E00CFA977 /* render_system.cc in Sources */,
+				8A99378E1780C05E00CFA977 /* time.cc in Sources */,
+				8A99378F1780C05E00CFA977 /* url_downloader_osx.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1083,6 +1144,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8A9937921780C07100CFA977 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8A9937691780C02400CFA977 /* rosewood-osx */;
+			targetProxy = 8A9937911780C07100CFA977 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		8A1F621516866B0600E53FBB /* InfoPlist.strings */ = {
@@ -1325,6 +1394,74 @@
 			};
 			name = Release;
 		};
+		8A99376B1780C02400CFA977 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../include\"",
+					/usr/local/include,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		8A99376C1780C02400CFA977 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../include\"",
+					/usr/local/include,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		8AF0509A168F7F85001B8093 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1390,6 +1527,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		8A99376D1780C02400CFA977 /* Build configuration list for PBXNativeTarget "rosewood-osx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A99376B1780C02400CFA977 /* Debug */,
+				8A99376C1780C02400CFA977 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		8AF05099168F7F85001B8093 /* Build configuration list for PBXNativeTarget "Rosewood" */ = {
 			isa = XCConfigurationList;
