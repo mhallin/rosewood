@@ -18,15 +18,16 @@ static std::string basename(const std::string &path) {
 }
 
 static const std::map<LogLevel, std::string> kLogLevelNames {
-	{ LogLevel::kDebugLevel,   "DEBUG" },
-	{ LogLevel::kInfoLevel,    "INFO" },
-	{ LogLevel::kWarningLevel, "WARNING" },
-	{ LogLevel::kErrorLevel,   "ERROR" },
+	{ LogLevel::kStatementLevel, "STMT" },
+	{ LogLevel::kDebugLevel,     "DEBUG" },
+	{ LogLevel::kInfoLevel,      "INFO" },
+	{ LogLevel::kWarningLevel,   "WARNING" },
+	{ LogLevel::kErrorLevel,     "ERROR" },
 };
 
 static std::mutex gWriterMutex;
 
-LogLevel LogWriter::gLogLevel = LogLevel::kDebugLevel;
+LogLevel LogWriter::gLogLevel = LogLevel::kStatementLevel;
 
 LogWriter::LogWriter(LogLevel level, const std::string &file, int line, const std::string &message)
 	: _enabled(level >= gLogLevel)
