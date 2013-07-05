@@ -8,6 +8,8 @@
 
 #import "rosewood/osx/RWGLView.h"
 
+#include <mutex>
+
 #include "rosewood/core/resource_manager.h"
 #include "rosewood/core/memory.h"
 
@@ -39,6 +41,8 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     NSTimeInterval _lastFrame;
 
     NSTimer *_updateTimer;
+
+    std::mutex *_draw_mutex;
 }
 
 + (NSOpenGLPixelFormat *)defaultPixelFormat {
@@ -61,6 +65,8 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     _needsReshape = 0;
     _isPaused = NO;
 
+    _draw_mutex = new std::mutex();
+
     self.pixelFormat = [[self class] defaultPixelFormat];
 
     add_resource_loader(make_unique<NSBundleResourceLoader>([NSBundle mainBundle]));
@@ -72,6 +78,9 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 
 - (void)dealloc {
     [_delegate rosewoodWillTerminate:self];
+
+    delete _draw_mutex;
+    _draw_mutex = nullptr;
 
     CVDisplayLinkRelease(_displayLink);
 }
@@ -129,6 +138,13 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 - (void)setFrame:(NSRect)frameRect {
     _needsReshape = 2;
     [super setFrame:frameRect];
+    [self setNeedsDisplay:YES];
+}
+
+- (void)drawRect:(NSRect)__unused dirtyRect {
+    if (_needsReshape) {
+        [self drawForTime:nullptr];
+    }
 }
 
 - (void)updateScene:(id)__unused sender {
@@ -142,6 +158,8 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 }
 
 - (CVReturn)drawForTime:(const CVTimeStamp *)__unused time {
+    std::lock_guard<std::mutex> lock(*_draw_mutex);
+
     [self.openGLContext makeCurrentContext];
 
     if (_needsReshape) {
