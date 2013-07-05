@@ -104,6 +104,27 @@ Matrix4 rosewood::math::make_inverse_perspective4(float fovy,
                    0,          0, -(z_near-z_far)/(2*z_far*z_near), -(z_far+z_near)/(2*z_far*z_near));
 }
 
+Matrix4 rosewood::math::make_orthographic(float width, float height, float z_near, float z_far) {
+    float left = -width/2, right = width/2, top = height/2, bottom = -height/2;
+    float tx = -(right + left) / (right - left);
+    float ty = -(top + bottom) / (top - bottom);
+    float tz = -(z_far + z_near) / (z_far - z_near);
+
+    return Matrix4(2/width,       0,                      0, tx,
+                   0,       2/height,                     0, ty,
+                   0,                 0, 2/(z_far - z_near), tz,
+                   0,                 0,                  0,  1);
+}
+
+Matrix4 rosewood::math::make_inverse_orthographic(float width, float height, float z_near, float z_far) {
+    float left = -width/2, right = width/2, top = height/2, bottom = -height/2;
+
+    return Matrix4((right - left)/2,                0,                   0,    (left + right)/2,
+                   0,                (top - bottom)/2,                   0,    (top + bottom)/2,
+                   0,                               0, (z_far - z_near)/-2, (z_far + z_near)/-2,
+                   0,                               0,                   0,                   1);
+}
+
 Matrix4 rosewood::math::make_translation4(Vector3 v) {
     return Matrix4(1, 0, 0, v.x(),
                    0, 1, 0, v.y(),

@@ -10,6 +10,8 @@ namespace rosewood { namespace math {
     Matrix4  make_hand_shift4   ();
     Matrix4  make_perspective4  (float fovy, float aspect, float z_near, float z_far);
     Matrix4  make_inverse_perspective4(float fovy, float aspect, float z_near, float z_far);
+    Matrix4  make_orthographic  (float width, float height, float z_near, float z_far);
+    Matrix4  make_inverse_orthographic(float width, float height, float z_near, float z_far);
     Matrix4  make_translation4  (Vector3 v);
     Matrix4  make_rotation4     (Quaternion q);
     Matrix4  make_scale4        (Vector3 v);

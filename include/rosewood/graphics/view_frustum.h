@@ -30,7 +30,8 @@ namespace rosewood { namespace graphics {
 
         std::array<math::Plane, (int)FrustumPlane::NumPlanes> _planes;
         
-        bool is_proj_point_visible(math::Vector3 proj_point) const;
+        void make_perspective_frustum_planes(const Camera *camera);
+        void make_orthographic_frustum_planes(const Camera *camera);
     };
     
 } }
