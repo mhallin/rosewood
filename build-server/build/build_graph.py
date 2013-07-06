@@ -239,8 +239,8 @@ def generate_graphviz(bld, f):
 
 
 def default_graph():
-    bld = BuildGraph('/home/mhallin/src/rosewood')
-    recursive_build(bld, '/home/mhallin/src/rosewood/game-assets')
+    bld = BuildGraph(os.getcwd())
+    recursive_build(bld, os.path.join(os.getcwd(), 'game-assets'))
     return bld
 
 
