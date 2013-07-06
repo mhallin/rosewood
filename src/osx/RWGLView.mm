@@ -69,6 +69,11 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 
     self.pixelFormat = [[self class] defaultPixelFormat];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(frameDidChange:)
+                                                 name:NSViewFrameDidChangeNotification
+                                               object:self];
+
     add_resource_loader(make_unique<NSBundleResourceLoader>([NSBundle mainBundle]));
 
     [self _setupOpenGL];
@@ -77,6 +82,8 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 }
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     [_delegate rosewoodWillTerminate:self];
 
     delete _draw_mutex;
@@ -135,9 +142,8 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     [super prepareOpenGL];
 }
 
-- (void)setFrame:(NSRect)frameRect {
+- (void)frameDidChange:(NSNotification *)__unused notification {
     _needsReshape = 2;
-    [super setFrame:frameRect];
     [self setNeedsDisplay:YES];
 }
 
