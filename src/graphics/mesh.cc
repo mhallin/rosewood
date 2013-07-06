@@ -87,6 +87,10 @@ void Mesh::instantiate(Matrix4 transform, Matrix4 inverse_transform,
                         *destination++ = v4.z;
                         *destination++ = v4.w;
                     }
+                    else if (spec.n_comps == 1) {
+                        auto f = data.get<std::vector<float>>()[i];
+                        *destination++ = f;
+                    }
                     break;
             }
         }
@@ -95,6 +99,11 @@ void Mesh::instantiate(Matrix4 transform, Matrix4 inverse_transform,
 
 void Mesh::set_extra_data(const data_map_key &key, const std::vector<math::Vector4> &vec4_data) {
     _extra_data[key].get<std::vector<math::Vector4>>() = vec4_data;
+    _mesh_asset = nullptr;
+}
+
+void Mesh::set_extra_data(const data_map_key &key, const std::vector<float> &float_data) {
+    _extra_data[key].get<std::vector<float>>() = float_data;
     _mesh_asset = nullptr;
 }
 

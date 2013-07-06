@@ -218,6 +218,12 @@ void Shader::reload_shader() {
                     spec.normalized = false;
                     spec.type = kTypeFloat;
                 }
+                else if (spec_str == "float") {
+                    spec.n_comps = 1;
+                    spec.width = sizeof(float);
+                    spec.normalized = false;
+                    spec.type = kTypeFloat;
+                }
 
                 _extra_attributes.push_back(spec);
             }

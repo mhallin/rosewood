@@ -61,6 +61,7 @@ namespace rosewood { namespace graphics {
         void set_texcoord_data(const data_map_key &key, const texcoord_list &texcoord_data);
 
         void set_extra_data(const data_map_key &key, const std::vector<math::Vector4> &vec4_data);
+        void set_extra_data(const data_map_key &key, const std::vector<float> &vec4_data);
 
         const data_map_key &default_normal_data_key() const;
         const data_map_key &default_texcoord_data_key() const;
@@ -82,7 +83,7 @@ namespace rosewood { namespace graphics {
 
         float _bounding_sphere_radius2;
 
-        typedef data_structures::Variant<std::vector<math::Vector4>> AttributeData;
+        typedef data_structures::Variant<std::vector<math::Vector4>, std::vector<float>> AttributeData;
         std::unordered_map<std::string, AttributeData> _extra_data;
 
         std::shared_ptr<core::AssetView> _mesh_asset;
