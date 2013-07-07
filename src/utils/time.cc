@@ -14,21 +14,25 @@ namespace rosewood { namespace utils {
         
         return kUsecPerSec * tv.tv_sec + tv.tv_usec;
     }
+
+    SecTime current_time() {
+        return current_usec_time() / (SecTime)kUsecPerSec;
+    }
     
-    float delta_time() {
-        return (gCurrentFrameTime - gLastFrameTime) / (float)kUsecPerSec;
+    SecTime delta_time() {
+        return (gCurrentFrameTime - gLastFrameTime) / (SecTime)kUsecPerSec;
     }
     
     uint64_t frame_usec_time() {
         return gCurrentFrameTime - gFirstFrameTime;
     }
     
-    float frame_time() {
-        return (gCurrentFrameTime - gFirstFrameTime) / (float)kUsecPerSec;
+    FSecTime frame_time() {
+        return (gCurrentFrameTime - gFirstFrameTime) / (FSecTime)kUsecPerSec;
     }
     
     void mark_frame_beginning() {
-        uint64_t new_current = current_usec_time();
+        auto new_current = current_usec_time();
         
         if (!gFirstFrameTime) {
             gFirstFrameTime = new_current;
