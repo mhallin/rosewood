@@ -26,6 +26,8 @@
 
 @property (nonatomic) BOOL isPaused;
 
++ (RWGLView *)defaultGLView;
+
 - (CVReturn)drawForTime:(const CVTimeStamp *)time;
 
 @end

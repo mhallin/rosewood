@@ -68,6 +68,7 @@
 		8A3720AA176DE1FA00C0FEE5 /* vector.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A9176DE1FA00C0FEE5 /* vector.cc */; };
 		8A3720BF176DE22700C0FEE5 /* debug.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720BD176DE22700C0FEE5 /* debug.cc */; };
 		8A3720C1176DE22700C0FEE5 /* render_system.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720BE176DE22700C0FEE5 /* render_system.cc */; };
+		8A3D8929178B3B2D00FF0306 /* context_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A3D8927178B3B2D00FF0306 /* context_osx.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8A99376E1780C05E00CFA977 /* component.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A0176DE1E200C0FEE5 /* component.cc */; };
 		8A99376F1780C05E00CFA977 /* component_array.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A37209F176DE1E200C0FEE5 /* component_array.cc */; };
 		8A9937701780C05E00CFA977 /* entity.cc in Sources */ = {isa = PBXBuildFile; fileRef = 8A3720A1176DE1E200C0FEE5 /* entity.cc */; };
@@ -275,6 +276,8 @@
 		8A3720A9176DE1FA00C0FEE5 /* vector.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector.cc; sourceTree = "<group>"; };
 		8A3720BD176DE22700C0FEE5 /* debug.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cc; sourceTree = "<group>"; };
 		8A3720BE176DE22700C0FEE5 /* render_system.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_system.cc; sourceTree = "<group>"; };
+		8A3D8926178B3A7300FF0306 /* context.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = context.h; sourceTree = "<group>"; };
+		8A3D8927178B3B2D00FF0306 /* context_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = context_osx.mm; sourceTree = "<group>"; };
 		8A99376A1780C02400CFA977 /* librosewood-osx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "librosewood-osx.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AE143F01693476E00A92298 /* stats.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stats.cc; sourceTree = "<group>"; };
 		8AE143F31693477C00A92298 /* stats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stats.h; sourceTree = "<group>"; };
@@ -444,6 +447,7 @@
 			isa = PBXGroup;
 			children = (
 				8A1F61EA16866A4500E53FBB /* camera.cc */,
+				8A3D8927178B3B2D00FF0306 /* context_osx.mm */,
 				8A1F61EC16866A4500E53FBB /* gl_func.cc */,
 				8A1F61ED16866A4500E53FBB /* gl_state.cc */,
 				8AE76289168726AF006FC8BC /* image_loader_ios.mm */,
@@ -645,6 +649,7 @@
 			isa = PBXGroup;
 			children = (
 				8A1F628416866EBD00E53FBB /* camera.h */,
+				8A3D8926178B3A7300FF0306 /* context.h */,
 				8A1F628616866EBD00E53FBB /* gl_func.h */,
 				8A1F628716866EBD00E53FBB /* gl_state.h */,
 				8AE7628516872251006FC8BC /* image_loader.h */,
@@ -1106,6 +1111,7 @@
 				8A9937731780C05E00CFA977 /* resource_manager.cc in Sources */,
 				8A9937741780C05E00CFA977 /* stats.cc in Sources */,
 				8A9937751780C05E00CFA977 /* transform.cc in Sources */,
+				8A3D8929178B3B2D00FF0306 /* context_osx.mm in Sources */,
 				8A9937761780C05E00CFA977 /* camera.cc in Sources */,
 				8A9937771780C05E00CFA977 /* gl_func.cc in Sources */,
 				8A9937781780C05E00CFA977 /* gl_state.cc in Sources */,
@@ -1422,6 +1428,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"CHECK_GL_CALLS=1",
+				);
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../include\"",
 					/usr/local/include,

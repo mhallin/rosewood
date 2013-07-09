@@ -21,6 +21,8 @@ using rosewood::core::add_resource_loader;
 
 using rosewood::ns::NSBundleResourceLoader;
 
+static __weak RWGLView *gDefaultView = nil;
+
 static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
                                       __unused const CVTimeStamp *inNow,
                                       const CVTimeStamp *inOutputTime,
@@ -61,6 +63,10 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     return [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
 }
 
++ (RWGLView *)defaultGLView {
+    return gDefaultView;
+}
+
 - (void)awakeFromNib {
     _needsReshape = 0;
     _isPaused = NO;
@@ -79,6 +85,8 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     [self _setupOpenGL];
     [self _startTimer];
     [self _startDisplayLink];
+
+    gDefaultView = self;
 }
 
 - (void)dealloc {
