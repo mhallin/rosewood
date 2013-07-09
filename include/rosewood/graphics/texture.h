@@ -33,6 +33,8 @@ namespace rosewood { namespace graphics {
         int width() const { return _image_data.width; }
         int height() const { return _image_data.height; }
 
+        GLuint opengl_texture_id() { return _texture; }
+
     private:
         GLuint _texture;
         std::shared_ptr<core::AssetView> _image_asset;
