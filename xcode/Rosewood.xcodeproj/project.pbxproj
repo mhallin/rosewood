@@ -47,7 +47,6 @@
 		8A1F62B71686782600E53FBB /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F62B61686782400E53FBB /* OpenGLES.framework */; };
 		8A1F62B91686787600E53FBB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A1F62B81686787500E53FBB /* GLKit.framework */; };
 		8A1F62BC1686789400E53FBB /* RWViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A1F62BB1686789400E53FBB /* RWViewController.mm */; };
-		8A35719A168F875900EA130B /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A357199168F875900EA130B /* Python.framework */; };
 		8A35719F168F8EE200EA130B /* main.py in Resources */ = {isa = PBXBuildFile; fileRef = 8A35719E168F8EE200EA130B /* main.py */; };
 		8A3571B3168F8FD800EA130B /* __init__.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A3571A0168F8F9400EA130B /* __init__.py */; };
 		8A3571B4168F8FD800EA130B /* build_graph.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A3571A1168F8F9400EA130B /* build_graph.py */; };
@@ -254,7 +253,6 @@
 		8A1F62BB1686789400E53FBB /* RWViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = RWViewController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8A357195168F81F100EA130B /* RWBuildWorker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RWBuildWorker.h; sourceTree = "<group>"; };
 		8A357198168F823B00EA130B /* RWDeviceConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RWDeviceConnection.h; sourceTree = "<group>"; };
-		8A357199168F875900EA130B /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Python.framework; sourceTree = DEVELOPER_DIR; };
 		8A35719E168F8EE200EA130B /* main.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = main.py; sourceTree = "<group>"; };
 		8A3571A0168F8F9400EA130B /* __init__.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = __init__.py; sourceTree = "<group>"; };
 		8A3571A1168F8F9400EA130B /* build_graph.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = build_graph.py; sourceTree = "<group>"; };
@@ -375,7 +373,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A35719A168F875900EA130B /* Python.framework in Frameworks */,
 				8AF05086168F7F85001B8093 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -513,7 +510,6 @@
 				8A12865C1780A1E6002170B5 /* libev.4.dylib */,
 				8A12865D1780A1E6002170B5 /* libmsgpack.3.dylib */,
 				8A3571CF1691C91000EA130B /* CoreVideo.framework */,
-				8A357199168F875900EA130B /* Python.framework */,
 				8A1F62B81686787500E53FBB /* GLKit.framework */,
 				8A1F62B61686782400E53FBB /* OpenGLES.framework */,
 				8A1F62A616866F7E00E53FBB /* OpenGL.framework */,
@@ -1469,9 +1465,15 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PREFIX_HEADER = "../build-server/misc/Rosewood-Prefix.pch";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"\"/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7\"",
+					"\"$(SRCROOT)/../include\"",
+				);
 				INFOPLIST_FILE = "../build-server/misc/Rosewood-Info.plist";
+				LIBRARY_SEARCH_PATHS = "\"/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lpython2.7";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
@@ -1487,8 +1489,14 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PREFIX_HEADER = "../build-server/misc/Rosewood-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7\"",
+					"\"$(SRCROOT)/../include\"",
+				);
 				INFOPLIST_FILE = "../build-server/misc/Rosewood-Info.plist";
+				LIBRARY_SEARCH_PATHS = "\"/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_LDFLAGS = "-lpython2.7";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
