@@ -77,8 +77,57 @@ def build_file(bld, path):
             break
 
 
+@build_task_single(r'\.mesh$')
+class BuildJSONMeshTask(TaskNode):
+    def __init__(self, bld, src, dest):
+        if not dest:
+            dest = bld.as_output_node(change_ext(src.filename, '.mesh-mp'))
+
+        self.mesh_node = src
+        self.mesh_dest_node = None
+
+        super(BuildJSONMeshTask, self).__init__(bld, [src], [])
+
+        self._update_dependents(bld)
+
+    @property
+    def name(self):
+        return 'Compile JSON Mesh'
+
+    @property
+    def is_valid(self):
+        return self.mesh_node.is_valid
+
+    def run(self, bld):
+        self._update_dependents(bld)
+
+        with file(self.mesh_node.filename) as infile:
+            data = json.load(infile)
+
+        vertices = data['vertices']
+        normals = {'': data['normals']}
+        texcoords = {'': data['texcoords']}
+
+        ensure_dir_for_file_exists(self.mesh_dest_node.filename)
+
+        with file(self.mesh_dest_node.filename, 'wb') as outfile:
+            msgpack.pack([vertices, normals, texcoords], outfile)
+
+        return True
+
+    def _update_dependents(self, bld):
+        if self.mesh_dest_node:
+            disconnect_nodes(self, self.mesh_dest_node)
+            self.mesh_dest_node = None
+
+        src_filename = self.mesh_node.filename
+
+        self.mesh_dest_node = bld.as_output_node(change_ext(src_filename, '.mesh-mp'))
+        connect_nodes(self, self.mesh_dest_node)
+
+
 @build_task_single(r'\.fbx$')
-class BuildMeshTask(TaskNode):
+class BuildFBXMeshTask(TaskNode):
     default_import_settings = {'normals': 'from-mesh',
                                'normals-recalculate-name': None,
                                'normals-recalculate-angle': 60,
@@ -95,9 +144,9 @@ class BuildMeshTask(TaskNode):
         self.mesh_dest_node = None
         self.hull_dest_node = None
 
-        super(BuildMeshTask, self).__init__(bld,
-                                            [src, self.settings_node],
-                                            [])
+        super(BuildMeshFBXTask, self).__init__(bld,
+                                               [src, self.settings_node],
+                                               [])
 
 
         self._update_dependents(bld)
