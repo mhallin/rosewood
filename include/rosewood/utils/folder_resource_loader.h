@@ -7,16 +7,16 @@
 
 namespace rosewood { namespace utils {
 
-	class FolderResourceLoader : public core::IResourceLoader {
-	public:
-		FolderResourceLoader(const std::string &root);
-		virtual ~FolderResourceLoader() override;
+    class FolderResourceLoader : public core::IResourceLoader {
+    public:
+        FolderResourceLoader(const std::string &root);
+        virtual ~FolderResourceLoader() override;
         virtual core::FileInfo find_file(std::string path) const override;
         virtual std::string read_file(std::string path) const override;
 
-	private:
-		std::string _root;
-	};
+    private:
+        std::string _root;
+    };
 
 } }
 

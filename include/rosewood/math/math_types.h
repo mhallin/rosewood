@@ -49,14 +49,14 @@ namespace rosewood { namespace math {
     struct Vector4 {
         Vector4();
         Vector4(float x, float y, float z, float w);
-        Vector4(const Vector4 &v);
-        explicit Vector4(const Vector3 &v, float w);
+        Vector4(const Vector3 &v, float w);
 
 #if __SSE__
+        Vector4(const Vector4 &v);
         explicit Vector4(__m128 v);
-#endif
 
         Vector4 &operator=(const Vector4 &rhs);
+#endif
 
         union {
             struct {
@@ -71,15 +71,13 @@ namespace rosewood { namespace math {
     struct Vector3 {
         Vector3();
         Vector3(float x, float y, float z);
-        Vector3(const Vector3 &v);
-        explicit Vector3(const Vector4 &v);
+        Vector3(const Vector4 &v);
 #if __SSE__
+        Vector3(const Vector3 &v);
         explicit Vector3(__m128 v);
-#endif
 
         Vector3 &operator=(const Vector3 &rhs);
 
-#if __SSE__
         __m128 m128;
 
         float x() const { float r[4]; _mm_store_ps(r, m128); return r[0]; }
@@ -95,6 +93,16 @@ namespace rosewood { namespace math {
         void set_z(float z) {
             float r[4]; _mm_store_ps(r, m128); r[2] = z; m128 = _mm_load_ps(r);
         }
+#else
+        float _x, _y, _z, _w;
+
+        float x() const { return _x; }
+        float y() const { return _y; }
+        float z() const { return _z; }
+
+        void set_x(float x) { _x = x; }
+        void set_y(float y) { _y = y; }
+        void set_z(float z) { _z = z; }
 #endif
     };
 
