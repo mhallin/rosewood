@@ -4,7 +4,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#import <Python/Python.h>
+#import <Python.h>
 
 static const float kAnimationBarHeight = 6;
 
