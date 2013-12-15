@@ -8,9 +8,8 @@ NSBundleResourceLoader::NSBundleResourceLoader(NSBundle *bundle) : _bundle(bundl
 NSBundleResourceLoader::~NSBundleResourceLoader() { }
     
 rosewood::core::FileInfo NSBundleResourceLoader::find_file(std::string path) const {
-    NSString *path_str = [_bundle pathForResource:@(path.c_str())
-                                           ofType:nil
-                                      inDirectory:@"asset-build"];
+    NSString *asset_path = [@"asset-build" stringByAppendingPathComponent:@(path.c_str())];
+    NSString *path_str = [_bundle pathForResource:asset_path ofType:nil];
     rosewood::core::FileInfo i;
     
     if (path_str) {
@@ -26,9 +25,8 @@ rosewood::core::FileInfo NSBundleResourceLoader::find_file(std::string path) con
 }
 
 std::string NSBundleResourceLoader::read_file(std::string path) const {
-    NSString *path_str = [_bundle pathForResource:@(path.c_str())
-                                           ofType:nil
-                                      inDirectory:@"asset-build"];
+    NSString *asset_path = [@"asset-build" stringByAppendingPathComponent:@(path.c_str())];
+    NSString *path_str = [_bundle pathForResource:asset_path ofType:nil];
     NSData *contents = [NSData dataWithContentsOfFile:path_str];
     return std::string((char*)contents.bytes, contents.length);
 }
