@@ -9,5 +9,5 @@ env:
   - PLATFORM=ios CONF=debug
   - PLATFORM=ios CONF=release
 script:
-  - python rwconfig.py -p $PLATFORM
+  - python rwconfig.py -p $PLATFORM || cat deps/build/msgpack-ios-build/config.log
   - cd out/$CONF && ninja -v && [ "$PLATFORM" != "ios" ] && ./rw_tests

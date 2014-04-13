@@ -11,11 +11,15 @@ import sys
 SUPPORTED_PLATFORMS = {
     'mac': {
         'cflags': '-arch x86_64',
+        'cxxflags': '-arch x86_64 -std=c++0x -stdlib=libc++',
     },
 
     'ios': {
         'cflags': '-arch armv7 -arch armv7s -arch arm64 '
                   '-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk',
+        'cxxflags': '-arch armv7 -arch armv7s -arch arm64 '
+                    '-std=c++0x -stdlib=libc++ '
+                    '-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk',
         'configureflags': ['--host=arm-apple-darwin9'],
     },
 }
@@ -133,9 +137,10 @@ def build_dependencies_for_platform(platform_name):
     print 'Configuring and building dependencies for platform "%s"' % platform_name
 
     cflags = SUPPORTED_PLATFORMS[platform_name].get('cflags', '')
+    cxxflags = SUPPORTED_PLATFORMS[platform_name].get('cxxflags', '')
     configureflags = SUPPORTED_PLATFORMS[platform_name].get('configureflags', [])
 
-    env = {'CFLAGS': cflags, 'CXXFLAGS': cflags, 'CC': 'clang', 'CXX': 'clang++'}
+    env = {'CFLAGS': cflags, 'CXXFLAGS': cxxflags, 'CC': 'clang', 'CXX': 'clang++'}
 
     for dep in ALL_DEPS:
         dep_dir = os.path.join('deps/src', dep['unpack_name'])
