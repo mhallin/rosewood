@@ -52,6 +52,17 @@
                     },
                 }
             ],
+            [
+                "_type == 'executable'",
+                {
+                    "xcode_settings": {
+                        "OTHER_LDFLAGS": [
+                            "-std=c++0x",
+                            "-stdlib=libc++",
+                        ],
+                    }
+                }
+            ],
         ],
 
         "configurations": {

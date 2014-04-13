@@ -10,4 +10,4 @@ env:
   - PLATFORM=ios CONF=release
 script:
   - python rwconfig.py -p $PLATFORM
-  - cd out/$CONF && ninja && [ "$PLATFORM" != "ios" ] && ./rw_tests
+  - cd out/$CONF && ninja -v && [ "$PLATFORM" != "ios" ] && ./rw_tests
