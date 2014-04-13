@@ -196,11 +196,15 @@ def create_virtualenv():
 
 def run_gyp(platform_name):
     print 'Generating ninja build files in "out" folder'
+
+    env = {'CC': 'clang', 'CXX': 'clang++'}
+
     result = subprocess.call(['./deps/gyp/gyp',
                               '--depth=.',
                               '-f', 'ninja',
                               '-DOS=%s' % platform_name,
-                              'example/sample.gyp', 'rosewood.gyp'])
+                              'example/sample.gyp', 'rosewood.gyp'],
+                              env=env)
 
     if result:
         raise Exception('gyp failed')
