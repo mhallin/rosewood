@@ -23,14 +23,6 @@ SUPPORTED_PLATFORMS = {
     },
 }
 
-MSGPACK_DEP = {
-    'url': 'https://github.com/msgpack/msgpack-c/releases/download/cpp-0.5.8/msgpack-0.5.8.tar.gz',
-    'sha1': 'e3100a327af5718cf4489d44c3b65f02e704aeb2',
-    'unpack_name': 'msgpack-0.5.8',
-    'name': 'msgpack',
-    'install': True,
-}
-
 GTEST_DEP = {
     'url': 'https://googletest.googlecode.com/files/gtest-1.7.0.zip',
     'sha1': 'f85f6d2481e2c6c4a18539e391aa4ea8ab0394af',
@@ -40,7 +32,6 @@ GTEST_DEP = {
 }
 
 ALL_DEPS = [
-    MSGPACK_DEP,
     GTEST_DEP
 ]
 

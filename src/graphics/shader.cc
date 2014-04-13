@@ -4,8 +4,11 @@
 #include <numeric>
 
 #include "rosewood/core/resource_manager.h"
-#include "rosewood/core/clang_msgpack.h"
 #include "rosewood/core/logging.h"
+
+#include "rosewood/data-format/object.h"
+#include "rosewood/data-format/object_conversions.h"
+#include "rosewood/data-format/reader.h"
 
 #include "rosewood/math/math_types.h"
 #include "rosewood/math/matrix4.h"
@@ -183,26 +186,22 @@ void Shader::reload_shader() {
     }
 
     auto &contents = _shader_spec->str();
-    msgpack::unpacked spec_pack;
-    msgpack::unpack(&spec_pack, contents.c_str(), contents.size());
-
-    auto spec = spec_pack.get();
+    auto spec = data_format::read_data(contents);
 
     std::string vertex_shader_source, fragment_shader_source;
 
-    for (int i = 0; i < spec.via.map.size; ++i) {
-        auto &kv = spec.via.map.ptr[i];
-
-        auto key = kv.key.as<std::string>();
+    for (const auto &kv : spec.dictionary) {
+        const auto &key = kv.first;
+        const auto &value = kv.second;
 
         if (key == "vertex-shader") {
-            vertex_shader_source = kv.val.as<std::string>();
+            vertex_shader_source = data_format::as<std::string>(value);
         }
         else if (key == "fragment-shader") {
-            fragment_shader_source = kv.val.as<std::string>();
+            fragment_shader_source = data_format::as<std::string>(value);
         }
         else if (key == "extra-attributes") {
-            auto specs = kv.val.as<std::vector<std::vector<std::string>>>();
+            auto specs = data_format::as<std::vector<std::vector<std::string>>>(value);
             _extra_attributes.clear();
 
             for (auto s : specs) {
@@ -229,29 +228,29 @@ void Shader::reload_shader() {
             }
         }
         else if (key == "queue-index") {
-            _queue_index = kv.val.as<int>();
+            _queue_index = data_format::as<int>(value);
         }
         else if (key == "depth-test") {
-            _depth_test = kv.val.as<bool>();
+            _depth_test = data_format::as<bool>(value);
         }
         else if (key == "depth-write") {
-            _depth_write = kv.val.as<bool>();
+            _depth_write = data_format::as<bool>(value);
         }
         else if (key == "blend-mode") {
-            if (kv.val.is_nil()) continue;
+            if (data_format::is_null(value.type)) continue;
 
-            auto sfactor_name = kv.val.via.array.ptr[0].as<std::string>();
-            auto dfactor_name = kv.val.via.array.ptr[1].as<std::string>();
+            auto sfactor_name = value[0].string;
+            auto dfactor_name = value[1].string;
 
             _blend_dfactor = convert_blend_name(dfactor_name);
             _blend_sfactor = convert_blend_name(sfactor_name);
             _enable_blend = true;
         }
         else if (key == "polygon-offset") {
-            if (kv.val.is_nil()) continue;
+            if (data_format::is_null(value)) continue;
 
-            _polygon_offset_factor = kv.val.via.array.ptr[0].as<float>();
-            _polygon_offset_units = kv.val.via.array.ptr[1].as<float>();
+            _polygon_offset_factor = data_format::as<float>(value[0]);
+            _polygon_offset_units = data_format::as<float>(value[1]);
         }
     }
 

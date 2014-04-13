@@ -64,10 +64,20 @@ namespace rosewood { namespace data_format {
             return array[index];
         }
 
+        const Object &operator[](size_t index) const {
+            assert(type == DataType::Array);
+            return array[index];
+        }
+
         // Dictionary access
         Object &operator[](const std::string &key) {
             assert(type == DataType::Dictionary);
             return dictionary[key];
+        }
+
+        const Object &operator[](const std::string &key) const {
+            assert(type == DataType::Dictionary);
+            return dictionary.at(key);
         }
     };
 
@@ -75,6 +85,10 @@ namespace rosewood { namespace data_format {
         T result;
         convert(object, &result);
         return result;
+    }
+
+    inline bool is_null(const Object &object) {
+        return object.type == DataType::Null;
     }
 
 } }

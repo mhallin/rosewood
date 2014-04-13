@@ -1,6 +1,5 @@
 {
     "sources": [
-        "clang_msgpack.h",
         "component.h",
         "component_array.h",
         "entity.h",

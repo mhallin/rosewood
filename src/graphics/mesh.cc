@@ -5,7 +5,10 @@
 #include <numeric>
 
 #include "rosewood/core/resource_manager.h"
-#include "rosewood/core/clang_msgpack.h"
+
+#include "rosewood/data-format/object.h"
+#include "rosewood/data-format/object_conversions.h"
+#include "rosewood/data-format/reader.h"
 
 #include "rosewood/math/math_types.h"
 #include "rosewood/math/matrix4.h"
@@ -114,14 +117,11 @@ std::shared_ptr<Mesh> Mesh::copy() const {
 
 void Mesh::reload_mesh_asset() {
     auto &contents = _mesh_asset->str();
-    msgpack::unpacked msg;
-    msgpack::unpack(&msg, contents.c_str(), contents.size());
+    auto arrays = data_format::read_data(contents);
 
-    auto arrays = msg.get();
-
-    auto vertex_float_array = arrays.via.array.ptr[0].as<std::vector<float>>();
-    auto normal_float_arrays = arrays.via.array.ptr[1].as<std::map<std::string, std::vector<float>>>();
-    auto texcoord_float_arrays = arrays.via.array.ptr[2].as<std::map<std::string, std::vector<float>>>();
+    auto vertex_float_array = data_format::as<std::vector<float>>(arrays[0]);
+    auto normal_float_arrays = data_format::as<std::unordered_map<std::string, std::vector<float>>>(arrays[1]);
+    auto texcoord_float_arrays = data_format::as<std::unordered_map<std::string, std::vector<float>>>(arrays[2]);
 
     _vertex_data.clear();
     _normal_datas.clear();

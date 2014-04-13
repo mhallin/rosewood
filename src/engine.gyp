@@ -52,32 +52,11 @@
                 "../include/rosewood/graphics/sources.gypi",
             ],
 
+            "dependencies": [
+                "rw_data_format",
+            ],
+
             "direct_dependent_settings": {
-                "target_conditions": [
-                    [
-                        "GENERATOR == 'xcode'",
-                        {
-                            "libraries": [
-                                "../deps/build/msgpack-<(OS)/lib/libmsgpack.a",
-                            ],
-                        }
-                    ],
-                    [
-                        "GENERATOR == 'ninja'",
-                        {
-                            "libraries": [
-                                "-lmsgpack",
-                            ],
-
-                            "xcode_settings": {
-                                "OTHER_LDFLAGS": [
-                                    "-L../deps/build/msgpack-<(OS)/lib",
-                                ],
-                            },
-                        }
-                    ],
-                ],
-
                 "libraries": [
                     "$(SDKROOT)/System/Library/Frameworks/CoreVideo.framework",
                 ],
