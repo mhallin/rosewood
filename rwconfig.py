@@ -10,16 +10,15 @@ import sys
 
 SUPPORTED_PLATFORMS = {
     'mac': {
+        'developer_platform_name': 'MacOSX',
         'cflags': '-arch x86_64',
         'cxxflags': '-arch x86_64 -std=c++0x -stdlib=libc++',
     },
 
     'ios': {
-        'cflags': '-arch armv7 -arch armv7s -arch arm64 '
-                  '-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk',
-        'cxxflags': '-arch armv7 -arch armv7s -arch arm64 '
-                    '-std=c++0x -stdlib=libc++ '
-                    '-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk',
+        'developer_platform_name': 'iPhoneOS',
+        'cflags': '-arch armv7 -arch armv7s -arch arm64',
+        'cxxflags': '-arch armv7 -arch armv7s -arch arm64 -std=c++0x -stdlib=libc++',
         'configureflags': ['--host=arm-apple-darwin9'],
     },
 }
@@ -133,12 +132,32 @@ def download_and_extract_dependencies():
     print 'All dependencies fetched and extracted'
 
 
+def platform_isysroot(platform_name):
+    name = SUPPORTED_PLATFORMS[platform_name]['developer_platform_name']
+
+    platform_dir = '/Applications/Xcode.app/Contents/Developer/Platforms'
+    sdk_dir = os.path.join(platform_dir, '%s.platform' % name, 'Developer/SDKs')
+
+    sorted_sdks = sorted(os.listdir(sdk_dir), reverse=True)
+
+    if not sorted_sdks:
+        raise Exception('no sdks available for platform %s' % platform_name)
+
+    return os.path.join(sdk_dir, sorted_sdks[0])
+
+
 def build_dependencies_for_platform(platform_name):
     print 'Configuring and building dependencies for platform "%s"' % platform_name
 
     cflags = SUPPORTED_PLATFORMS[platform_name].get('cflags', '')
     cxxflags = SUPPORTED_PLATFORMS[platform_name].get('cxxflags', '')
     configureflags = SUPPORTED_PLATFORMS[platform_name].get('configureflags', [])
+
+    isysroot = platform_isysroot(platform_name)
+
+    if isysroot:
+        cflags += ' -isysroot %s' % isysroot
+        cxxflags += ' -isysroot %s' % isysroot
 
     env = {'CFLAGS': cflags, 'CXXFLAGS': cxxflags, 'CC': 'clang', 'CXX': 'clang++'}
 
