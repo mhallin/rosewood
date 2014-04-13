@@ -23,6 +23,11 @@
                     "deps/build/gtest-<(OS)/include",
                 ],
             },
+
+            "xcode_settings": {
+                "GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS": "NO",
+                "GCC_WARN_ABOUT_MISSING_PROTOTYPES": "NO",
+            },
         },
 
         {

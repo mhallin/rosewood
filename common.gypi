@@ -69,12 +69,14 @@
             "debug": {
                 "xcode_settings": {
                     "GCC_OPTIMIZATION_LEVEL": "0",
+                    "ONLY_ACTIVE_ARCH": "YES",
                 },
             },
 
             "debug_slowrender": {
                 "xcode_settings": {
                     "GCC_OPTIMIZATION_LEVEL": "0",
+                    "ONLY_ACTIVE_ARCH": "YES",
                 },
             },
 

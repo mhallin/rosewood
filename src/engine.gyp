@@ -24,6 +24,8 @@
 
             "includes": [
                 "core/sources.gypi",
+                "../include/rosewood/core/sources.gypi",
+                "../include/rosewood/data-structures/sources.gypi",
             ],
         },
 
@@ -33,6 +35,7 @@
 
             "includes": [
                 "data-format/sources.gypi",
+                "../include/rosewood/data-format/sources.gypi",
             ],
         },
 
@@ -46,6 +49,7 @@
 
             "includes": [
                 "graphics/sources.gypi",
+                "../include/rosewood/graphics/sources.gypi",
             ],
 
             "direct_dependent_settings": {
@@ -86,6 +90,7 @@
 
             "includes": [
                 "math/sources.gypi",
+                "../include/rosewood/math/sources.gypi",
             ],
         },
 
@@ -95,6 +100,7 @@
 
             "includes": [
                 "platform/sources.gypi",
+                "../include/rosewood/platform/sources.gypi",
             ],
         },
 
@@ -104,6 +110,7 @@
 
             "includes": [
                 "utils/sources.gypi",
+                "../include/rosewood/utils/sources.gypi",
             ],
         },
     ],
