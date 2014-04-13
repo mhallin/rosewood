@@ -2,7 +2,7 @@
 
 #include "rosewood/graphics/texture.h"
 
-#include "rosewood/osx/RWGLView.h"
+#include "rosewood/platform/glview_osx.h"
 
 namespace rosewood { namespace graphics { namespace image_loader {
 

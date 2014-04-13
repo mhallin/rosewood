@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Magnus Hallin. All rights reserved.
 //
 
-#import "rosewood/osx/RWGLView.h"
+#import "rosewood/platform/glview_osx.h"
 
 #include <mutex>
 
@@ -15,11 +15,11 @@
 
 #include "rosewood/utils/animatable.h"
 #include "rosewood/utils/time.h"
-#include "rosewood/ns/bundle_resource_loader.h"
+#include "rosewood/utils/bundle_resource_loader_ns.h"
 
 using rosewood::core::add_resource_loader;
 
-using rosewood::ns::NSBundleResourceLoader;
+using rosewood::utils::NSBundleResourceLoader;
 
 static __weak RWGLView *gDefaultView = nil;
 

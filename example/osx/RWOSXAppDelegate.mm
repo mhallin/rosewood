@@ -8,7 +8,7 @@
 
 #import "RWOSXAppDelegate.h"
 
-#import "rosewood/osx/RWGLView.h"
+#import "rosewood/platform/glview_osx.h"
 
 #import "../sample_app.h"
 
