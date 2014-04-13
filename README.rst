@@ -2,6 +2,9 @@
 Rosewood
 ********
 
+.. image:: https://travis-ci.org/mhallin/rosewood.svg?branch=master
+   :target: https://travis-ci.org/mhallin/rosewood
+
 An interactive CES-based 3D-renderer. Written to be platform independent, builds on GLX/X11, OS X,
 and iOS.
 
