@@ -14,7 +14,7 @@
 namespace rosewood { namespace graphics {
 
     typedef rosewood::data_structures::Variant<
-        void, int, math::Matrix3, math::Matrix4, math::Vector4> UniformData;
+        int, math::Matrix3, math::Matrix4, math::Vector4> UniformData;
 
     static_assert(std::is_same<UniformData::alignment_type, math::Vector4>::value, "incorrect alignment");
 

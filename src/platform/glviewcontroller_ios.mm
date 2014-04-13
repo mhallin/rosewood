@@ -6,13 +6,13 @@
 //
 //
 
-#import "rosewood/ios/RWViewController.h"
+#import "rosewood/platform/glviewcontroller_ios.h"
 
 #include "rosewood/core/resource_manager.h"
 #include "rosewood/core/memory.h"
 
 #include "rosewood/utils/animatable.h"
-#include "rosewood/utils/bundle_resource_loader.h"
+#include "rosewood/utils/bundle_resource_loader_ns.h"
 #include "rosewood/utils/time.h"
 
 using rosewood::core::add_resource_loader;

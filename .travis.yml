@@ -1,0 +1,12 @@
+language: objective-c
+before_install:
+  - brew update
+  - brew install ninja
+env:
+  - PLATFORM=mac CONF=debug
+  - PLATFORM=mac CONF=release
+  - PLATFORM=ios CONF=debug
+  - PLATFORM=ios CONF=release
+script:
+  - python rwconfig.py -p $PLATFORM
+  - cd out/$CONF && ninja && [ "$PLATFORM" != "ios" ] && ./rw_tests

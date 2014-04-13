@@ -144,7 +144,7 @@ class BuildFBXMeshTask(TaskNode):
         self.mesh_dest_node = None
         self.hull_dest_node = None
 
-        super(BuildMeshFBXTask, self).__init__(bld,
+        super(BuildFBXMeshTask, self).__init__(bld,
                                                [src, self.settings_node],
                                                [])
 

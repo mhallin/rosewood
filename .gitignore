@@ -1,8 +1,6 @@
-/asset-build
-xcuserdata
+/example/asset-build
+*.xcodeproj
 *.pyc
-/build-server/build/graph.png
-/.lock-waf*
-/.waf-*
-/build
-/gtest-*
+/out
+/deps/src
+/deps/build

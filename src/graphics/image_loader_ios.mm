@@ -1,3 +1,5 @@
+#import <UIKit/UIKit.h>
+
 #include "rosewood/graphics/image_loader.h"
 
 #include "rosewood/graphics/texture.h"

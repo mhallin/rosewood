@@ -1,8 +1,8 @@
-#include "rosewood/ns/bundle_resource_loader.h"
+#include "rosewood/utils/bundle_resource_loader_ns.h"
 
 using rosewood::core::IResourceLoader;
 
-using rosewood::ns::NSBundleResourceLoader;
+using rosewood::utils::NSBundleResourceLoader;
 
 NSBundleResourceLoader::NSBundleResourceLoader(NSBundle *bundle) : _bundle(bundle) { }
 NSBundleResourceLoader::~NSBundleResourceLoader() { }

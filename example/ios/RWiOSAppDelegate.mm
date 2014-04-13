@@ -8,7 +8,7 @@
 
 #import "RWiOSAppDelegate.h"
 
-#import "rosewood/ios/RWViewController.h"
+#import "rosewood/platform/glviewcontroller_ios.h"
 
 #import "../sample_app.h"
 
