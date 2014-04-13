@@ -40,16 +40,34 @@
             ],
 
             "direct_dependent_settings": {
-                "libraries": [
-                    "-lmsgpack",
-                    "$(SDKROOT)/System/Library/Frameworks/CoreVideo.framework",
+                "target_conditions": [
+                    [
+                        "GENERATOR == 'xcode'",
+                        {
+                            "libraries": [
+                                "../deps/build/msgpack-<(OS)/lib/libmsgpack.a",
+                            ],
+                        }
+                    ],
+                    [
+                        "GENERATOR == 'ninja'",
+                        {
+                            "libraries": [
+                                "-lmsgpack",
+                            ],
+
+                            "xcode_settings": {
+                                "OTHER_LDFLAGS": [
+                                    "-L../deps/build/msgpack-<(OS)/lib",
+                                ],
+                            },
+                        }
+                    ],
                 ],
 
-                "xcode_settings": {
-                    "OTHER_LDFLAGS": [
-                        "-L../deps/build/msgpack-<(OS)/lib",
-                    ],
-                },
+                "libraries": [
+                    "$(SDKROOT)/System/Library/Frameworks/CoreVideo.framework",
+                ],
             },
         },
 

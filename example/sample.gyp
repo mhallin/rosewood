@@ -86,7 +86,7 @@
                     }
                 ],
                 [
-                    "OS == 'ios' or OS == 'mac'",
+                    "(OS == 'ios' or OS == 'mac') and GENERATOR == 'ninja'",
                     {
                         "actions": [
                             {
@@ -105,7 +105,22 @@
                             },
                         ],
                     }
-                ]
+                ],
+                [
+                    "(OS == 'ios' or OS == 'mac') and GENERATOR == 'xcode'",
+                    {
+                        "postbuilds": [
+                            {
+                                "postbuild_name": "Copy asset-build to app bundle",
+                                "action": [
+                                    "rsync", "--recursive", "--delete", "--update",
+                                    "asset-build",
+                                    "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+                                ],
+                            },
+                        ],
+                    }
+                ],
             ],
 
             "dependencies": [
