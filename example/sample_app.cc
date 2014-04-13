@@ -92,7 +92,7 @@ RosewoodApp::RosewoodApp() : _render_system(&_entity_manager, &_scene_mutex), _r
     auto light = light_obj.component<Light>();
     light->set_color(Vector4(0.2f, 0.6f, 0.2f, 1.0f));
 
-    GL_FUNC(glClearColor)(0.65f, 0.65f, 0.65f, 1.0f);
+    GL_FUNC(glClearColor)(0.662f, 0.231f, 0.071f, 1.0f);
 }
 
 void RosewoodApp::update() {
