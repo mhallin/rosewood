@@ -14,8 +14,8 @@ SUPPORTED_PLATFORMS = {
     },
 
     'ios': {
-        'cflags': '-arch armv7 -arch armv7s -arch arm64 ' \
-            '-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk',
+        'cflags': '-arch armv7 -arch armv7s -arch arm64 '
+                  '-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk',
         'configureflags': ['--host=arm-apple-darwin9'],
     },
 }
@@ -152,11 +152,10 @@ def build_dependencies_for_platform(platform_name):
             os.makedirs(dep_build_dir)
 
         print 'Configuring %s' % dep['name']
-        result = subprocess.call([abs_configure, 
+        result = subprocess.call([abs_configure,
                                   '--prefix=%s' % dep_install_dir,
                                   '--disable-shared', '--enable-static',
-                                  ] \
-                                  + configureflags,
+                                  ] + configureflags,
                                  cwd=dep_build_dir, env=env)
         if result:
             raise Exception('error while configuring %s' % dep['name'])
@@ -198,7 +197,7 @@ def create_virtualenv():
 def run_gyp(platform_name):
     print 'Generating ninja build files in "out" folder'
     result = subprocess.call(['./deps/gyp/gyp',
-                              '--depth=.', 
+                              '--depth=.',
                               '-f', 'ninja',
                               '-DOS=%s' % platform_name,
                               'example/sample.gyp', 'rosewood.gyp'])
@@ -217,6 +216,8 @@ def main():
     build_dependencies_for_platform(args.platform)
     create_virtualenv()
     run_gyp(args.platform)
+
+    return True
 
 
 if __name__ == '__main__':
