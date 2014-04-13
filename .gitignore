@@ -4,3 +4,4 @@
 /out
 /deps/src
 /deps/build
+/build-server/.venv

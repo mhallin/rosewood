@@ -177,6 +177,24 @@ def build_dependencies_for_platform(platform_name):
             shutil.copytree(dep_dir, dep_install_dir)
 
 
+def create_virtualenv():
+    if os.path.exists('build-server/.venv'):
+        return
+
+    print 'Creating python virtualenv in build-server/.venv'
+    result = subprocess.call(['virtualenv', 'build-server/.venv'])
+
+    if result:
+        raise Exception('could not create virtualenv')
+
+    print 'Installing packages'
+    result = subprocess.call(['./build-server/.venv/bin/pip', 'install',
+                              '-r', 'build-server/requirements.txt'])
+
+    if result:
+        raise Exception('could not install python packages')
+
+
 def run_gyp(platform_name):
     print 'Generating ninja build files in "out" folder'
     result = subprocess.call(['./deps/gyp/gyp',
@@ -197,6 +215,7 @@ def main():
 
     download_and_extract_dependencies()
     build_dependencies_for_platform(args.platform)
+    create_virtualenv()
     run_gyp(args.platform)
 
 
