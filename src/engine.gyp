@@ -28,6 +28,15 @@
         },
 
         {
+            "target_name": "rw_data_format",
+            "product_name": "rw_data_format",
+
+            "includes": [
+                "data-format/sources.gypi",
+            ],
+        },
+
+        {
             "target_name": "rw_graphics",
             "product_name": "rw_graphics",
 

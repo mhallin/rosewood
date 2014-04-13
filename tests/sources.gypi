@@ -1,5 +1,6 @@
 {
     "sources": [
+        "data_format_tests.cc",
         "entity_manager_tests.cc",
         "event_manager_tests.cc",
         "main.cc",

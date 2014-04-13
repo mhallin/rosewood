@@ -36,6 +36,7 @@
             "dependencies": [
                 "src/engine.gyp:rw_math",
                 "src/engine.gyp:rw_core",
+                "src/engine.gyp:rw_data_format",
                 "rw_gtest",
             ],
         },
