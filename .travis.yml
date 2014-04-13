@@ -2,6 +2,7 @@ language: objective-c
 before_install:
   - brew update
   - brew install ninja
+  - sudo easy_install virtualenv
 env:
   - PLATFORM=mac CONF=debug
   - PLATFORM=mac CONF=release
