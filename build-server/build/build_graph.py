@@ -2,7 +2,7 @@ import os
 import sys
 import hashlib
 
-import msgpack
+import rbdef
 
 from os import path
 
@@ -188,7 +188,7 @@ class BuildGraph(object):
 
     @property
     def build_cache_filename(self):
-        return path.join(self.root, self.out_dir, 'rw_build.cache')
+        return path.join(self.root, self.out_dir, 'rw_build_cache.rbdef')
 
     def save_build_cache(self):
         bc = {}
@@ -197,14 +197,14 @@ class BuildGraph(object):
                 bc[filepath] = hash
 
         with file(self.build_cache_filename, 'wb') as bcfile:
-            msgpack.dump(bc, bcfile)
+            rbdef.dump(bc, bcfile)
 
     def load_build_cache(self):
         if not path.exists(self.build_cache_filename):
             return
 
         with file(self.build_cache_filename, 'rb') as bcfile:
-            bc = msgpack.load(bcfile)
+            bc = rbdef.load(bcfile)
 
         for t in self.tasks:
             for o in t.edges_out:
@@ -249,7 +249,7 @@ def main():
 
     if len(sys.argv) < 2:
         print 'usage: build_graph.py command'
-        return 1
+        return False
 
     if sys.argv[1] == 'dot':
         generate_graphviz(bld, sys.stdout)
@@ -262,6 +262,8 @@ def main():
                 bld.run_task(task)
 
         bld.save_build_cache()
+
+    return True
 
 
 if __name__ == '__main__':

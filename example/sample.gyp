@@ -18,12 +18,11 @@
                     "action_name": "Run rosewood build tasks",
                     "inputs": [],
                     "outputs": [
-                        "asset-build/rw_build.cache",
+                        "asset-build/rw_build_cache.rbdef",
                         "__always_run_build_graph__"
                     ],
                     "action": [
-                        "../build-server/.venv/bin/python",
-                        "../build-server/build/build_graph.py",
+                        "../build-server/build.py",
                         "build"
                     ],
                 },
@@ -92,7 +91,7 @@
                             {
                                 "action_name": "Copy asset-build to app bundle",
                                 "inputs": [
-                                    "asset-build/rw_build.cache",
+                                    "asset-build/rw_build_cache.rbdef",
                                 ],
                                 "outputs": [
                                     "<(PRODUCT_DIR)/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/asset-build/rw_build.cache",

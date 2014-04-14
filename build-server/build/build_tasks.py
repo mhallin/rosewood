@@ -3,7 +3,7 @@ import shutil
 import inspect
 import re
 import json
-import msgpack
+import rbdef
 
 from os import path
 
@@ -81,7 +81,7 @@ def build_file(bld, path):
 class BuildJSONMeshTask(TaskNode):
     def __init__(self, bld, src, dest):
         if not dest:
-            dest = bld.as_output_node(change_ext(src.filename, '.mesh-mp'))
+            dest = bld.as_output_node(change_ext(src.filename, '.mesh-rbdef'))
 
         self.mesh_node = src
         self.mesh_dest_node = None
@@ -111,7 +111,7 @@ class BuildJSONMeshTask(TaskNode):
         ensure_dir_for_file_exists(self.mesh_dest_node.filename)
 
         with file(self.mesh_dest_node.filename, 'wb') as outfile:
-            msgpack.pack([vertices, normals, texcoords], outfile)
+            rbdef.dump([vertices, normals, texcoords], outfile)
 
         return True
 
@@ -122,7 +122,7 @@ class BuildJSONMeshTask(TaskNode):
 
         src_filename = self.mesh_node.filename
 
-        self.mesh_dest_node = bld.as_output_node(change_ext(src_filename, '.mesh-mp'))
+        self.mesh_dest_node = bld.as_output_node(change_ext(src_filename, '.mesh-rbdef'))
         connect_nodes(self, self.mesh_dest_node)
 
 
@@ -136,7 +136,7 @@ class BuildFBXMeshTask(TaskNode):
                                'import-name': None}
     def __init__(self, bld, src, dest):
         if not dest:
-            dest = bld.as_output_node(change_ext(src.filename, '.mesh-mp'))
+            dest = bld.as_output_node(change_ext(src.filename, '.mesh-rbdef'))
 
         self.settings_node = bld.as_file_node(src.filename + '.rwsettings')
         self.mesh_node = src
@@ -206,7 +206,7 @@ class BuildFBXMeshTask(TaskNode):
         ensure_dir_for_file_exists(self.mesh_dest_node.filename)
 
         with file(self.mesh_dest_node.filename, 'w') as mesh_output_file:
-            msgpack.pack([vertices, normals, texcoords], mesh_output_file)
+            rbdef.dump([vertices, normals, texcoords], mesh_output_file)
 
     def _write_convex_hull(self, mesh):
         vertices = set()
@@ -216,7 +216,7 @@ class BuildFBXMeshTask(TaskNode):
         ensure_dir_for_file_exists(self.hull_dest_node.filename)
 
         with file(self.hull_dest_node.filename, 'w') as hull_output_file:
-            msgpack.pack(fbx.flatten(vertices), hull_output_file)
+            rbdef.dump(fbx.flatten(vertices), hull_output_file)
 
     def _update_dependents(self, bld):
         if self.mesh_dest_node:
@@ -232,11 +232,11 @@ class BuildFBXMeshTask(TaskNode):
         src_filename = self.mesh_node.filename
 
         if import_settings['generate-mesh']:
-            self.mesh_dest_node = bld.as_output_node(change_ext(src_filename, '.mesh-mp'))
+            self.mesh_dest_node = bld.as_output_node(change_ext(src_filename, '.mesh-rbdef'))
             connect_nodes(self, self.mesh_dest_node)
 
         if import_settings['generate-convex-hull']:
-            self.hull_dest_node = bld.as_output_node(change_ext(src_filename, '.hull-mp'))
+            self.hull_dest_node = bld.as_output_node(change_ext(src_filename, '.hull-rbdef'))
             connect_nodes(self, self.hull_dest_node)
 
 
@@ -249,15 +249,15 @@ def copy_png(i, o):
     return True
 
 
-@build_task_single('\.json$', 'JSON to msgpack', lambda p: change_ext(p, '.mp'))
-def json_to_msgpack(i, o):
+@build_task_single('\.json$', 'JSON to RBDEF', lambda p: change_ext(p, '.rbdef'))
+def json_to_rbdef(i, o):
     ensure_dir_for_file_exists(o.filename)
 
     with file(i.filename) as infile:
         data = json.load(infile)
 
     with file(o.filename, 'w') as outfile:
-        msgpack.pack(data, outfile)
+        rbdef.dump(data, outfile)
 
     return True
 
@@ -266,7 +266,7 @@ def json_to_msgpack(i, o):
 class BuildShaderTask(TaskNode):
     def __init__(self, bld, src, dest):
         if not dest:
-            dest = bld.as_output_node(change_ext(src.filename, '.rwshader-mp'))
+            dest = bld.as_output_node(change_ext(src.filename, '.rwshader-rbdef'))
 
         super(BuildShaderTask, self).__init__(bld, [src], [dest])
 
@@ -303,7 +303,7 @@ class BuildShaderTask(TaskNode):
         ensure_dir_for_file_exists(self.destination.filename)
 
         with file(self.destination.filename, 'w') as ofile:
-            msgpack.pack(shader_input, ofile)
+            rbdef.dump(shader_input, ofile)
 
         return True
 
