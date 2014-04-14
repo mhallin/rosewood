@@ -9,6 +9,7 @@ from io import BytesIO
 
 PY3 = sys.version_info >= (3, 0)
 
+
 def _dump_uint(prefix_chars, obj, fp):
     if obj < 2**32:
         fp.write(prefix_chars[0])
@@ -131,6 +132,8 @@ def dump_dict(obj, fp):
 
 
 def dump(obj, fp):
+    '''Serialize ``obj`` as a RBDEF object to ``fp``.'''
+
     if obj is None:
         dump_none(fp)
     elif isinstance(obj, bool):
@@ -156,9 +159,15 @@ def dump(obj, fp):
 
 
 def dumps(obj):
+    '''Serialize ``obj`` as a RBDEF object to a str/bytes object, depending
+    on Python 2/3.'''
+
     of = BytesIO()
     try:
         dump(obj, of)
         return of.getvalue()
     finally:
         of.close()
+
+
+__all__ = ['dump', 'dumps']
