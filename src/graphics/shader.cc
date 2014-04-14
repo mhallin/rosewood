@@ -53,7 +53,7 @@ static GLenum convert_blend_name(const std::string &name) {
 }
 
 std::shared_ptr<Shader> Shader::create(const std::string &resource_path) {
-    return std::make_shared<Shader>(core::get_resource(resource_path + ".rwshader-mp"));
+    return std::make_shared<Shader>(core::get_resource(resource_path + ".rwshader-rbdef"));
 }
 
 Shader::Shader(std::shared_ptr<Asset> shader_spec_asset)

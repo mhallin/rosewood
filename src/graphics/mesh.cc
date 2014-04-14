@@ -32,7 +32,7 @@ std::shared_ptr<Mesh> Mesh::create(const std::shared_ptr<Asset> &mesh_asset) {
 }
 
 std::shared_ptr<Mesh> Mesh::create(const std::string &resource_path) {
-    return create(core::get_resource(resource_path + ".mesh-mp"));
+    return create(core::get_resource(resource_path + ".mesh-rbdef"));
 }
 
 Mesh::Mesh(const std::shared_ptr<Asset> &mesh_asset)

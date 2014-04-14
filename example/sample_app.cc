@@ -54,7 +54,7 @@ RosewoodApp::RosewoodApp() : _render_system(&_entity_manager, &_scene_mutex), _r
 
     camera_object.add_component<Transform>()->set_local_position(0.0f, 0.0f, -4.0f);
 
-    auto mesh = Mesh::create(get_resource("Cube 1x1x1.mesh-mp"));
+    auto mesh = Mesh::create("Cube 1x1x1");
     mesh->set_default_texcoord_data_key("Wrap");
 
     auto material = std::make_shared<Material>();
