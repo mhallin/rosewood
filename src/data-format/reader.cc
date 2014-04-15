@@ -44,7 +44,7 @@ T read_number(const std::string &source, size_t from, size_t *out_end) {
 
 template<typename T>
 std::string read_string(const std::string &source, size_t from, size_t *out_end) {
-    auto length = read_number<T>(source, from, &from);
+    auto length = (size_t)read_number<T>(source, from, &from);
     std::string string(&source[from], length);
 
     if (out_end) *out_end = from + length;
@@ -54,7 +54,7 @@ std::string read_string(const std::string &source, size_t from, size_t *out_end)
 
 template <typename T>
 ArrayType read_array(const std::string &source, size_t from, size_t *out_end) {
-    auto length = read_number<T>(source, from, &from);
+    auto length = (size_t)read_number<T>(source, from, &from);
     ArrayType array;
     array.reserve(length);
 
@@ -69,7 +69,7 @@ ArrayType read_array(const std::string &source, size_t from, size_t *out_end) {
 
 template<typename T>
 DictionaryType read_dictionary(const std::string &source, size_t from, size_t *out_end) {
-    auto length = read_number<T>(source, from, &from);
+    auto length = (size_t)read_number<T>(source, from, &from);
     DictionaryType dictionary;
     dictionary.reserve(length);
 
