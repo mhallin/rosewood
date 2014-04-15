@@ -182,7 +182,7 @@ namespace rosewood { namespace math {
     }
 #else
     inline Vector4::Vector4() : x(0), y(0), z(0), w(0) { };
-    inline Vector4::Vector4(float x, float y, float z, float w) : x(0), y(0), z(0), w(0) { };
+    inline Vector4::Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) { };
     inline Vector4::Vector4(const Vector3 &v, float w) : x(v.x()), y(v.y()), z(v.z()), w(w) { }
 
     inline float dot(const Vector4 &lhs, const Vector4 &rhs) {
