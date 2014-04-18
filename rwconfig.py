@@ -58,6 +58,10 @@ def parse_args():
                         action='store', dest='platform',
                         help='Platform to build for',
                         choices=SUPPORTED_PLATFORMS.keys() + ['host'])
+    parser.add_argument('--format', '-f',
+                        default='ninja',
+                        action='store', dest='format',
+                        help='Project formats to generate')
 
     return parser.parse_args()
 
@@ -267,7 +271,7 @@ def build_dependencies_for_platform(platform_name):
             shutil.copytree(dep_dir, dep_install_dir)
 
 
-def run_gyp(platform_name):
+def run_gyp(platform_name, proj_format):
     print 'Generating ninja build files in "out" folder'
 
     platform = SUPPORTED_PLATFORMS[platform_name]
@@ -280,7 +284,7 @@ def run_gyp(platform_name):
 
     result = subprocess.call(['./deps/gyp/gyp',
                               '--depth=.',
-                              '-f', 'ninja',
+                              '-f', proj_format,
                               '-DOS=%s' % platform_name,
                               'example/sample.gyp', 'rosewood.gyp'],
                               env=env)
@@ -305,7 +309,7 @@ def main():
     else:
         build_dependencies_for_platform(args.platform)
 
-    run_gyp(args.platform)
+    run_gyp(args.platform, args.format)
 
     return True
 
