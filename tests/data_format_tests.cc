@@ -24,14 +24,14 @@ TEST(DataFormatTests, ReadInt32) {
     auto object = read_data("i\x0a\x0b\x0c\x0d");
     ASSERT_EQ(DataType::IntOrFloat, object.type);
     EXPECT_EQ(0x0a0b0c0d, object.int64);
-    EXPECT_EQ(0x0a0b0c0d, object.float64);
+    EXPECT_DOUBLE_EQ(0x0a0b0c0d, object.float64);
 }
 
 TEST(DataFormatTests, ReadInt64) {
     auto object = read_data(std::string("I\x0a\x0b\x0c\x0d\x0e\x0f\x00\x01", 9));
     ASSERT_EQ(DataType::IntOrFloat, object.type);
     EXPECT_EQ(0x0a0b0c0d0e0f0001, object.int64);
-    EXPECT_EQ(0x0a0b0c0d0e0f0001, object.float64);
+    EXPECT_DOUBLE_EQ(0x0a0b0c0d0e0f0001, object.float64);
 }
 
 TEST(DataFormatTests, ReadFloat32) {
@@ -203,8 +203,8 @@ TEST(DataFormatTests, IntConversion) {
     EXPECT_EQ(0x0a0b0c0d, as<long>(object));
     EXPECT_EQ(0x0a0b0c0d, as<unsigned int>(object));
     EXPECT_EQ(0x0a0b0c0d, as<unsigned long>(object));
-    EXPECT_EQ(0x0a0b0c0d, as<float>(object));
-    EXPECT_EQ(0x0a0b0c0d, as<double>(object));
+    EXPECT_FLOAT_EQ(0x0a0b0c0d, as<float>(object));
+    EXPECT_DOUBLE_EQ(0x0a0b0c0d, as<double>(object));
 }
 
 TEST(DataFormatTests, BoolTrueConversion) {
