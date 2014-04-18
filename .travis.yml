@@ -6,7 +6,7 @@ cache:
 before_install:
   - brew update
   - brew install ninja
-  - sudo easy_install virtualenv
+  - sudo ln -s /usr/bin/python2.7 /usr/bin/python2
 env:
   - PLATFORM=mac CONF=debug
   - PLATFORM=mac CONF=release
