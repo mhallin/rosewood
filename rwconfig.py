@@ -38,8 +38,16 @@ GTEST_DEP = {
     'install': False,
 }
 
+EMSDK_DEP = {
+    'url': 'https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable.tar.gz',
+    'sha1': 'fbfb03ba38bf2ce07c7a8bd0282b8b3389b75f8a',
+    'unpack_name': 'emsdk_portable',
+    'name': 'Emscripten SDK',
+    'platforms': ['emscripten'],
+}
+
 ALL_DEPS = [
-    GTEST_DEP
+    GTEST_DEP,
 ]
 
 
@@ -113,6 +121,34 @@ def extract_archive(filename):
 
     if result:
         raise Exception('could not extract %s' % basename)
+
+
+def download_and_install_emsdk():
+    dep = EMSDK_DEP
+
+    print 'Downloading %s' % os.path.basename(dep['url'])
+
+    dstname = os.path.join('deps', os.path.basename(dep['url']))
+    unpack_path = os.path.join('deps', dep['unpack_name'])
+
+    if not os.path.exists(dstname):
+        fetch_file(dep['url'], dstname)
+
+    verify_file_hash(dstname, dep['sha1'])
+
+    extract_archive(dstname)
+
+    # Update emsdk
+    result = subprocess.call(['./emsdk', 'update'], cwd=unpack_path)
+    if result:
+        raise Exception('Could not update %s' % dep['name'])
+
+    # Install SDK 1.13.0
+    result = subprocess.call(['./emsdk', 'install', 'sdk-1.13.0-64bit'], cwd=unpack_path)
+    if result:
+        raise Exception('Could not install SDK 1.13.0 from %s' % dep['name'])
+
+    print '%s fetched and installed' % dep['name']
 
 
 def download_and_extract_dependencies():
@@ -257,10 +293,14 @@ def main():
 
     download_and_extract_dependencies()
 
+    if args.platform in EMSDK_DEP['platforms']:
+        download_and_install_emsdk()
+
     if SUPPORTED_PLATFORMS[args.platform].get('skip_build_deps', False):
         copy_dependencies_for_platform(args.platform)
     else:
         build_dependencies_for_platform(args.platform)
+
     run_gyp(args.platform)
 
     return True
