@@ -1,6 +1,7 @@
 #include "rosewood/graphics/mesh.h"
 
 #include <assert.h>
+#include <alloca.h>
 
 #include <numeric>
 

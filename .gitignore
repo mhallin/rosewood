@@ -3,5 +3,7 @@
 *.pyc
 /out
 /deps/src
+/deps/emsdk_portable
+/deps/emsdk-portable.tar.gz
 /deps/build
 /build-server/.venv

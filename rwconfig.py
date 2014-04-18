@@ -21,6 +21,13 @@ SUPPORTED_PLATFORMS = {
         'cxxflags': '-arch armv7 -arch armv7s -arch arm64 -std=c++0x -stdlib=libc++',
         'configureflags': ['--host=arm-apple-darwin9'],
     },
+
+    'emscripten': {
+        'cc': os.path.abspath('./deps/emsdk_portable/emscripten/1.13.0/emcc'),
+        'cxx': os.path.abspath('./deps/emsdk_portable/emscripten/1.13.0/em++'),
+        'cxxflags': '-std=c++0x -stdlib=libc++',
+        'skip_deps': True,
+    },
 }
 
 GTEST_DEP = {
@@ -124,7 +131,9 @@ def download_and_extract_dependencies():
 
 
 def platform_isysroot(platform_name):
-    name = SUPPORTED_PLATFORMS[platform_name]['developer_platform_name']
+    name = SUPPORTED_PLATFORMS[platform_name].get('developer_platform_name', None)
+    if name is None:
+        return None
 
     platform_dir = '/Applications/Xcode.app/Contents/Developer/Platforms'
     sdk_dir = os.path.join(platform_dir, '%s.platform' % name, 'Developer/SDKs')
@@ -140,9 +149,14 @@ def platform_isysroot(platform_name):
 def build_dependencies_for_platform(platform_name):
     print 'Configuring and building dependencies for platform "%s"' % platform_name
 
-    cflags = SUPPORTED_PLATFORMS[platform_name].get('cflags', '')
-    cxxflags = SUPPORTED_PLATFORMS[platform_name].get('cxxflags', '')
-    configureflags = SUPPORTED_PLATFORMS[platform_name].get('configureflags', [])
+    platform = SUPPORTED_PLATFORMS[platform_name]
+
+    cc = platform.get('cc', 'clang')
+    cxx = platform.get('cxx', 'clang++')
+    cflags = platform.get('cflags', '')
+    cxxflags = platform.get('cxxflags', '')
+    platform_configure = platform.get('configure', None)
+    configureflags = platform.get('configureflags', [])
 
     isysroot = platform_isysroot(platform_name)
 
@@ -150,7 +164,8 @@ def build_dependencies_for_platform(platform_name):
         cflags += ' -isysroot %s' % isysroot
         cxxflags += ' -isysroot %s' % isysroot
 
-    env = {'CFLAGS': cflags, 'CXXFLAGS': cxxflags, 'CC': 'clang', 'CXX': 'clang++'}
+    env = {'CFLAGS': cflags, 'CXXFLAGS': cxxflags, 'CC': cc, 'CXX': cxx}
+    env.update(platform.get('extraenv', {}))
 
     for dep in ALL_DEPS:
         dep_dir = os.path.join('deps/src', dep['unpack_name'])
@@ -167,11 +182,15 @@ def build_dependencies_for_platform(platform_name):
             os.makedirs(dep_build_dir)
 
         print 'Configuring %s' % dep['name']
-        result = subprocess.call([abs_configure,
-                                  '--prefix=%s' % dep_install_dir,
-                                  '--disable-shared', '--enable-static',
-                                  ] + configureflags,
-                                 cwd=dep_build_dir, env=env)
+        args = ['--prefix=%s' % dep_install_dir,
+                '--disable-shared', '--enable-static',
+                ] + configureflags
+
+        if platform_configure:
+            args = [platform_configure, abs_configure] + args
+        else:
+            args = [abs_configure] + args
+        result = subprocess.call(args, cwd=dep_build_dir, env=env)
         if result:
             raise Exception('error while configuring %s' % dep['name'])
 
@@ -194,7 +213,13 @@ def build_dependencies_for_platform(platform_name):
 def run_gyp(platform_name):
     print 'Generating ninja build files in "out" folder'
 
-    env = {'CC': 'clang', 'CXX': 'clang++'}
+    platform = SUPPORTED_PLATFORMS[platform_name]
+
+    cc = platform.get('cc', 'clang')
+    cxx = platform.get('cxx', 'clang++')
+
+    env = {'CC': cc, 'CXX': cxx}
+    env.update(platform.get('extraenv', {}))
 
     result = subprocess.call(['./deps/gyp/gyp',
                               '--depth=.',
@@ -213,8 +238,9 @@ def main():
     if args.platform == 'host':
         args.platform = determine_host_platform()
 
-    download_and_extract_dependencies()
-    build_dependencies_for_platform(args.platform)
+    if not SUPPORTED_PLATFORMS[args.platform].get('skip_deps', False):
+        download_and_extract_dependencies()
+        build_dependencies_for_platform(args.platform)
     run_gyp(args.platform)
 
     return True

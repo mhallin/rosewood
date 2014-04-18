@@ -1,4 +1,8 @@
 language: objective-c
+cache:
+  directories:
+    - deps/src
+    - deps/emsdk_portable
 before_install:
   - brew update
   - brew install ninja
@@ -8,6 +12,8 @@ env:
   - PLATFORM=mac CONF=release
   - PLATFORM=ios CONF=debug
   - PLATFORM=ios CONF=release
+  - PLATFORM=emscripten CONF=debug
+  - PLATFORM=emscripten CONF=release
 script:
   - python rwconfig.py -p $PLATFORM
   - cd out/$CONF && ninja -v && if [ "$PLATFORM" != "ios" ]; then ./rw_tests; fi

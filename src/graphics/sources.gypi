@@ -28,5 +28,13 @@
                 ],
             }
         ],
+        [
+            "OS == 'emscripten'",
+            {
+                "sources": [
+                    "image_loader_sdl.cc",
+                ],
+            }
+        ],
     ],
 }

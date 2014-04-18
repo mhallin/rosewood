@@ -7,7 +7,6 @@
         {
             "target_name": "rw_sample",
             "type": "executable",
-            "mac_bundle": 1,
 
             "sources": [
                 "sample_app.cc",
@@ -32,6 +31,8 @@
                 [
                     "OS == 'mac'",
                     {
+                        "mac_bundle": 1,
+
                         "sources": [
                             "osx/RWOSXAppDelegate.mm",
                             "osx/main.m",
@@ -58,6 +59,8 @@
                 [
                     "OS == 'ios'",
                     {
+                        "mac_bundle": 1,
+
                         "sources": [
                             "ios/RWiOSAppDelegate.mm",
                             "ios/main.m",
@@ -120,10 +123,29 @@
                         ],
                     }
                 ],
+                [
+                    "OS == 'emscripten'",
+                    {
+                        "product_name": "rw_sample.html",
+
+                        "sources": [
+                            "emscripten/main.cc",
+                        ],
+
+                        "xcode_settings": {
+                            "OTHER_LDFLAGS": [
+                                "-s STB_IMAGE=1",
+                                "-s WARN_ON_UNDEFINED_SYMBOLS=1",
+                                "--embed-file", "../../example/asset-build@/",
+                            ],
+                        },
+                    }
+                ],
             ],
 
             "dependencies": [
                 "../src/engine.gyp:rw_core",
+                "../src/engine.gyp:rw_data_format",
                 "../src/engine.gyp:rw_math",
                 "../src/engine.gyp:rw_graphics",
                 "../src/engine.gyp:rw_platform",

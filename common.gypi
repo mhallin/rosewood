@@ -63,6 +63,19 @@
                     }
                 }
             ],
+            [
+                "OS == 'emscripten'",
+                {
+                    "xcode_settings": {
+                        "ARCHS": ["-ignore"],
+                        "GCC_GENERATE_DEBUGGING_SYMBOLS": "NO",
+                    },
+
+                    "include_dirs": [
+                        "deps/emsdk_portable/emscripten/1.13.0/system/lib/libcxxabi",
+                    ],
+                }
+            ],
         ],
 
         "configurations": {
@@ -95,7 +108,29 @@
                                     "-flto",
                                 ],
                             },
-                        },
+                        }
+                    ],
+                    [
+                        "OS == 'emscripten'",
+                        {
+                            "xcode_settings": {
+                                "OTHER_CFLAGS": [
+                                    "-s FORCE_ALIGNED_MEMORY=1",
+                                    "-s ASSERTIONS=0",
+                                    "-s RELOOP=1",
+                                ],
+
+                                "OTHER_LDFLAGS": [
+                                    "--llvm-lto 3",
+                                    "--js-opts 1",
+                                    "--closure 1",
+                                    "-O3",
+                                    "-s FORCE_ALIGNED_MEMORY=1",
+                                    "-s ASSERTIONS=0",
+                                    "-s RELOOP=1",
+                                ],
+                            },
+                        }
                     ],
                 ],
             },

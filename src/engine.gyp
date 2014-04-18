@@ -4,7 +4,20 @@
     ],
 
     "target_defaults": {
-        "type": "static_library",
+        "conditions": [
+            [
+                "OS == 'emscripten'",
+                {
+                    "type": "shared_library",
+                }
+            ],
+            [
+                "OS != 'emscripten'",
+                {
+                    "type": "static_library",
+                }
+            ],
+        ],
 
         "include_dirs": [
             "../include",
@@ -56,11 +69,18 @@
                 "rw_data_format",
             ],
 
-            "direct_dependent_settings": {
-                "libraries": [
-                    "$(SDKROOT)/System/Library/Frameworks/CoreVideo.framework",
-                ],
-            },
+            "target_conditions": [
+                [
+                    "OS == 'mac' or OS == 'ios'",
+                    {
+                        "direct_dependent_settings": {
+                            "libraries": [
+                                "$(SDKROOT)/System/Library/Frameworks/CoreVideo.framework",
+                            ],
+                        },
+                    }
+                ]
+            ],
         },
 
         {

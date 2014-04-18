@@ -2,6 +2,7 @@
 
 #include <assert.h>
 #include <string.h>
+#include <arpa/inet.h>
 
 #include "rosewood/data-format/object.h"
 
@@ -9,6 +10,11 @@
 
 # include <libkern/OSByteOrder.h>
 # define ntohl64(x) OSSwapHostToBigInt64(x)
+
+#elif defined(EMSCRIPTEN)
+
+# include <endian.h>
+# define ntohl64(x) betoh64(x)
 
 #else
 
