@@ -20,4 +20,4 @@ script:
   - if [ -x "./deps/emsdk_portable/emscripten/1.13.0/emcc" -a ! -f "$HOME/.emscripten" ]; then
       ./deps/emsdk_portable/emscripten/1.13.0/emcc;
     fi
-  - cd out/$CONF && ninja -v && if [ "$PLATFORM" = "mac" ]; then ./rw_tests; fi
+  - cd out/$CONF && ninja -v && if [ "$PLATFORM" != "ios" ]; then ./rw_tests; fi
