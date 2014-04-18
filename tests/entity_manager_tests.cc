@@ -123,13 +123,6 @@ struct __attribute__ ((aligned (1024))) AlignedComponent : public Component<Alig
     int i;
 };
 
-TEST_F(EntityManagerTests, AlignedComponentsSanity) {
-    auto e1 = _entities.create_entity();
-    AlignedComponent ac(e1, 123);
-
-    ASSERT_EQ(0, size_t(&ac) % 1024);
-}
-
 TEST_F(EntityManagerTests, AlignedComponent) {
     auto e1 = _entities.create_entity();
     auto e2 = _entities.create_entity();
