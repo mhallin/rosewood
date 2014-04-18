@@ -69,7 +69,7 @@
                 "rw_data_format",
             ],
 
-            "target_conditions": [
+            "conditions": [
                 [
                     "OS == 'mac' or OS == 'ios'",
                     {
