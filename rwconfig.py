@@ -126,10 +126,14 @@ def extract_archive(filename):
 def download_and_install_emsdk():
     dep = EMSDK_DEP
 
-    print 'Downloading %s' % os.path.basename(dep['url'])
-
     dstname = os.path.join('deps', os.path.basename(dep['url']))
     unpack_path = os.path.join('deps', dep['unpack_name'])
+
+    if os.path.exists(unpack_path):
+        print '%s already installed, skipping' % dep['name']
+        return
+
+    print 'Downloading %s' % os.path.basename(dep['url'])
 
     if not os.path.exists(dstname):
         fetch_file(dep['url'], dstname)
