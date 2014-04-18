@@ -16,4 +16,4 @@ env:
   - PLATFORM=emscripten CONF=release
 script:
   - python rwconfig.py -p $PLATFORM
-  - cd out/$CONF && ninja -v && if [ "$PLATFORM" != "ios" ]; then ./rw_tests; fi
+  - cd out/$CONF && ninja -v && if [ "$PLATFORM" = "mac" ]; then ./rw_tests; fi
