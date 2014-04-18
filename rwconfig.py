@@ -26,7 +26,7 @@ SUPPORTED_PLATFORMS = {
         'cc': os.path.abspath('./deps/emsdk_portable/emscripten/1.13.0/emcc'),
         'cxx': os.path.abspath('./deps/emsdk_portable/emscripten/1.13.0/em++'),
         'cxxflags': '-std=c++0x -stdlib=libc++',
-        'skip_deps': True,
+        'skip_build_deps': True,
     },
 }
 
@@ -146,6 +146,23 @@ def platform_isysroot(platform_name):
     return os.path.join(sdk_dir, sorted_sdks[0])
 
 
+def copy_dependencies_for_platform(platform_name):
+    print 'Copying dependency sources for platform "%s"' % platform_name
+
+    platform = SUPPORTED_PLATFORMS[platform_name]
+
+    for dep in ALL_DEPS:
+        dep_dir = os.path.join('deps/src', dep['unpack_name'])
+        dep_install_dir = os.path.abspath('deps/build/%s-%s' % (dep['name'], platform_name))
+
+        if os.path.exists(dep_install_dir):
+            print '%s already copied, skipping' % dep['name']
+            continue
+
+        print 'Copying %s source' % dep['name']
+        shutil.copytree(dep_dir, dep_install_dir)
+
+
 def build_dependencies_for_platform(platform_name):
     print 'Configuring and building dependencies for platform "%s"' % platform_name
 
@@ -238,8 +255,11 @@ def main():
     if args.platform == 'host':
         args.platform = determine_host_platform()
 
-    if not SUPPORTED_PLATFORMS[args.platform].get('skip_deps', False):
-        download_and_extract_dependencies()
+    download_and_extract_dependencies()
+
+    if SUPPORTED_PLATFORMS[args.platform].get('skip_build_deps', False):
+        copy_dependencies_for_platform(args.platform)
+    else:
         build_dependencies_for_platform(args.platform)
     run_gyp(args.platform)
 
