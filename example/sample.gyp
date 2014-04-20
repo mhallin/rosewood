@@ -144,12 +144,12 @@
             ],
 
             "dependencies": [
-                "../src/engine.gyp:rw_core",
-                "../src/engine.gyp:rw_data_format",
-                "../src/engine.gyp:rw_math",
-                "../src/engine.gyp:rw_graphics",
-                "../src/engine.gyp:rw_platform",
-                "../src/engine.gyp:rw_utils",
+                "../engine/engine.gyp:rw_core",
+                "../engine/engine.gyp:rw_data_format",
+                "../engine/engine.gyp:rw_math",
+                "../engine/engine.gyp:rw_graphics",
+                "../engine/engine.gyp:rw_platform",
+                "../engine/engine.gyp:rw_utils",
             ],
         },
     ],
