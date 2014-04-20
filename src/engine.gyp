@@ -94,6 +94,20 @@
         },
 
         {
+            "target_name": "rw_particle_system",
+            "product_name": "rw_particle_system",
+
+            "includes": [
+                "particle-system/sources.gypi",
+                "../include/rosewood/particle-system/sources.gypi",
+            ],
+
+            "dependencies": [
+                "rw_graphics",
+            ],
+        },
+
+        {
             "target_name": "rw_platform",
             "product_name": "rw_platform",
 
