@@ -4,6 +4,7 @@ import inspect
 import re
 import json
 import rbdef
+import toml
 
 from os import path
 
@@ -185,7 +186,7 @@ class BuildFBXMeshTask(TaskNode):
         import_settings = dict(self.default_import_settings)
         if os.path.exists(self.settings_node.filename):
             with file(self.settings_node.filename) as settingsfile:
-                import_settings.update(json.load(settingsfile))
+                import_settings.update(toml.load(settingsfile))
 
         return import_settings
 
@@ -289,7 +290,7 @@ class BuildShaderTask(TaskNode):
         self._update_dependencies(bld)
 
         with file(self.shader_metadata.filename) as mdfile:
-            shader_input = json.load(mdfile)
+            shader_input = toml.load(mdfile)
 
         try:
             with file(self.vertex_shader.filename) as vshfile:
@@ -313,7 +314,7 @@ class BuildShaderTask(TaskNode):
             disconnect_nodes(self.fragment_shader, self)
 
         with file(self.shader_metadata.filename) as shader_file:
-            shader_metadata = json.load(shader_file)
+            shader_metadata = toml.load(shader_file)
 
         srcdir = path.dirname(self.shader_metadata.filename)
 

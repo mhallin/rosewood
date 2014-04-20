@@ -292,12 +292,34 @@ def run_gyp(platform_name, proj_format):
     if result:
         raise Exception('gyp failed')
 
+def create_build_server_virtualenv():
+    venv_path = 'build-server/.venv'
+    pip_path = os.path.join(venv_path, 'bin/pip')
+    requirements_file = 'build-server/requirements.txt'
+
+    if os.path.exists(venv_path):
+        print 'Build server virtualenv already exists, skipping'
+        return
+
+    print 'Creating build server virtualenv in %s' % venv_path
+
+    result = subprocess.call(['virtualenv', venv_path])
+    if result:
+        raise Exception('Could not create build server virtualenv')
+
+    print 'Installing build server requirements'
+    result = subprocess.call([pip_path, 'install', '-r', requirements_file])
+    if result:
+        raise Exception('Could not install build server requirements')
+
 
 def main():
     args = parse_args()
 
     if args.platform == 'host':
         args.platform = determine_host_platform()
+
+    create_build_server_virtualenv()
 
     download_and_extract_dependencies()
 

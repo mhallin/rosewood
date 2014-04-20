@@ -21,6 +21,7 @@
                         "__always_run_build_graph__"
                     ],
                     "action": [
+                        "../build-server/.venv/bin/python",
                         "../build-server/build.py",
                         "build"
                     ],

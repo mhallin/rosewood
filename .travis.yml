@@ -8,6 +8,7 @@ before_install:
   - brew install ninja
   - sudo ln -s /usr/bin/python2.7 /usr/bin/python2
   - export LLVM=`pwd`/deps/emsdk_portable/clang/e1.13.0_64bit
+  - sudo easy_install virtualenv
 env:
   - PLATFORM=mac CONF=debug
   - PLATFORM=mac CONF=release
