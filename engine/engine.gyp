@@ -165,6 +165,19 @@
                 "include_dirs": [
                     "platform/include",
                 ],
+
+                "target_conditions": [
+                    [
+                        "OS == 'ios' or OS == 'mac'",
+                        {
+                            "xcode_settings": {
+                                "OTHER_LDFLAGS": [
+                                    "-ObjC",
+                                ],
+                            },
+                        }
+                    ],
+                ],
             },
         },
 
