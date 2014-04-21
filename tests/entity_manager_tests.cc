@@ -3,6 +3,8 @@
 #include <iostream>
 #include <type_traits>
 
+#include "rosewood/target.h"
+
 #include "rosewood/core/entity.h"
 #include "rosewood/core/component.h"
 

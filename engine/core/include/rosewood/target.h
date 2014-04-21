@@ -9,6 +9,8 @@
 
 #    define TARGET_WEBGL 1
 
+#    define __unused
+
 #else
 
 #    define TARGET_OS_UNIX 1
