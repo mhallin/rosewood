@@ -135,6 +135,7 @@
             "dependencies": [
                 "rw_core",
                 "rw_graphics",
+                "rw_utils",
             ],
 
             "all_dependent_settings": {
