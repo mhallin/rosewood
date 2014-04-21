@@ -115,6 +115,14 @@ TEST_F(EntityManagerTests, RemoveComponentsWhenEntityRemoved) {
 
     _entities.destroy_entity(e1);
     EXPECT_TRUE(dtor_called);
+
+    for (auto __unused comp : _entities.components<CtorDtorComponent>()) {
+        GTEST_FAIL();
+    }
+
+    _entities.for_components<CtorDtorComponent>([](CtorDtorComponent *) {
+        GTEST_FAIL();
+    });
 }
 
 struct __attribute__ ((aligned (1024))) AlignedComponent : public Component<AlignedComponent> {
