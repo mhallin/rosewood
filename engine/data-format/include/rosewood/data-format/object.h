@@ -1,11 +1,11 @@
 #ifndef __ROSEWOOD_DATA_FORMAT_OBJECT_H__
 #define __ROSEWOOD_DATA_FORMAT_OBJECT_H__
 
-#include <assert.h>
-
 #include <string>
 #include <vector>
 #include <unordered_map>
+
+#include "rosewood/core/assert.h"
 
 namespace rosewood { namespace data_format {
 
@@ -60,23 +60,23 @@ namespace rosewood { namespace data_format {
 
         // Array access
         Object &operator[](size_t index) {
-            assert(type == DataType::Array);
+            RW_ASSERT(type == DataType::Array, "Can only use operator [int] for array-like objects");
             return array[index];
         }
 
         const Object &operator[](size_t index) const {
-            assert(type == DataType::Array);
+            RW_ASSERT(type == DataType::Array, "Can only use operator [int] for array-like objects");
             return array[index];
         }
 
         // Dictionary access
         Object &operator[](const std::string &key) {
-            assert(type == DataType::Dictionary);
+            RW_ASSERT(type == DataType::Dictionary, "Can only use operator [string] for dictionary-like objects");
             return dictionary[key];
         }
 
         const Object &operator[](const std::string &key) const {
-            assert(type == DataType::Dictionary);
+            RW_ASSERT(type == DataType::Dictionary, "Can only use operator [string] for dictionary-like objects");
             return dictionary.at(key);
         }
     };

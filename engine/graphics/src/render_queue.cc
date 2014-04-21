@@ -44,8 +44,8 @@ bool rosewood::graphics::operator<(const RenderCommand &lhs, const RenderCommand
 }
 
 void RenderCommand::execute(const RenderCommand *previous) const {
-	assert(_material);
-	assert(_mesh);
+	RW_ASSERT(_material, "Expecting material for rendering");
+	RW_ASSERT(_mesh, "Expecting mesh for rendering");
 
     auto old_mat = previous ? previous->_material : nullptr;
 

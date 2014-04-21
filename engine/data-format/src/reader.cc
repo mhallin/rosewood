@@ -1,8 +1,9 @@
 #include "rosewood/data-format/reader.h"
 
-#include <assert.h>
 #include <string.h>
 #include <arpa/inet.h>
+
+#include "rosewood/core/assert.h"
 
 #include "rosewood/data-format/object.h"
 
@@ -81,8 +82,8 @@ DictionaryType read_dictionary(const std::string &source, size_t from, size_t *o
 
     for (T i = 0; i < length; ++i) {
         auto key = read_from(source, from, &from);
-        assert(key.type == DataType::String);
-        assert(dictionary.count(key.string) == 0);
+        RW_ASSERT(key.type == DataType::String, "Object keys must be strings");
+        RW_ASSERT(dictionary.count(key.string) == 0, "Object keys must be unique");
 
         auto value = read_from(source, from, &from);
         dictionary[key.string] = value;
@@ -94,7 +95,7 @@ DictionaryType read_dictionary(const std::string &source, size_t from, size_t *o
 
 
 static Object read_from(const std::string &source, size_t from, size_t *out_end) {
-    assert(from < source.size());
+    RW_ASSERT(from < source.size(), "Can't read outside buffer");
 
     switch (source[from]) {
         case 'n':
@@ -152,7 +153,7 @@ static Object read_from(const std::string &source, size_t from, size_t *out_end)
             return Object::make_dictionary(read_dictionary<unsigned long long>(source, from + 1, out_end));
     }
 
-    assert(false && "Unknown byte in RBDEF");
+    RW_UNREACHABLE("Unknown byte in RBDEF");
 }
 
 

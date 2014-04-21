@@ -1,7 +1,5 @@
 #include "rosewood/graphics/gl_state.h"
 
-#include <assert.h>
-
 #include <iostream>
 #include <functional>
 #include <unordered_map>

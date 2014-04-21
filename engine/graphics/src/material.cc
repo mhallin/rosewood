@@ -1,9 +1,8 @@
 #include "rosewood/graphics/material.h"
 
-#include <assert.h>
-
 #include <ostream>
 
+#include "rosewood/core/assert.h"
 #include "rosewood/core/stats.h"
 
 #include "rosewood/math/matrix4.h"
@@ -39,13 +38,13 @@ void Material::clear_vertex_buffer() {
 }
 
 void Material::enqueue_mesh(const Mesh *mesh, Matrix4 transform, Matrix4 inverse_transform) {
-	assert(mesh);
-	assert(shader());
+    RW_ASSERT(mesh, "Expected a mesh to enqueue_mesh");
+    RW_ASSERT(shader(), "Material must have shader set");
 
     auto nverts = mesh->vertex_data().size();
     auto meshbufsize = nverts * shader()->attribute_stride() / sizeof(float);
 
-	assert(nverts);
+	RW_ASSERT(nverts, "Mesh must have vertex data");
 
     if (_buffer_index + meshbufsize > _buffer.size()) {
         _buffer.resize(_buffer_index + meshbufsize);

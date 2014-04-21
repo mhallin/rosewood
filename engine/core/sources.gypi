@@ -1,5 +1,6 @@
 {
     "sources": [
+        "include/rosewood/core/assert.h",
         "include/rosewood/core/component.h",
         "include/rosewood/core/component_array.h",
         "include/rosewood/core/entity.h",
@@ -16,6 +17,7 @@
 
         "include/rosewood/target.h",
 
+        "src/assert.cc",
         "src/component.cc",
         "src/component_array.cc",
         "src/entity.cc",

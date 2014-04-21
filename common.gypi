@@ -83,14 +83,22 @@
                 "xcode_settings": {
                     "GCC_OPTIMIZATION_LEVEL": "0",
                     "ONLY_ACTIVE_ARCH": "YES",
+
                 },
+                "defines": [
+                    "ENABLE_RW_ASSERTIONS=1",
+                ],
             },
 
             "debug_slowrender": {
                 "xcode_settings": {
                     "GCC_OPTIMIZATION_LEVEL": "0",
                     "ONLY_ACTIVE_ARCH": "YES",
+
                 },
+                "defines": [
+                    "ENABLE_RW_ASSERTIONS=1",
+                ],
             },
 
             "release": {

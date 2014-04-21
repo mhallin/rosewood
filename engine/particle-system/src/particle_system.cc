@@ -1,7 +1,6 @@
 #include "rosewood/particle-system/particle_system.h"
 
-#include <assert.h>
-
+#include "rosewood/core/assert.h"
 #include "rosewood/core/entity.h"
 #include "rosewood/core/transform.h"
 #include "rosewood/core/logging.h"
@@ -49,7 +48,7 @@ static Vector3 generate_starting_point(const ParticleEmitterArea &area) {
         return random(box.min_extent, box.max_extent);
     }
 
-    assert(false && "Unreachable");
+    RW_UNREACHABLE("Invalid data in ParticleEmitterArea");
 }
 
 static void step_particle(Transform *tform, Particle *particle) {
@@ -100,5 +99,4 @@ void rosewood::particle_system::particle_system::update(EntityManager *entities)
     entities->for_components<Transform, ParticleEmitter>([](Transform *tform, ParticleEmitter *emitter) {
         step_particle_emitter(tform, emitter);
     });
-
 }

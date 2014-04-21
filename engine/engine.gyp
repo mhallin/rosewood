@@ -61,6 +61,10 @@
                     "data-format/include",
                 ],
             },
+
+            "dependencies": [
+                "rw_core",
+            ],
         },
 
         {

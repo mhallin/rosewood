@@ -6,53 +6,55 @@
 namespace rosewood { namespace data_format {
 
     inline void convert(const Object &object, bool *result) {
-        assert(object.type == DataType::Boolean);
+        RW_ASSERT(object.type == DataType::Boolean, "Can't convert non-boolean to boolean");
         *result = object.boolean;
     }
 
     inline void convert(const Object &object, int *result) {
-        assert(object.type == DataType::IntOrFloat);
+        RW_ASSERT(object.type == DataType::IntOrFloat, "Can't convert non-integral to int");
         *result = (int)object.int64;
     }
 
     inline void convert(const Object &object, unsigned int *result) {
-        assert(object.type == DataType::IntOrFloat);
+        RW_ASSERT(object.type == DataType::IntOrFloat, "Can't convert non-integral to unsigned int");
         *result = (unsigned int)object.int64;
     }
 
     inline void convert(const Object &object, long *result) {
-        assert(object.type == DataType::IntOrFloat);
+        RW_ASSERT(object.type == DataType::IntOrFloat, "Can't convert non-integral to long");
         *result = (long)object.int64;
     }
 
     inline void convert(const Object &object, unsigned long *result) {
-        assert(object.type == DataType::IntOrFloat);
+        RW_ASSERT(object.type == DataType::IntOrFloat, "Can't convert non-integral to unsigned long");
         *result = (unsigned long)object.int64;
     }
 
     inline void convert(const Object &object, long long *result) {
-        assert(object.type == DataType::IntOrFloat);
+        RW_ASSERT(object.type == DataType::IntOrFloat, "Can't convert non-integral to long long");
         *result = object.int64;
     }
 
     inline void convert(const Object &object, float *result) {
-        assert(object.type == DataType::IntOrFloat || object.type == DataType::Float);
+        RW_ASSERT(object.type == DataType::IntOrFloat || object.type == DataType::Float,
+                  "Can't convert non-floating point to float");
         *result = (float)object.float64;
     }
 
     inline void convert(const Object &object, double *result) {
-        assert(object.type == DataType::IntOrFloat || object.type == DataType::Float);
+        RW_ASSERT(object.type == DataType::IntOrFloat || object.type == DataType::Float,
+                  "Can't convert non-floating ponit to double");
         *result = object.float64;
     }
 
     inline void convert(const Object &object, std::string *result) {
-        assert(object.type == DataType::String);
+        RW_ASSERT(object.type == DataType::String, "Can't convert non-string to string");
         *result = object.string;
     }
 
     template<typename T>
     void convert(const Object &object, std::vector<T> *result) {
-        assert(object.type == DataType::Array);
+        RW_ASSERT(object.type == DataType::Array, "Can't convert non-array to std::vector");
 
         result->reserve(object.array.size());
         for (const auto &elem : object.array) {
@@ -62,7 +64,7 @@ namespace rosewood { namespace data_format {
 
     template<typename T>
     void convert(const Object &object, std::unordered_map<std::string, T> *result) {
-        assert(object.type == DataType::Dictionary);
+        RW_ASSERT(object.type == DataType::Dictionary, "Can't convert non-object to std::unordered_map");
 
         result->reserve(object.dictionary.size());
         for (const auto &pair : object.dictionary) {
