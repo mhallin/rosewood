@@ -1,5 +1,7 @@
 #include "rosewood/particle-system/particle_system.h"
 
+#include <assert.h>
+
 #include "rosewood/core/entity.h"
 #include "rosewood/core/transform.h"
 #include "rosewood/core/logging.h"
@@ -19,10 +21,36 @@ using rosewood::core::Transform;
 
 using rosewood::graphics::Renderable;
 
+using rosewood::math::random;
 using rosewood::math::random_centered;
+using rosewood::math::Vector3;
 
 using rosewood::particle_system::Particle;
 using rosewood::particle_system::ParticleEmitter;
+using rosewood::particle_system::ParticleEmitterArea;
+using rosewood::particle_system::PointArea;
+using rosewood::particle_system::SphereArea;
+using rosewood::particle_system::BoxArea;
+
+static Vector3 generate_starting_point(const ParticleEmitterArea &area) {
+    if (area.has<PointArea>()) {
+        return area.get<PointArea>().point;
+    }
+    else if (area.has<SphereArea>()) {
+        auto sphere = area.get<SphereArea>();
+        auto radius = random(0, sphere.radius);
+        auto point = random(Vector3(-1, -1, -1), Vector3(1, 1, 1));
+
+        return point * radius;
+    }
+    else if (area.has<BoxArea>()) {
+        auto box = area.get<BoxArea>();
+
+        return random(box.min_extent, box.max_extent);
+    }
+
+    assert(false && "Unreachable");
+}
 
 static void step_particle(Transform *tform, Particle *particle) {
     auto pos = tform->local_position() + particle->velocity * rosewood::utils::delta_time();
@@ -42,7 +70,7 @@ static void step_particle_emitter(Transform *transform, ParticleEmitter *emitter
     renderable->set_mesh(emitter->mesh);
 
     auto particle_tform = particle_obj.add_component<Transform>();
-    particle_tform->set_local_position(transform->local_position());
+    particle_tform->set_local_position(transform->local_position() + generate_starting_point(emitter->emission_area));
     particle_tform->set_local_rotation(transform->local_rotation());
     transform->parent()->add_child(particle_tform);
 

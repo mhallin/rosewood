@@ -17,7 +17,7 @@ namespace rosewood { namespace particle_system {
 
     struct PointArea { math::Vector3 point; };
     struct SphereArea { math::Vector3 center; float radius; };
-    struct BoxArea { math::Vector3 minExtent; math::Vector3 maxExtent; };
+    struct BoxArea { math::Vector3 min_extent; math::Vector3 max_extent; };
 
     typedef data_structures::Variant<PointArea, SphereArea, BoxArea> ParticleEmitterArea;
 
