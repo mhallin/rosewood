@@ -26,7 +26,11 @@ namespace rosewood { namespace core {
                 _data.set_slice_data_alignment(std::alignment_of<CompData<TComp>>::value);
             }
             register_component<TComp>();
-            _data.resize((index + 1) * stride<TComp>(), 0);
+
+            auto req_size = (index + 1) * stride<TComp>();
+            if (_data.size() < req_size) {
+                _data.resize(req_size, 0);
+            }
 
             auto data = comp_data<TComp>(index);
             data->flag = 1;
