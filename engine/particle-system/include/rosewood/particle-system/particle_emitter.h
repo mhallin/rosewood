@@ -6,6 +6,8 @@
 
 #include "rosewood/data-structures/variant.h"
 
+#include "rosewood/utils/time.h"
+
 namespace rosewood { namespace graphics {
 
     class Mesh;
@@ -23,7 +25,10 @@ namespace rosewood { namespace particle_system {
 
     class ParticleEmitter : public core::Component<ParticleEmitter> {
     public:
-        ParticleEmitter(core::Entity owner) : core::Component<ParticleEmitter>(owner) { }
+        ParticleEmitter(core::Entity owner)
+        : core::Component<ParticleEmitter>(owner)
+        , is_enabled(true)
+        , accumulated_downtime(0) { }
 
         std::shared_ptr<graphics::Mesh> mesh;
         std::shared_ptr<graphics::Material> material;
@@ -35,6 +40,12 @@ namespace rosewood { namespace particle_system {
 
         float velocity;
         float velocity_random_range;
+
+        float emission_rate;
+
+        bool is_enabled;
+
+        utils::UsecTime accumulated_downtime;
     };
 
 } }

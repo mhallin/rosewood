@@ -17,6 +17,7 @@ namespace rosewood { namespace utils {
     UsecTime frame_usec_time();
     SecTime frame_time(); // Absolute timepoint for the current frame
 
+    UsecTime delta_usec_time();
     FSecTime delta_time(); // Time it took to render the last frame
     
     void mark_frame_beginning();

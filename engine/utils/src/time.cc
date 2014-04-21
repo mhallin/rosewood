@@ -18,6 +18,10 @@ namespace rosewood { namespace utils {
     SecTime current_time() {
         return current_usec_time() / (SecTime)kUsecPerSec;
     }
+
+    UsecTime delta_usec_time() {
+        return gCurrentFrameTime - gLastFrameTime;
+    }
     
     SecTime delta_time() {
         return (gCurrentFrameTime - gLastFrameTime) / (SecTime)kUsecPerSec;
