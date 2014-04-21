@@ -98,6 +98,15 @@ TEST(VariantTests, VariantAssignment) {
     EXPECT_EQ(5.0, i.get<double>());
 }
 
+TEST(VariantTests, VariantValueAssignment) {
+    Variant<int, double> d(5.0);
+
+    d = 2;
+
+    EXPECT_TRUE(d.has<int>());
+    EXPECT_EQ(2, d.get<int>());
+}
+
 TEST(VariantTests, CopyConstruction) {
     Variant<int, double> d1(5.0);
     Variant<int, double> d2(d1);

@@ -15,6 +15,9 @@ namespace rosewood { namespace data_structures {
         template<typename TSet> Variant(TSet &&t,
             typename std::enable_if<static_member<typename std::remove_const<typename std::remove_reference<TSet>::type>::type, TMembers...>::result>::type *v = 0);
 
+        template<typename TSet, typename TValid = typename std::enable_if<static_member<typename std::decay<TSet>::type, TMembers...>::result>::type>
+        Variant &operator=(TSet &&t);
+
         ~Variant();
 
         template<typename TGet> bool has() const;
@@ -82,6 +85,12 @@ namespace rosewood { namespace data_structures {
                       "invalid type in variant constructor");
         type_index = static_index_of<TNoRef, TMembers...>::result;
         new (data) TNoRef(std::forward<TSet>(t));
+    }
+
+    template<typename... TMembers>
+    template<typename TSet, typename TValid>
+    Variant<TMembers...> &Variant<TMembers...>::operator=(TSet &&t) {
+        return (*this = Variant(t));
     }
 
     template<typename... TMembers>
