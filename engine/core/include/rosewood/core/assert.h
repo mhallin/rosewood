@@ -18,7 +18,7 @@ namespace rosewood { namespace core {
 
 #else
 
-#    define RW_ASSERT(e)
+#    define RW_ASSERT(e, ...)
 
 #endif
 
