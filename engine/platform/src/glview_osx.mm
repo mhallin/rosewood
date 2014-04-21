@@ -41,10 +41,6 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     CVDisplayLinkRef _displayLink;
 
     NSTimeInterval _lastFrame;
-
-    NSTimer *_updateTimer;
-
-    std::mutex *_draw_mutex;
 }
 
 + (NSOpenGLPixelFormat *)defaultPixelFormat {
@@ -71,8 +67,6 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     _needsReshape = 0;
     _isPaused = NO;
 
-    _draw_mutex = new std::mutex();
-
     self.pixelFormat = [[self class] defaultPixelFormat];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -83,7 +77,6 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     add_resource_loader(make_unique<NSBundleResourceLoader>([NSBundle mainBundle]));
 
     [self _setupOpenGL];
-    [self _startTimer];
     [self _startDisplayLink];
 
     gDefaultView = self;
@@ -93,9 +86,6 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [_delegate rosewoodWillTerminate:self];
-
-    delete _draw_mutex;
-    _draw_mutex = nullptr;
 
     CVDisplayLinkRelease(_displayLink);
 }
@@ -107,12 +97,9 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 
     if (_isPaused) {
         CVDisplayLinkStop(_displayLink);
-        [_updateTimer invalidate];
-        _updateTimer = nil;
     }
     else {
         CVDisplayLinkStart(_displayLink);
-        [self _startTimer];
     }
 }
 
@@ -121,15 +108,6 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     rosewood::utils::mark_frame_beginning();
 
     [_delegate rosewoodDidInitialize:self];
-}
-
-- (void)_startTimer {
-    _updateTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/240.0
-                                                    target:self
-                                                  selector:@selector(updateScene:)
-                                                  userInfo:nil
-                                                   repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:_updateTimer forMode:NSEventTrackingRunLoopMode];
 }
 
 - (void)_startDisplayLink {
@@ -161,7 +139,7 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     }
 }
 
-- (void)updateScene:(id)__unused sender {
+- (void)updateScene {
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
     if (now - _lastFrame >= 1.0/60.0) {
         rosewood::utils::mark_frame_beginning();
@@ -172,14 +150,14 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 }
 
 - (CVReturn)drawForTime:(const CVTimeStamp *)__unused time {
-    std::lock_guard<std::mutex> lock(*_draw_mutex);
-
     [self.openGLContext makeCurrentContext];
 
     if (_needsReshape) {
         [_delegate rosewoodDidReshapeViewport:self];
         --_needsReshape;
     }
+
+    [self updateScene];
 
     [_delegate rosewoodDrawDidTick:self];
 
