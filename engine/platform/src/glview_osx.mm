@@ -41,6 +41,8 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
     CVDisplayLinkRef _displayLink;
 
     NSTimeInterval _lastFrame;
+
+    std::mutex _draw_mutex;
 }
 
 + (NSOpenGLPixelFormat *)defaultPixelFormat {
@@ -150,6 +152,8 @@ static CVReturn display_link_callback(__unused CVDisplayLinkRef displayLink,
 }
 
 - (CVReturn)drawForTime:(const CVTimeStamp *)__unused time {
+    std::lock_guard<std::mutex> draw_lock(_draw_mutex);
+
     [self.openGLContext makeCurrentContext];
 
     if (_needsReshape) {
